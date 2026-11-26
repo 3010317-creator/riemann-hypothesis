@@ -58,7 +58,7 @@ lemma tsum_mul_measure_le_lintegral {G I : Type*} [Group G] [MeasurableSpace G] 
     rw [← measure_preimage_mul μ (y i)⁻¹ B, ← setLIntegral_const]
     exact setLIntegral_mono' (hS i) fun x hx ↦ by simpa using h_le (y i) _ hx
   calc (∑' i : I, f (y i)) * μ B ≤ ∑' i : I, ∫⁻ x in S i, c * f x ∂μ :=
-        ENNReal.tsum_mul_right.ge.trans (ENNReal.tsum_le_tsum h_term)
+        ENNReal.tsum_mul_right.ge.trans (tsum_le_tsum h_term)
     _ = ∫⁻ x in ⋃ i : I, S i, c * f x ∂μ := (lintegral_iUnion hS hS_disjoint _).symm
     _ ≤ ∫⁻ x, c * f x ∂μ := setLIntegral_le_lintegral _ _
     _ = c * ∫⁻ x, f x ∂μ := lintegral_const_mul' _ _ hc

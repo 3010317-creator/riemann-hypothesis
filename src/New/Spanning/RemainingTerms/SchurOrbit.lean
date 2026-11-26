@@ -620,8 +620,8 @@ lemma exists_tsum_schurWeight_le {B : Set (S.G E)}
   -- Sort the terms by their lattice point and sum each fibre by packing.
   let point (p : B) : S.columnLattice (Fin (min 𝔰.ϱ j)) c :=
     ⟨conjColumnsAtInfinity E 𝔰 _ (l p), mem_columnLattice.2 ⟨l p, (hl p p.2).1, rfl⟩⟩
-  rw [← ENNReal.tsum_fiberwise _ point, ← ENNReal.tsum_mul_left]
-  refine ENNReal.tsum_le_tsum fun ⟨_, q, hq_int, rfl⟩ ↦ ?_
+  rw [← tsum_fiberwise _ point, ← ENNReal.tsum_mul_left]
+  refine tsum_le_tsum fun ⟨_, q, hq_int, rfl⟩ ↦ ?_
   let f (p : point ⁻¹' {⟨conjColumnsAtInfinity E 𝔰 _ q, ⟨q, hq_int, rfl⟩⟩}) : {p ∈ B | l p = q} :=
     ⟨p.1, p.1.2, conjColumnsAtInfinity_injective (congrArg Subtype.val p.2)⟩
   have hf : Function.Injective f := fun _ _ h_eq ↦

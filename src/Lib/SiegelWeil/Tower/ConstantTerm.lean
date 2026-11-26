@@ -406,7 +406,7 @@ lemma lintegral_levi_unfold (f : (𝔸 E)ˣ × G E t → ENNReal) (hf : Measurab
   rw [lintegral_prod _ (by fun_prop), lintegral_prod _ (by fun_prop),
     ← lintegral_orbitMeasure_lintegral (ν := count (α := principalAdeleUnits E)) (by fun_prop)]
   refine lintegral_congr fun u ↦ ?_
-  rw [lintegral_count, lintegral_tsum (by fun_prop), ENNReal.tsum_prod']
+  rw [lintegral_count, lintegral_tsum (by fun_prop), tsum_prod']
   simp [h_unitary, Subgroup.smul_def]
 
 /-- The rational isotropic line of the splitting `X`: the span of the vector `X.k`. -/

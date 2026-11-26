@@ -799,7 +799,7 @@ theorem IsFillingData.siegel_sum_le_lintegral_sphere (hT_N : (S.N : E)⁻¹ ∈ 
       rw [← h_siegel]
       simp_rw [classSum_sourceLevel_eq_sum, ← NNReal.coe_sum, eNorm_eq_nnNorm, nnNorm_real,
         nnNorm_eq, ofNNReal_finsetSum, ENNReal.coe_tsum (h_summable _)]
-      grw [← ENNReal.tsum_prod.trans (tsum_fintype _), ← ENNReal.sum_le_tsum s]
+      grw [← tsum_prod.trans (tsum_fintype _), ← sum_le_tsum s]
       gcongr with z hz
       have h_norm_eq : star z.2 ⬝ᵥ z.2 = β := by simp [β, ← h_norm z hz, Nat.Prime.ne_zero]
       grw [ite_eq_left h_norm_eq, ← vectorOfLastEntry_evalPlaces]

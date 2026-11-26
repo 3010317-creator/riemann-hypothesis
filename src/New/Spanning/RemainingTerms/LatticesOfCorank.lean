@@ -633,13 +633,13 @@ lemma sum_tsum_discWeightIfRowVanishes_le [Fintype S.LatticeStabilizerCoset] (u 
     exact Subtype.ext (by rwa [← hM L, ← hM L'])
   calc _ = ∑' L : S.BoundedDiscSublattice r (unimodularLattice u), ∑ φ : S.LatticeStabilizerCoset,
           S.discWeightIfRowVanishes u (y φ) r L.1 :=
-      (Summable.tsum_finsetSum fun _ _ ↦ ENNReal.summable).symm
+      (Summable.tsum_finsetSum fun _ _ ↦ CompleteLattice.summable).symm
     _ ≤ ∑' L : S.BoundedDiscSublattice r (unimodularLattice u),
-          C * (subspaceDiscWeight u l (span L) * w (span L) (M L)) := ENNReal.tsum_le_tsum h_term
+          C * (subspaceDiscWeight u l (span L) * w (span L) (M L)) := tsum_le_tsum h_term
     _ ≤ ∑' p : Σ V : Submodule E (𝔰.κ → E), Sub V, C * (subspaceDiscWeight u l p.1 * w p.1 p.2) :=
       tsum_comp_le_tsum_of_injective h_sort fun p ↦ C * (subspaceDiscWeight u l p.1 * w p.1 p.2)
     _ = C * ∑' V : Submodule E (𝔰.κ → E), subspaceDiscWeight u l V * ∑' M : Sub V, w V M := by
-      simp only [ENNReal.tsum_sigma', ENNReal.tsum_mul_left]
+      simp only [tsum_sigma', ENNReal.tsum_mul_left]
     _ ≤ C * ((∑' V : Submodule E (𝔰.κ → E), subspaceDiscWeight u l V) * 2 ^ 𝔰.k) := by
       rw [← ENNReal.tsum_mul_right]
       gcongr with V

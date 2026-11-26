@@ -643,8 +643,8 @@ theorem linkSecondMoment_isOpenElement_le [S.IsAdmissible] (Sg : Finset (S.chose
   -- `S.entrySet`. These entries are units off the set `T` of places, and the inverses of the level
   -- and of `N` are integral there.
   obtain ⟨T, _, hT₀, hT_M, hT_basis, hT_N⟩ := S.exists_places_integralOff S.entrySet
-  simp_rw [linkSecondMoment, ← ENNReal.tsum_prod]
-  refine (tsum_subtype_support _).ge.trans (ENNReal.summable.tsum_le_of_sum_le fun F ↦ ?_)
+  simp_rw [linkSecondMoment, ← tsum_prod]
+  refine (tsum_subtype_support _).ge.trans (CompleteLattice.summable.tsum_le_of_sum_le fun F ↦ ?_)
   -- a block `j` has two classes, a reduction and a link
   let block (j : F) : S.Classes × S.Classes × {s | s ∈ S.fixer Sg D ∧ S.IsOpenElement s} ×
       Submodule E (𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex → E) := j.val.val
