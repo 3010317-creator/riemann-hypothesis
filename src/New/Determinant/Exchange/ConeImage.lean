@@ -458,7 +458,7 @@ standard datum `stdRowDatum σ 𝔠.semilocalChar y` at these places: the functi
 `𝔠.semilocalChar⁻¹` of the determinant of the matrix with rows `y` and `x`, ordered by `σ`, if that
 matrix is integrally invertible, and to zero otherwise. -/
 theorem exists_thetaLarge_cone_eq [IsBaseAdapted A] [IsBaseAdapted X] (μ : InfinitePlace E → ℤ)
-    {b : Type} [Fintype b] (σ : b ⊕ r ≃ n) (hn : 2 ∣ card n) {z : ℝ} (hz : 0 < z)
+    {b : Type} (σ : b ⊕ r ≃ n) (hn : 2 ∣ card n) {z : ℝ} (hz : 0 < z)
     {v : PairFock E s t} (hv : IsSchwartzVector v) :
     ∃ v' : PairFock E s' t', IsSchwartzVector v' ∧
       ∀ (𝔠 : SplitTameChar E μ) (y : Matrix b n (LocProd 𝔠.ramifiedPlaces)) (g : G E s),
