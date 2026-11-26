@@ -304,7 +304,7 @@ contains every `f` such that `φ f` factors through `q`. Let `b` be acyclic for 
 (`New.Variety.IsAcyclicAt`). Then a section `x` of `F` at `φ A` that dies along every map in `R`
 dies along `q`. -/
 lemma map_eq_zero_of_dies_along_quotient_sieve {A : C'} {R : Subfunctor (reprBy A)} [φ.Full]
-    [φ.Faithful] {b : C} (q : φ A ⟶ b)
+    {b : C} (q : φ A ⟶ b)
     (h_mem : ∀ {d : C'} (f : A ⟶ d) (g : b ⟶ φ.obj d), q ≫ g = φ.map f → ⟨f⟩ ∈ R d)
     (h_acyclic : IsAcyclicAt φ F b) (x : (φ ⋙ F).obj A)
     (h_dies : ∀ (d : C') (f : A ⟶ d), ⟨f⟩ ∈ R d → (φ ⋙ F).map f x = 0) :
