@@ -89,7 +89,7 @@ lemma eichler_apply_eq_zero_of_level_le {m : Type} [Fintype m] {p : m → Fin �
     ∀ i j : 𝔰.BesselIndex, BesselIndex.level j ≤ BesselIndex.level i →
       (x * (uᴴ * S.ratGram) - (u + x * (τ • (uᴴ * S.ratGram * u) - s)) * (xᴴ * S.ratGram)) i j =
         0 := by
-  simp [← hx, splitGram, BesselIndex.level, inclMatrix, Matrix.mul_assoc, Matrix.mul_sub,
+  simp [← hx, splitGram, BesselIndex.level, inclMatrix, Matrix.mul_sub,
     Matrix.add_mul, Matrix.sub_mul, Matrix.one_apply, Matrix.mul_apply, sub_eq_zero]
   grind [Finset.sum_eq_zero, star_zero]
 
