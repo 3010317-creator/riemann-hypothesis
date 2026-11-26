@@ -884,9 +884,15 @@ lemma IsChartCovered.pairRestrictBijective {n : ℕ} {X : CommAlg k ⥤ Type 1}
     rintro rfl
     refine (forall_congr' fun i ↦ ?_).trans ⟨a.lift_unique D.isSquareZero_toGeneric hψ, by tauto⟩
     -- compare components; `mulMu` is injective, and `g` acts on `b + e` by `f b + mulMu (g e).1`
-    erw [Prod.ext_iff, ← h_mulMu_inj.eq_iff, ht, eq_sub_iff_add_eq', Subtype.ext_iff,
-      Prod.ext_iff, Prod.ext_iff, and_iff_right (ConcreteCategory.congr_hom hψ _),
-      AlgHom.comp_apply, hs]
+    rw [Prod.ext_iff, ← h_mulMu_inj.eq_iff, ht, eq_sub_iff_add_eq']
+    let u : D.PairRing := (pairAlg.map g) (s (a.coordinate i))
+    let v : D.PairRing := ψ (a.coordinate i)
+    change _ ↔ u = v
+    rw [show u = v ↔ u.val = v.val from Subtype.ext_iff]
+    have h_generic : u.val.snd.fst = v.val.snd.fst := ConcreteCategory.congr_hom hψ _
+    rw [Prod.ext_iff, TrivSqZeroExt.ext_iff, and_iff_right h_generic]
+    dsimp only [u, v]
+    rw [hs]
     rfl
   have h_map_comp_point {A A' : CommAlg k} (φ : a.coordRing ⟶ A) (φ' : A ⟶ A') :
       X.map (φ ≫ φ') a.point = X.map φ' (X.map φ a.point) := X.map_comp_apply ..
