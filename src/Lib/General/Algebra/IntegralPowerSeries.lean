@@ -15,7 +15,6 @@ with coefficients in the ring of integers of `ℂ_[p]`.
 
 * `New.mem_range_seriesToCp`: a series in one variable is integral iff all its coefficients have
   norm at most one.
-* `New.pderiv_subst`: the chain rule for partial derivatives of a substitution of power series.
 * `New.jet_subst_linearSeries`: for a linear substitution `M`, the jet `P(∂) (F ∘ M) (0)` is the jet
   of `F` along the polynomial `New.linSubst M P` obtained from `P` by the transposed substitution.
 * `New.expSubst`: the exponential `exp a` of a power series `a` in several variables without
@@ -103,15 +102,6 @@ section JetChainRule
 
 open MvPowerSeries Finset WithPiTopology
 
-
-variable {ι : Type _} {κ : Type _} {R : Type _} [CommRing R] [Fintype ι] in
-/-- The chain rule for power series: if the family `a` can be substituted into series in the
-variables `ι`, then `∂_k F(a) = ∑_i (∂_i F)(a) * ∂_k a_i`. -/
-@[simp]
-lemma New.pderiv_subst {a : ι → MvPowerSeries κ R} (ha : HasSubst a) (k : κ)
-    (F : MvPowerSeries ι R) :
-    pderiv k (subst a F) = ∑ i : ι, (pderiv i F).subst a * pderiv k (a i) :=
-  MvPowerSeries.pderiv_subst ha F k
 
 /-- Jets of a linear substitution. Let `M` be a matrix and substitute the linear forms
 `(M z)_i = ∑_k M_(i k) z_k` into the series `F`. The jet `P(∂) F(M z) (0)` equals the jet of `F`
