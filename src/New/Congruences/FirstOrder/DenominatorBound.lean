@@ -1212,8 +1212,8 @@ Hecke eigenvalues with main summands whose twisted Selmer groups have length at 
 `twistError ℓ D`. Then some operator `Λ` on `Z` has a determinant of `ℓ`-adic norm at least
 `exp (-(finrank ℂ Z * (card r * (β * log ℓ))))`, where `β = clearingBound D ℓ` adds the local
 losses, error terms and `v_ℓ(N)`. It takes the projection to `Z` of every form `y'` integral at `ιℓ`
-and orthogonal to the false lifts to a form integral at `ιℓ`, whose pairings with the forms integral
-at all places above `ℓ` are integral. -/
+and orthogonal to the false lifts to a form integral at `ιℓ`, whose pairings with forms integral
+at the same chosen place `ιℓ` are integral. -/
 theorem exists_operator_det_clearingBound {P : Parameters} {D : Data P} {ℓ : ℕ} [ThePrime ℓ]
     [PadicIso ℓ] (ϑ : D.Twist) (hϑ : IsAuxTwist (badPlaces D ℓ) ϑ.Q ϑ.invAvatar (twistError ℓ D))
     {r n : Type} [Fintype r] [DecidableEq r] [Fintype n] [DecidableEq n] {O : DescentPair D.E r n}
@@ -1224,7 +1224,7 @@ theorem exists_operator_det_clearingBound {P : Parameters} {D : Data P} {ℓ : �
       (∀ y' : O.FormV, y' ∈ integralForms (PadicPlace.ofIso ιℓ) → O.IsOrthogonalToFalseLifts E Zᗮ y'
         →
         (Λ (Z.orthogonalProjectionOnto y') : O.FormV) ∈ integralForms (PadicPlace.ofIso ιℓ)) ∧
-      ∀ y y' : O.FormV, (∀ j : PadicPlace ℓ, y ∈ integralForms j) →
+      ∀ y y' : O.FormV, y ∈ integralForms (PadicPlace.ofIso ιℓ) →
         y' ∈ integralForms (PadicPlace.ofIso ιℓ) → O.IsOrthogonalToFalseLifts E Zᗮ y' →
         ‖ιℓ (inner ℂ y (Λ (Z.orthogonalProjectionOnto y') : O.FormV))‖ ≤ 1 := by
   -- If no generator is nonzero, then `Z = ⊥` and the identity serves. Otherwise some generator
@@ -1266,7 +1266,7 @@ theorem exists_operator_det_clearingBound {P : Parameters} {D : Data P} {ℓ : �
     have h_pair : ‖(PadicPlace.ofIso ιℓ).ιₚ
         (D.chosenGroupOrder • inner ℂ y (Λ (Z.orthogonalProjectionOnto y') : O.FormV))‖ ≤ 1 :=
       y.norm_nsmul_inner_le_one _ (PadicPlace.ofIso ιℓ)
-        (D.card_classAut_dvd_chosenGroupOrder hc.card_le levelOf_le_stdLevel) (hy _)
+        (D.card_classAut_dvd_chosenGroupOrder hc.card_le levelOf_le_stdLevel) hy
         (h_int y' hy' hy'_test)
     rw [LinearMap.smul_apply, Submodule.coe_smul, inner_smul_right_eq_smul,
       Nat.cast_smul_eq_nsmul ℂ]
@@ -1296,6 +1296,6 @@ theorem denominatorLe_clearingBound {P : Parameters} {D : Data P} {ℓ : ℕ} [T
   obtain ⟨Λ, h_det, h_int, h_pair⟩ := exists_operator_det_clearingBound ϑ hϑ h_span
   refine ⟨Λ, h_det, fun y hy hy_test ↦ ⟨?_, fun y' hy' ↦ ?_⟩⟩
   · exact h_int y hy hy_test
-  · exact h_pair y' y hy' hy hy_test
+  · exact h_pair y' y (hy' _) hy hy_test
 
 end New.Selmer
