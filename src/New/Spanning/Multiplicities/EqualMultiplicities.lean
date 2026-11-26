@@ -3,6 +3,7 @@ module
 public import Lib.Adelic.TraceFormula.CuspidalComparison
 public import Lib.Adelic.TraceFormula.CuspidalType
 public import New.Determinant.Norms.AdjointThetaLift
+import TauCeti.LinearAlgebra.Matrix.Charpoly.Newton
 
 /-!
 # Equality of multiplicities
@@ -284,8 +285,10 @@ Hecke operator away from `M` has the same characteristic polynomial on the good 
 theorem charpoly_heckeOnGood_eq [hs : ∀ v : D.Φ, (toHCParam s (D.paramW v)).HasGap D.gap]
     [hs' : ∀ v : D.Φ, (toHCParam s' (D.paramW v)).HasGap D.gap] (T : D.heckeAlgebra) :
     (D.heckeOnGood V T).charpoly = (D.heckeOnGood V' T).charpoly := by
-  exact charpoly_eq_of_trace_pow_eq fun l ↦ by
+  refine LinearMap.charpoly_eq_of_trace_pow_eq (Nat.cast_injective (R := ℂ) ?_) fun l _ _ ↦ by
     rw [← map_pow, ← map_pow, D.trace_heckeOnGood_eq V V']
+  -- The dimensions agree, being the traces of the identity.
+  simpa using D.trace_heckeOnGood_eq V V' 1
 
 /-- Let the parameter `D.paramW` have gap `D.gap` for the signs of `V` and of `V'`. Then a spherical
 Hecke operator away from `M` has the same determinant on the good forms of `V` and of `V'`. -/
