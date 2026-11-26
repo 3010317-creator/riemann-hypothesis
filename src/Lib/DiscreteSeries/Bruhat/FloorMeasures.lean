@@ -921,6 +921,7 @@ lemma ae_ascConv_mem_unipotentBelow :
     exact ae_mem_mconv (ih.mono (by grind)) (ae_mem_floorUnipotent.mono fun _ hx ↦ hx.2)
       (isClosed_of_entries_eq_one mem_unipotentBelow).measurableSet
 
+omit [DecidableEq ι] in
 /-- Plancherel's inequality with a damping factor `∏ i, G (v i)`, for `G ≥ 0` continuous and
 integrable and the additive character `ψ` of the place `A`: the constant is the `L¹` norm of the
 transform of `G` (dilated by `ξ`), to the power `card ι`. -/
