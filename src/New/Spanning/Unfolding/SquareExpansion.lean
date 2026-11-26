@@ -593,12 +593,11 @@ theorem sqrt_secondMoment_compl_besselS_le [HasPrimitiveRoot5040 E] [S.IsAdmissi
     _ = √C + 2 * (S.b ^ 5)⁻¹ * ((S.b ^ 15)⁻¹ * √S.identitySecondMoment) := by ring
     _ ≤ √C + (S.b ^ 15)⁻¹ * √S.identitySecondMoment := by grw [h_small, one_mul]
 
-/-- Let `E` contain a primitive `5040`-th root of unity and let the filling `S` be admissible
-(`IsAdmissible`). Let `s` coincide, at the chosen places above `p_i = levelPrime i`, with an element
-`t` of `reducedImage besselS`, the reduction of the Bessel subgroup. Then the product of the norms
+/-- Let `s` coincide at the chosen places above `p_i = levelPrime i` with an element `t` of
+`reducedImage besselS`, the reduction of the Bessel subgroup. Then the product of the norms
 `p_i` of these places and their conjugates is at most `meetNorm s`, the product of the norms of the
 places at which `s` meets, as `s` meets at each of them. -/
-lemma prod_levelPrime_le_meetNorm_of_eq [HasPrimitiveRoot5040 E] [S.IsAdmissible]
+lemma prod_levelPrime_le_meetNorm_of_eq
     {s t : S.ResidueGL} (ht : t ∈ S.reducedImage besselS) {i : Fin 2} (hs : s i = t i) :
     ∏ _ : S.chosenPlaces i × Bool, S.levelPrime i ≤ S.meetNorm s := by
   classical
