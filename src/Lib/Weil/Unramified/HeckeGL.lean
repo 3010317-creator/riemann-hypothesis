@@ -174,6 +174,11 @@ others to 0. -/
 def residueOrZero (x : LocField w) : ResField w :=
   if h : v x ≤ 1 then residue (LocInt w) ⟨x, h⟩ else 0
 
+/-- The matrix `g` has entries in `O_w`, and `0` is a simple root of its characteristic polynomial
+modulo `w`. -/
+def HasSimpleZero (g : GL n (LocField w)) : Prop :=
+  (∀ i j : n, Valued.v (g i j) ≤ 1) ∧ (g.val.map residueOrZero).charpoly.rootMultiplicity 0 = 1
+
 /-- The kernel, in column vectors over the residue field at w, of the entrywise reduction
 `New.residueOrZero` of the matrix z. -/
 abbrev residueKer (z : Matrix m n (LocField w)) : Submodule (ResField w) (n → ResField w) :=

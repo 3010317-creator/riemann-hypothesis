@@ -211,11 +211,6 @@ lemma IsCuspidalAt.convIndicator_mul {hw : w.IsSplit} {K : Subgroup (Gf E n)}
     simp [convIndicator_single_mul, ← mul_assoc, ← mul_finsum,
       ha T hT_empty hT_univ t lift h_lift (x⁻¹ * g)]
 
-/-- The matrix `g` has entries in `O_w`, and `0` is a simple root of its characteristic polynomial
-modulo `w`. -/
-def HasSimpleZero (g : GL n (LocField w)) : Prop :=
-  (∀ i j : n, Valued.v (g i j) ≤ 1) ∧ (g.val.map residueOrZero).charpoly.rootMultiplicity 0 = 1
-
 /-- If a monic polynomial over an integrally closed domain is a `j`-th power over the fraction
 field, with `j ≠ 0`, then it is the `j`-th power of a polynomial over the domain. -/
 lemma exists_eq_pow_of_monic_of_map_eq_pow {R K : Type} [CommRing R]
