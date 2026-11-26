@@ -1,6 +1,5 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.HeckeEigenforms
 public import Lib.Adelic.TraceFormula.LevelCut
 public import Lib.Adelic.TraceFormula.TraceComparison
 
