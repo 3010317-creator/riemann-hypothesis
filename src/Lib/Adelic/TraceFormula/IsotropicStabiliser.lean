@@ -147,7 +147,7 @@ lemma exists_mul_mul_eq_of_orthogonal_right (h : IsIsotropicFrame J X Y) :
     ∃ c : Matrix n n E, ∀ v : Matrix n n E, Yᴴ * (J * v) = 0 → X * (c * v) = v := by
   obtain ⟨e, b, h_one⟩ := h.spans
   have h_adjoint : eᴴ * Yᴴ + J * X * bᴴ = 1 := by
-    simpa [h.isHermitian.eq, mul_assoc] using congrArg conjTranspose h_one
+    simpa [h.isHermitian.eq] using congrArg conjTranspose h_one
   refine ⟨bᴴ * J, fun v hv ↦ h.isUnit.mul_left_cancel ?_⟩
   calc J * (X * (bᴴ * J * v)) = (eᴴ * Yᴴ + J * X * bᴴ) * (J * v) := by
         simp [add_mul, mul_assoc, hv]
