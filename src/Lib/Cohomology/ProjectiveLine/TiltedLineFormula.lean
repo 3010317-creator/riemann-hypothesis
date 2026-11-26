@@ -896,14 +896,14 @@ private lemma exists_isTodaCancellation_etaClass_of_squares [Algebra A ℂ_[ℓ]
     let z : twoDiscs.obj c := ⟨⟨true⟩, ⟨evalZero _⟩⟩
     have h_origin_app : (origin ⟨true⟩).app c (FreeAddCommGroup.of x) = FreeAddCommGroup.of z :=
       freeAb.desc_of ..
-    erw [NatTrans.comp_app, AddCommGrpCat.comp_apply, h_origin_app]
-    change FreeAddCommGroup.lift _ (FreeAddCommGroup.of z) = _
-    erw [FreeAddCommGroup.lift_apply_of]
-    change Sub.sub (FreeAddCommGroup.of z) (FreeAddCommGroup.of
-      (⟨⟨true⟩, ⟨discTwist χ ⟨true⟩ ≫ evalZero (PadicTest.tilt.obj c)⟩⟩ : twoDiscs.obj c)) = _
-    erw [discTwist_comp_evalZero]
-    change FreeAddCommGroup.of z - FreeAddCommGroup.of z = 0
-    exact sub_self _
+    let z' : twoDiscs.obj c :=
+      ⟨⟨true⟩, ⟨discTwist χ ⟨true⟩ ≫ evalZero (PadicTest.tilt.obj c)⟩⟩
+    have h_twist : (oneSub (discTwist χ)).app c (.of z) = .of z - .of z' :=
+      freeAb.desc_of ..
+    have h_fixed : z' = z :=
+      congrArg (fun t ↦ (⟨⟨true⟩, ⟨t⟩⟩ : twoDiscs.obj c)) (discTwist_comp_evalZero ..)
+    exact (congrArg ((oneSub (discTwist χ)).app c) h_origin_app).trans
+      (h_twist.trans (sub_eq_zero.mpr (congrArg FreeAddCommGroup.of h_fixed.symm)))
   obtain ⟨B, K, j, y, ω, h_toda⟩ := exists_isTodaCancellation (oneSub_comp_gluing χ) (origin ⟨true⟩)
     h_origin
     (cocycle _).shortExact_extension (shortExact_kummerSeq (genericTestOver A)) f α κ (𝟙 _) _
@@ -912,9 +912,9 @@ private lemma exists_isTodaCancellation_etaClass_of_squares [Algebra A ℂ_[ℓ]
   have h_eta : (cocycle (genericTestOver A)).shortExact_extension.extClass.comp
       (H.map _ (𝟙 _) 1 (shortExact_kummerSeq (genericTestOver A)).extClass) rfl =
       etaClass (genericTestOver A) := by
-    erw [H.map_id]
     unfold etaClass
-    rfl
+    exact congrArg (fun x ↦ (cocycle (genericTestOver A)).shortExact_extension.extClass.comp x rfl)
+      (H.map_id (x := (shortExact_kummerSeq (genericTestOver A)).extClass))
   refine ⟨oneSub (discTwist χ), f ≫ (cocycle (genericTestOver A)).extension.g, B, K, j, y, ω, ?_⟩
   rw [← h_eta, ← h_gen]
   exact h_toda
