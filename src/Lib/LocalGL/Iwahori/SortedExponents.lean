@@ -141,15 +141,6 @@ private lemma stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) (j : Fin N
   simp +decide [dominantTorus, stepTorus, apply_ite, ite_apply, hϖ, Monotone]
   omega
 
-omit [Valued F ℤᵐ⁰] in
-/-- For `i < j`, exchanging the entries `i` and `j` of `stepTorus ϖ j` moves one factor `ϖ`
-from the index `i` to the index `j`. -/
-private lemma stepTorus_comp_swap {i j : Fin N} (hij : i < j) :
-    stepTorus ϖ j ∘ Equiv.swap i j = stepTorus ϖ j * mulSingle j ϖ * mulSingle i ϖ⁻¹ := by
-  ext
-  simp [stepTorus, mulSingle_apply]
-  grind
-
 /-- Let `ϖ` be a uniformiser, `j = i + 1`, and `t` dominant with `v (t i) < v (t j)`. Then
 `t / stepTorus ϖ j` is still dominant. -/
 private lemma div_stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) {i j : Fin N}
@@ -362,7 +353,10 @@ lemma IsExponent.exists_sorted (hϖ : v ϖ.val = exp (-1)) (hx : x ∈ levelSpac
   -- the dominant element whose order drops by one from `i` to `j` and nowhere else
   let w : Fin N → Fˣ := stepTorus ϖ j
   have hw : w ∈ dominantTorus := stepTorus_mem_dominantTorus hϖ j
-  have w_swap : w ∘ swap i j = w * mulSingle j ϖ * mulSingle i ϖ⁻¹ := stepTorus_comp_swap hij
+  have w_swap : w ∘ swap i j = w * mulSingle j ϖ * mulSingle i ϖ⁻¹ := by
+    ext
+    simp [w, stepTorus, mulSingle_apply]
+    grind
   -- The mean drops out on vectors fixed by the transvections at `(i, j)`.
   have S_eq {z : ρ} (hz : ∀ a : F, v a ≤ 1 → ρ (transvectionGL hne a) z = z) : S z = s z :=
     hl.apply_permGL_swap_compactMean_of_forall_transvectionGL hcov hz
