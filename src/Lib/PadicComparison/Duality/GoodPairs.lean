@@ -342,12 +342,29 @@ lemma isFiniteLerayHirsch_of_prod_projLine
   refine (congrArg _ map_pullbackAlong).trans ?_
   -- Write the product with `eta` as `sliceEquiv` of the product with `etaClass`, and `etaClass` in
   -- terms of `ξ`.
-  -- `erw`: the cup class of the theory on elements matches the goal only after unfolding.
-  conv_rhs =>
-    erw [map_zero, add_zero, ← TorsionCoeff.sliceEquiv_mulClass,
-      ← map_restrictAlong_etaClass (g := 𝟭 _), ← hξ, map_pullbackAlong, map_comp_assoc,
-      map_homClass, sliceEquiv, AddEquiv.ofBijective_apply, AddMonoidHom.comp_apply,
-      map_pullbackAlong]
+  simp only [map_zero, add_zero]
+  let y : TotalH (t.toTestOver ⋙ relFreeAb V) t.theory.functor :=
+    pullbackAlong (t.toTestOver.whiskerLeft (abCoker.π (ℓ • 𝟙 (relFreeAb V)))) x
+  refine Eq.trans ?_ (t.theory.sliceEquiv_mulClass y)
+  have h_eta : TotalH.map (restrictAlong t.toTestOver) (pullbackAlong (relFreeAb.π S') ξ) =
+      (etaClass t.toTestOver).toTotalH :=
+    (congrArg (TotalH.map (restrictAlong t.toTestOver)) hξ).trans
+      (map_restrictAlong_etaClass (g := 𝟭 _) (φ := t.toTestOver))
+  refine Eq.trans ?_ (congrArg (fun η ↦ sliceEquiv (t.theory.mulClass η y)) h_eta)
+  let π := elementsProj (projLineAlong t.toTestOver)
+  let Φ : AbFunctor t.Base ⥤ AbFunctor (projLineAlong t.toTestOver).Elements := restrictAlong π
+  let ξt : TotalH (t.toTestOver ⋙ relFreeAb S') (tateModule t.toTestOver) :=
+    TotalH.map (restrictAlong t.toTestOver) ξ
+  let σ := t.toTestOver.whiskerLeft (relFreeAb.π S')
+  let τ := tensorPoint (freeAbMap tautologicalSection) (π ⋙ t.toTestOver ⋙ relFreeAb V)
+  have h_mul :
+      t.theory.mulClass (pullbackAlong σ ξt) y =
+        pullbackAlong ((abTensor.obj (t.toTestOver ⋙ relFreeAb V)).map σ)
+          (t.theory.mulClass ξt y) := by
+    rw [TorsionCoeff.mulClass_apply, TorsionCoeff.mulClass_apply, map_pullbackAlong, TotalH.comp_assoc]
+  rw [map_pullbackAlong]
+  change _ = pullbackAlong τ (TotalH.map Φ (t.theory.mulClass (pullbackAlong σ ξt) y))
+  rw [h_mul, map_pullbackAlong]
   refine TotalH.comp_assoc_of_sq ?_ _
   -- What remains is a square of morphisms of functors, which commutes on generators.
   exact (homClass_comp ..).symm.trans
