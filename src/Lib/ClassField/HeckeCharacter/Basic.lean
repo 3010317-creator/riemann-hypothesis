@@ -234,11 +234,8 @@ lemma exists_snd_div_divStar_finIdeleIncl_eq_one :
 /-- If an idele `y` satisfies `y = u * ȳ` for some `u` in `U(1)(𝔸)`, then `y / ȳ = u`. -/
 lemma divStar_eq_of_eq_mul_star {y : (𝔸 E)ˣ} {u : unitary (𝔸 E)}
     (h_eq : (y : 𝔸 E) = (u : 𝔸 E) * star (y : 𝔸 E)) :
-    divStar y = u := by
-  apply Subtype.ext
-  rw [coe_divStar]
-  nth_rw 1 [h_eq]
-  rw [mul_assoc, ← star_mul', Units.mul_inv, star_one, mul_one]
+    divStar y = u :=
+  Subtype.ext <| (Units.mul_inv_eq_iff_eq_mul (star y)).mpr h_eq
 
 /-- Hilbert's Theorem 90 for a field with an involution that negates some nonzero element `j`: an
 element `a` with `a * star a = 1` satisfies `b = a * star b`, that is `a = b / star b`, for some
