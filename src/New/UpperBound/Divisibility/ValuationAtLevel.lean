@@ -79,7 +79,7 @@ lemma norm_detCharAt_diagN_le {i : ℕ} (hi : i ≤ 2 * D.m) (k j : ℕ) (S : Fi
           else if star (D.inducedPlace τ) ∈ S then .mk0 ↑D.N NeZero.out else 1)⁻¹).val.det := by
       -- `g` is unitary, so `det g` at `τ` is `det g⁻¹` at the conjugate embedding. The rewriting is
       -- up to the definitions of `G` and of the unitary group, hence `erw`.
-      erw [G.det_snd, ← star_star (det _), adeleExtension_star, ← det_conjTranspose,
+      rw [G.det_snd, ← star_star (det _), adeleExtension_star, ← det_conjTranspose,
         ← U.inv_val_eq_conjTranspose, RingHom.map_det]
       exact congrArg (fun g : GL (D.X j) ℂ_[D.N] ↦ g⁻¹.1.det) (D.map_adeleExtension_diagPoint j S τ)
     rw [h_det]

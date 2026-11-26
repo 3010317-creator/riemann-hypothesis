@@ -724,7 +724,7 @@ lemma relIndex_comap_eq_det_mul_conj_det {L : Submodule ℤ V} [IsFullRankLattic
     b'.toMatrix fun i ↦ ⟨b i, hF_mem (b i) (b i).prop⟩
   -- `b` is read as a basis of `L.toAddSubgroup.toIntSubmodule`.
   have h_index : relIndex L.toAddSubgroup (L.toAddSubgroup.comap F) = M.det.natAbs := by
-    erw [relIndex_eq_natAbs_det _ _ hF_mem b b']
+    rw [relIndex_eq_natAbs_det _ _ hF_mem b b']
     rfl
   let bℝ : Basis (Fin (finrank ℤ L)) ℝ V := b.ofZLatticeBasis ℝ
   have h_matrix : M.map (↑) = toMatrix bℝ bℝ (F.restrictScalars ℝ) := by

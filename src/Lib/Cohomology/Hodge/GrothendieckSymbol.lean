@@ -692,7 +692,7 @@ lemma snocRel.exists_detTensor_boundary_eq
     refine ⟨_ ⊗ₜ .of ⟨x, hx⟩, rfl, congrArg ULift.up ?_⟩
     simp [volumeForm, ExteriorAlgebra.ιMulti, ↓List.ofFn_succ', a, smul_smul, ← hw, mul_comm]
     -- `erw`, because `hωx` is stated on the subtype of unimodular points.
-    erw [hωx]
+    rw [hωx]
   · -- Otherwise the last column of `l` vanishes, and so do both sides.
     have h_det : det (fun i ↦ (l i).down) = 0 :=
       det_eq_zero_of_column_eq_zero (last d) fun i ↦ (hl i).right.resolve_left hx

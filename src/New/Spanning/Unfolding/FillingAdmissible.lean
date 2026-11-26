@@ -506,7 +506,7 @@ lemma scaledSiegelConst_le : D.filling.scaledSiegelConst ≤
     -- The factor `frameScaleProd` cancels from the definition of the covolume.
     rw [Filling.unipotentCovolume, div_mul_cancel₀ _ D.filling.frameScaleProd_pos.ne', Shape.k,
       card_X₀, h_rank, div_pow]
-    erw [h_order]
+    rw [h_order]
     rfl
   have h_siegel : D.filling.siegelConst = (∏ v : D.Φ, D.frameMass v) *
       (D.shape.openCellConst ^ D.f * (√√|NumberField.discr D.E| ^ D.ϱ) ^ 2) /
