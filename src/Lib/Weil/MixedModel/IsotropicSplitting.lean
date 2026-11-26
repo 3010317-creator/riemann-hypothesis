@@ -441,7 +441,10 @@ lemma iCoord_mul_lAdelic : D.iCoord * D.lAdelic = 0 := by
 lemma iCoord_mul_iAdelic : D.iCoord * D.iAdelic = 1 := by
   have h_point₀ : V₀.x.valᴴ * (V₀.J.map toAdele * V₀.x.val) = stdForm E s₀ := by
     rw [← Matrix.mul_assoc, V₀.gram_point]
-  simp [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc]
+  suffices h : stdForm E s₀ * (V₀.x.valᴴ * (D.iᴴ.map toAdele *
+      (V.J.map toAdele * (D.i.map toAdele * V₀.x.val)))) = 1 by
+    simpa [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc]
+      using h
   rw [← Matrix.mul_assoc (V.J.map toAdele), ← Matrix.mul_assoc (D.iᴴ.map toAdele),
     V.map_conjTranspose_mul_map_J_mul_map]
   simp [h_point₀]
