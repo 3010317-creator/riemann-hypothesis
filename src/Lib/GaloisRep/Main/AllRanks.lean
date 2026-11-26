@@ -101,7 +101,6 @@ section SphericalAllRanks
 
 open New NumberField Matrix Polynomial Filter Fintype Finset AlgHeckeChar AutChar Metric
   Units
-open scoped Classical
 
 /-- Let `E` be a CM field with Weil data, including a splitting character `υ`, and let `e` assign an
 integer to each infinite place. Then there are two characters `μ 0`, `μ 1` of `U(1)(𝔸)` (norm-one
@@ -543,7 +542,6 @@ of the finite adelic group on it by right translation, and `New.heckeSplit` the 
 namespace New.Patching
 
 open NumberField Filter Submodule Set Gf GaloisRep Algebra Fintype
-open scoped Classical
 
 section
 
