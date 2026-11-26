@@ -252,6 +252,19 @@ variable {A : Type} [CommRing A] [StarRing A] [TopologicalSpace A] [MeasureSpace
   {T : 𝔰.Form A} [IsHermitianUnit T.splitGram] {F : PlaceData ι T m} {p q : ℕ → Aˣ}
   {I : Type} [Fintype I] {W : T.G → EuclideanSpace ℂ I} {x : T.G} (Γ Γ' : Gauge F)
 
+/-- A nonzero pivot for a cut frame correlation forces both points to be near, also after
+simultaneous translation by an element of the floor group. -/
+lemma PlaceData.IsCut.isNear_pair_of_pivot_ne_zero (hk : F.IsCut W) {d g z ρ : T.G}
+    (hd : ∀ τ ∈ floorGroup j, d * (τ * z) = τ * (d * z))
+    (h : F.pivotL1Norm j (frameCorrelation W d) g z ≠ 0) (hρ : ρ ∈ floorGroup j) :
+    F.IsNear j (ρ * g) ∧ F.IsNear j (ρ * (d * z)) := by
+  obtain ⟨τ, hτ, h_pair⟩ := exists_ne_zero_of_pivotL1Norm_ne_zero h
+  have near {u : T.G} (hu : W (τ * u) ≠ 0) : F.IsNear j (ρ * u) :=
+    (isNear_mul_iff (mem_partialUnitriangularGroup_of_mem_floorGroup hρ)).2
+      ((hk.isNear_of_ne_zero hu).of_floorGroup_mul hτ le_rfl)
+  refine ⟨near (fun h₀ ↦ h_pair (by simp [h₀])), near (fun h₀ ↦ h_pair ?_)⟩
+  simp [frameCorrelation, hd τ hτ, h₀]
+
 /-! ### Integrals of inverse depth weights and weighted squares over several floors -/
 
 /-- Deep vectors are rare, one floor. Let `Γ` be a gauge for the data `F` of a place, with constant
