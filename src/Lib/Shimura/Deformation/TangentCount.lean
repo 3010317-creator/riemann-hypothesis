@@ -1,4 +1,6 @@
-import Lib.Shimura.CongruenceRelation.KernelReduction
+module
+
+public import Lib.Shimura.CongruenceRelation.KernelReduction
 
 /-!
 # Counting w-torsion points bounds a space of natural semilinear functions by n − 1
@@ -14,6 +16,8 @@ kernel. A morphism `specOver k C ⟶ x.groupScheme` is a `C`-point, and `placeTo
 
 Known; see `Lib.Shimura.Deformation.TangentBound` for sources.
 -/
+
+@[expose] public section
 
 namespace New.Variety
 
@@ -399,7 +403,7 @@ lemma eq_zero_of_isLocalParameter (h_ker : RingHom.ker x.baseHom ≠ ⊥)
       · rw [h_pow_eq_div (pt a + pt b) (a + b) (by simp [h_pt])]
         simp [h_pow_eq_div _ _ (h_pt _), add_div]
       · -- the scalar `a` of `F` acts on `k` through `x.baseHom`
-        show (x.baseHom a * b) ^ i = x.baseHom a * b ^ i
+        change (x.baseHom a * b) ^ i = x.baseHom a * b ^ i
         rw [h_pow_eq_div (a • pt b) (x.baseHom a * b) (by simp [h_pt, hL_smul]),
           h_pow_eq_div _ _ (h_pt b)]
         simp [mul_div_assoc, smul_eq_mul]

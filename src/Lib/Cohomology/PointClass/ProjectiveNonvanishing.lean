@@ -1,7 +1,9 @@
-import Lib.Cohomology.Hodge.FixedPointFormula
-import Lib.Cohomology.PointClass.ProjectiveSpace
-import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
-import Lib.PadicComparison.HodgeTate.Map
+module
+
+public import Lib.Cohomology.Hodge.FixedPointFormula
+public import Lib.Cohomology.PointClass.ProjectiveSpace
+public import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
+public import Lib.PadicComparison.HodgeTate.Map
 
 /-!
 # The Hodge–Tate map does not kill point classes of the projective line and space
@@ -42,6 +44,8 @@ Notions from other files:
 
 Known; see `Lib.Cohomology.PointClass.LinearIndependence` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -152,7 +156,7 @@ private lemma pull_mk₀_comp_contractionPow_one_eq_pull_extClass_oneSubMu
   -- The left side is `α` (the form `ω` on pairs), then one contraction, then the projection
   -- `HodgeTatePair.contractionPow 0` of `⋀ M` to degree zero; with `D` below it is the class of the
   -- cocycle `D` (the form `ω`, then contraction along `f`), followed by that projection.
-  show TotalH.comp (TotalH.homClass α)
+  change TotalH.comp (TotalH.homClass α)
       (TotalH.comp HodgeTatePair.contractionCocycle.cohomClass (HodgeTatePair.contractionPow 0)) = _
   let D : Cocycle (HodgeTatePair.pairAlg ⋙ N) HodgeTatePair.formCoeff :=
     ⟨fun {c d} f ↦ α.app c ≫ HodgeTatePair.contractionCocycle.component f,
@@ -261,7 +265,7 @@ lemma thickeningOver.teichmullerLift_epsTilt (c : PadicTest) :
       algebraMap (WittVector p OFlat) c.Thickening (teichmuller p epsTilt) :=
     congrArg (algebraMap (WittVector p c.TiltRing) c.Thickening) (map_teichmuller ..).symm
   rw [h_lift, ← map_one c.thickeningProj, mulMu_thickeningProj]
-  simp [mu]
+  simp [mu_eq]
 
 /-- Let `V` be covered by charts of dimension one (`New.Variety.IsChartCovered 1 V`) and `U` an
 open subfunctor of `V`. Then restriction from `p`-adic tests to Hodge–Tate pairs is bijective
@@ -361,11 +365,8 @@ lemma projSpace.exists_relative_point_class :
 `thickeningOver.map f` sends `[x]` to `[tilt.map f x]`. -/
 private lemma thickeningOver.teichmullerLift_map {c d : PadicTest} (f : c ⟶ d) (x : tilt.obj c) :
     teichmullerLift d (tilt.map f x) = thickeningOver.map f (teichmullerLift c x) := by
-  -- `with_unfolding_all`: only then is `thickeningOver.map f` seen as a map of localizations,
-  -- which sends `[x]` to `[tilt.map f x]` by `WittVector.map_teichmuller`.
-  with_unfolding_all
-    exact congr(.mk _ $(.symm ((IsLocalization.map_eq (powers_le_comap_powers ..) _).trans
-      (congrArg _ (map_teichmuller ..)))))
+  exact congr(.mk _ $(.symm ((IsLocalization.map_eq (powers_le_comap_powers ..) _).trans
+    (congrArg _ (map_teichmuller ..)))))
 
 /-- The Teichmüller coordinate. For a `p`-adic test with ring `R`, a point `t` of the perfect disc
 over the tilt is an `O♭`-algebra map `O♭[ℚ≥0] → R♭` with coordinate `u = t (T ^ 1)`; it goes to the

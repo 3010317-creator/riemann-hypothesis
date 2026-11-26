@@ -1,4 +1,6 @@
-import New.Spanning.Unfolding.Link
+module
+
+public import New.Spanning.Unfolding.Link
 
 /-!
 # Links, lifts and gauges of a term
@@ -42,6 +44,8 @@ Notions from other files:
   it is `S.ratMiddle = diag(1, -N)`, and `S.linkForm` is the form `diag(T, -T)` for this matrix `T`.
 * `New.genIndex`: the generalised index `[a]` of an adele `a`; it is `0` for a non-unit.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -728,14 +732,6 @@ lemma HasCellRank.abs_norm_subframeMinor {S : Filling E 𝔰} {j : Fin (𝔰.ϱ 
       simp [Finset.piecewise, row, paddedLeading, ha, ite_apply, Matrix.one_apply]
   rw [subframeMinor, ← det_piecewise_one_eq_submatrix_det, h_rows,
     hγ.abs_norm_det_updateRow_paddedLeading]
-
-/-- If `γ` has the cell rank `j`, then the minor `δ_*(γ) = S.subframeMinor j γ` of the products of
-the first `j` vectors of the frame `(e₁, …, e_ϱ, z)` and its last vector `z` with their images under
-`γ` is not zero. -/
-theorem HasCellRank.subframeMinor_ne_zero {S : Filling E 𝔰} {j : Fin (𝔰.ϱ + 2)} {γ : S.G E}
-    [HasPrimitiveRoot5040 E] (hγ : S.HasCellRank j γ) : S.subframeMinor j γ ≠ 0 := by
-  intro h_zero
-  simpa [h_zero, S.N_prime.ne_zero, hγ.minorNorm_pos.ne'] using hγ.abs_norm_subframeMinor
 
 /-- Let the CM field `E` have `r` infinite places and contain a primitive `5040`-th root of unity,
 let `N = S.N` be the prime of the data `S`, and let `γ` have the cell rank `j`. Put

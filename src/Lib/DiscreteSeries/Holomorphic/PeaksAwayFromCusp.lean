@@ -1,4 +1,6 @@
-import Lib.Weil.DualPair.HolomorphicData
+module
+
+public import Lib.Weil.DualPair.HolomorphicData
 
 /-!
 # The peaks of a bounded holomorphic form lie away from the cusps
@@ -49,6 +51,8 @@ C. Poor, D. Yuen, Linear dependence among Siegel modular forms, Math. Ann. 318 (
 1.3; M. Eichler, Math. Ann. 213 (1975) 281-291; for the factorisation, Gill, Golub, Murray,
 Saunders, Math. Comp. 28 (1974) 505-535.
 -/
+
+@[expose] public section
 
 open NumberField Matrix Real Finset UpperHalfPlane Function Prod ComplexConjugate New Space G
   Norms.L2Operator
@@ -354,7 +358,7 @@ lemma New.Rows.norm_I_le_of_periodic {f : ℍ → ℂ} {M : ℝ} (f_per : Period
     intro q _
     obtain hq | rfl : q ≠ 0 ∨ q = 0 := ne_or_eq q 0
     · rw [f_zero.cuspFunction_apply_zero one_pos, mem_closedBall_zero_iff, cuspFunction,
-        Periodic.cuspFunction_eq_of_nonzero _ _ hq]
+        Periodic.cuspFunction_eq_of_ne_zero _ _ hq]
       exact f_bdd _
     · exact Metric.mem_closedBall_self ((norm_nonneg _).trans (f_bdd .I))
   -- the point `z = i` corresponds to `q = exp (-2 π)`

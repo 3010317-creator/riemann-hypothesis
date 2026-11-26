@@ -1,5 +1,7 @@
-import Lib.Weil.Periods.Equivariant
-import New.Spanning.Unfolding.PoincareSeries
+module
+
+public import Lib.Weil.Periods.Equivariant
+public import New.Spanning.Unfolding.PoincareSeries
 
 /-!
 # The Bessel function as an integral over `R(F_∞)`
@@ -38,6 +40,8 @@ Notions from other files:
 Related work on Bessel periods and on second moments is listed in `New.Spanning.Unfolding.Moments`.
 -/
 
+@[expose] public section
+
 open MeasureTheory Measure Matrix ComplexConjugate NumberField
 
 noncomputable section
@@ -64,8 +68,8 @@ the one written with the unit matrix, by the identity on matrices. -/
 def unitSignEquiv (n : Type) [Fintype n] [DecidableEq n] :
     USign (1 : n → ℤˣ) ≃ₜ* U (1 : Matrix n n ℂ) where
   __ := MulEquiv.subgroupCongr (congrArg U signMatrix_one)
-  continuous_toFun := continuous_subtype_val.subtype_mk _
-  continuous_invFun := continuous_subtype_val.subtype_mk _
+  continuous_toFun := continuous_subtypeVal.subtype_mk _
+  continuous_invFun := continuous_subtypeVal.subtype_mk _
 
 /-- The isomorphism `unitSignEquiv` does not change the matrix. -/
 lemma coe_unitSignEquiv {n : Type} [Fintype n] [DecidableEq n] (u : USign (1 : n → ℤˣ)) :
@@ -179,8 +183,6 @@ lemma besselRealToPi_apply_snd (h : S.Fits V l kw Y η) (s : Y.besselReal) (v : 
 /-- The map `besselRealToPi` is continuous, as both components at each place are. -/
 lemma continuous_besselRealToPi (h : S.Fits V l kw Y η) : Continuous h.besselRealToPi := by
   have h_coords : Continuous h.realCoords := h.isEmbedding_realCoords.continuous
-  have h_levi : Continuous fun s : Y.besselReal ↦ Y.leviPart ⟨(s.1, 1), s.2⟩ :=
-    Y.continuous_leviPart.comp (by fun_prop)
   refine continuous_pi fun v ↦ continuous_induced_rng.2 ?_
   change Continuous fun s : Y.besselReal ↦
     (h.realCoords s v, unitSignEquiv 𝔰.κ ((Y.leviPart ⟨(s.1, 1), s.2⟩).1 v))

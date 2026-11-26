@@ -1,5 +1,7 @@
-import Lib.Analytic.ZeroSymmetry
-import TauCeti.NumberTheory.DirichletCharacter.GaussSum
+module
+
+public import Lib.Analytic.ZeroSymmetry
+public import TauCeti.NumberTheory.DirichletCharacter.GaussSum
 
 /-!
 # Gauss sums of primitive characters and the Pólya–Vinogradov bound
@@ -18,6 +20,8 @@ proved here for initial intervals only, with the explicit bound `2 √q (1 + log
 general character is reduced to the primitive character that induces it by a Möbius sieve. Source:
 Pólya 1918, Vinogradov 1918; Davenport, Multiplicative Number Theory; Montgomery–Vaughan Thm 9.18.
 -/
+
+@[expose] public section
 
 open Complex Finset DirichletCharacter Real ZMod ArithmeticFunction Moebius NeZero Nat
 
@@ -136,7 +140,7 @@ lemma apply_eq_sum_moebius_smul_of_changeLevel_eq {M r : ℕ} {ψ : DirichletCha
     χ v = ∑ d ∈ (v.gcd r).divisors, μ d • ψ v := by
   -- The sum of `μ` over the divisors of `n` is `1` for `n = 1` and `0` otherwise.
   rw [← sum_smul, ← coe_mul_zeta_apply, moebius_mul_coe_zeta, ArithmeticFunction.one_apply]
-  show χ v = (if v.gcd r = 1 then 1 else 0 : ℤ) • ψ v
+  change χ v = (if v.gcd r = 1 then 1 else 0 : ℤ) • ψ v
   have h_coprime : IsCoprime (v : ℤ) q ↔ IsCoprime (v : ℤ) M ∧ v.gcd r = 1 := by
     simp only [isCoprime_iff_coprime, hr, coprime_mul_iff_right, ← coprime_iff_gcd_eq_one]
   by_cases hv : IsCoprime (v : ℤ) q

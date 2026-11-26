@@ -1,4 +1,6 @@
-import Lib.Analytic.PrimeNumberTheorem.ZeroFreeRegion
+module
+
+public import Lib.Analytic.PrimeNumberTheorem.ZeroFreeRegion
 
 /-!
 # Primes congruent to `1` modulo `M ^ k` with logarithm in a prescribed window
@@ -24,6 +26,8 @@ consequence of the Siegel–Walfisz theorem. Only one prime is found, in a long 
 moduli that are powers of a fixed multiple of `4`. Source: Montgomery and Vaughan, Multiplicative
 Number Theory I, 2007, Cor. 11.19.
 -/
+
+@[expose] public section
 
 /-! ## A lower bound for Euler's totient -/
 
@@ -154,7 +158,7 @@ lemma New.eventually_norm_logDeriv_entireL_le_near_one (A : ℕ) {M : ℕ} [NeZe
   have hl_pow : 0 < l ^ 25 := pow_pos (by linarith) 25
   replace h_pow : 2 * l ^ 25 ≤ X := (le_abs_self _).trans (h_pow.trans_eq (abs_of_pos hX_pos))
   have h_exp : rexp l = X ^ A * X := by
-    rw [l_def, Real.exp_nat_mul, Real.exp_log hX_pos, pow_succ]
+    rw [l_def, Real.exp_natCast_mul, Real.exp_log hX_pos, pow_succ]
   have h_one : 1 ≤ X ^ A := one_le_pow₀ (by linarith)
   have h_re_lower : 1 - 1 / l ^ 25 ≤ s.re := by
     have h_inv_le : X⁻¹ ≤ 1 / l ^ 25 := by

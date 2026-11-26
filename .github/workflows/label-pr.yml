@@ -2,8 +2,8 @@ name: Label PR
 
 # Labels PRs that touch the build configuration, the challenge statement, the solution, CI or the
 # docs, and labels each PR by size, using the larger of its added and removed line counts: under
-# 100 is extra small, under 1,000 small, under 10,000 medium, under 100,000 large, and 100,000 or
-# more extra large. The counts are GitHub's own for the PR, so the job never downloads file contents.
+# 10 is extra small, under 100 small, under 1,000 medium, under 10,000 large, and 10,000 or more
+# extra large. The counts are GitHub's own for the PR, so the job never downloads file contents.
 # GitHub gives +0 -0 for a PR too large for it to diff, so the size is never taken to be less
 # than the number of paths the PR changes.
 #
@@ -108,13 +108,13 @@ jobs:
           paths=$(tr -cd '\0' < changed | wc -c)
           size=$(( additions > deletions ? additions : deletions ))
           size=$(( size > paths ? size : paths ))
-          if (( size < 100 )); then
+          if (( size < 10 )); then
             size_label='extra small'
-          elif (( size < 1000 )); then
+          elif (( size < 100 )); then
             size_label=small
-          elif (( size < 10000 )); then
+          elif (( size < 1000 )); then
             size_label=medium
-          elif (( size < 100000 )); then
+          elif (( size < 10000 )); then
             size_label=large
           else
             size_label='extra large'

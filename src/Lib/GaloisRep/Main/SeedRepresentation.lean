@@ -1,11 +1,13 @@
-import Lib.ClassField.Avatar.HeckeBaseChange
-import Lib.GaloisRep.KillingPolynomials
-import Lib.GaloisRep.Main.CuspidalTypes
-import Lib.Shimura.Eigenspace
-import Lib.Shimura.IntegralModel.PELDataExistence
-import Lib.Shimura.IntegralModel.TowerExistence
-import Lib.Shimura.ThetaModuli.UniversalFamily
-import Lib.Shimura.Transfer.WeightOccurs
+module
+
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.GaloisRep.KillingPolynomials
+public import Lib.GaloisRep.Main.CuspidalTypes
+public import Lib.Shimura.Eigenspace
+public import Lib.Shimura.IntegralModel.PELDataExistence
+public import Lib.Shimura.IntegralModel.TowerExistence
+public import Lib.Shimura.ThetaModuli.UniversalFamily
+public import Lib.Shimura.Transfer.WeightOccurs
 
 /-!
 # Seed representations: odd rank, a cuspidal type and free jumps
@@ -41,6 +43,8 @@ Notions from other files:
 
 Known; see `Lib.GaloisRep.Main.OddRank` for sources.
 -/
+
+@[expose] public section
 
 open NumberField Matrix New Variety Period IsLocalization RingHom Subgroup Gf
 
@@ -115,7 +119,7 @@ lemma New.GaloisRep.exists_frame_extension {E : Type} [Field E] [CMBase E] {n W 
     have h_scalar :
         IsScalarFrame ((invTransposeGL t.val)⁻¹ * toFinGL y * invTransposeGL u.val)⁻¹ 1 := by
       simpa [mul_assoc] using levelGU.isScalarFrame_inv_one h_mem
-    have hy : y ∈ U (1 : Matrix n n E) :=
+    have hy : y ∈ U (1 : Matrix n n E) := mem_unitaryGroupOf_iff.2 <|
       ((h_frame u).conjTranspose_mul_mul_eq_smul (h_frame t) h_scalar).trans (by simp)
     obtain ⟨c, hc_f, hc⟩ := h_rat y hy
     have h_stab : t⁻¹ * c * u ∈ rightStabilizer f :=
@@ -294,7 +298,7 @@ private lemma New.GaloisRep.card_eq_and_eventually_charpoly_eq_of_hasNoSmallRela
   have h_near : ∀ᶠ g : decompGroup Gal(Ω/E) A in nearOne (decompGroup Gal(Ω/E) A),
       G.aeval (T⁻¹.val * (r g).val.map (algebraMap (PadicAlgCl ℓ) ℂ_[ℓ])).uncurry = 0 := by
     rw [nearOne_eq_nhds_one hj_open]
-    exact continuousAt_subtype_val (x := (1 : decompGroup Gal(Ω/E) A)) hG
+    exact continuousAt_subtypeVal (x := (1 : decompGroup Gal(Ω/E) A)) hG
   have h_twisted : ∀ᶠ g : decompGroup Gal(Ω/E) A in nearOne (decompGroup Gal(Ω/E) A),
       G.aeval (fun i : Fin b × Fin b ↦
         (cyclotomicGp (j g) ^ (-k i.1)).val • j g • T⁻¹.val.uncurry i) = 0 := by

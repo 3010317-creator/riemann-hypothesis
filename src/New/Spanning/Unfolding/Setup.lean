@@ -1,5 +1,7 @@
-import Lib.Adelic.Reduction.DefiniteClassSums
-import New.Spanning.Bessel.Basic
+module
+
+public import Lib.Adelic.Reduction.DefiniteClassSums
+public import New.Spanning.Bessel.Basic
 
 /-!
 # The data, standing hypotheses and amplitudes of the filling theorem
@@ -38,6 +40,8 @@ Notions from other files:
 * `New.frameDisc`: for Z of size ϱ+1 with leading minors D_l, the quantity |D_{ϱ+1}|² − N²|D_ϱ|²,
   where |x|² means x x̄.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -605,7 +609,7 @@ lemma discreteTopology_map_ratToInf {c : S.Classes} (K : Subgroup (S.classUnipot
   have h_inj : Function.Injective toMatrices := fun γ γ' h ↦
     Subtype.ext (funext fun v ↦ Subtype.ext (Units.ext (congrFun h v)))
   have h_cont : Continuous toMatrices := continuous_pi fun v ↦ Units.continuous_val.comp
-    (continuous_subtype_val.comp ((continuous_apply v).comp continuous_subtype_val))
+    (continuous_subtypeVal.comp ((continuous_apply v).comp continuous_subtypeVal))
   refine h_cont.discrete_of_tendsto_cofinite_cocompact
     (tendsto_cofinite_cocompact_iff.2 fun C hC ↦ ?_)
   -- The matrices of `Γ` are among those of 𝖴_c(M), of which only finitely many lie in `C`.

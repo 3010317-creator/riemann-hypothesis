@@ -1,4 +1,6 @@
-import Lib.SiegelWeil.Mass
+module
+
+public import Lib.SiegelWeil.Mass
 
 /-!
 # Products of completions at finite sets of places and approximation of adeles by elements of E
@@ -32,6 +34,8 @@ Notions from other files:
 
 Known; see `Lib.Adelic.Adeles.Basic` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -183,7 +187,6 @@ lemma mem_integralOff {x : 𝔸f E} :
 lemma isOpen_integralOff : IsOpen (integralOff S : Set (𝔸f E)) :=
   AddSubgroup.isOpen_mono (H₁ := (Ô E).toAddSubgroup) (H₂ := (integralOff S).toAddSubgroup)
     (fun _ hx ↦ (mem_integralOff S).2 fun w _ ↦ mem_Ô.1 hx w) isOpen_Ô
-
 
 @[simp]
 lemma adeleOfLocal_mem_integralOff (x : LocProd S) : adeleOfLocal S x ∈ integralOff S :=

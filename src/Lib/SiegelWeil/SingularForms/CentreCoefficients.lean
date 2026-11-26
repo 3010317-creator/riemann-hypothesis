@@ -1,6 +1,8 @@
-import Lib.Adelic.Witt.IwasawaDecomposition
-import Lib.ClassField.HeckeCharacter.SplitTameCharacters
-import Lib.Weil.MixedModel.ZeroTerm
+module
+
+public import Lib.Adelic.Witt.IwasawaDecomposition
+public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+public import Lib.Weil.MixedModel.ZeroTerm
 
 /-!
 # Fourier coefficients along the centre of a unipotent radical and their partial means
@@ -45,6 +47,8 @@ Notions from other files:
 * `New.Space.Splitting.comp`: From splittings of V over V₀ (rank p) and V₀ over V₁ (rank q), the
   splitting of V over V₁ with frames (k, ik'), (l, il') and embedding ii'.
 -/
+
+@[expose] public section
 
 /-!
 ## Laws of the Fourier coefficients along the centre of the radical
@@ -113,7 +117,7 @@ lemma continuous_centreCoeff : Continuous (H.centreCoeff T D) := by
   -- by periodicity the choice of coset representatives does not matter
   simp only [Function.uncurry_apply_pair,
     (isContPeriodic_mul (H.isContPeriodic_radicalCentre hD _) T).apply_out_mk]
-  exact (continuous_stdAddChar.subtype_val.comp (by fun_prop)).mul (hD.1.comp (by fun_prop))
+  exact (continuous_stdAddChar.subtypeVal.comp (by fun_prop)).mul (hD.1.comp (by fun_prop))
 
 /-- For D continuous and left invariant under the rational points, left translation by
 z(M) = `H.radicalCentre M` divides the coefficient at T by ψ(tr TM), ψ the standard additive

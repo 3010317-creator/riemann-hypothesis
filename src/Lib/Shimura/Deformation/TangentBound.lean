@@ -1,5 +1,7 @@
-import Lib.General.Geometry.SerreTheorem
-import Lib.Shimura.Deformation.TangentCount
+module
+
+public import Lib.General.Geometry.SerreTheorem
+public import Lib.Shimura.Deformation.TangentCount
 
 /-!
 # Drinfeld lifting over k[ε] and a bound on the tangent space of the moduli scheme
@@ -47,6 +49,8 @@ without p-divisible groups or crystals. Source: N. Katz, Serre–Tate local modu
 94 (1966); M. Harris, R. Taylor, The Geometry and Cohomology of Some Simple Shimura Varieties
 (2001), III.4.1.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -143,7 +147,7 @@ lemma AgreeModEps.ringChar_smul_and_smul_eq_zero (hq : IsPullbackAlong (sqZeroRe
     have h_tiny : IsInfinitesimal ψ (τ ≫ y) := by
       simpa [IsInfinitesimal, eq_zero_iff_factors_zero_section] using
         h_agree B b (homMk _ h_over ≫ τ)
-    show (τ ≫ y').left = (τ ≫ 0).left
+    change (τ ≫ y').left = (τ ≫ 0).left
     rw [hy' _ ψ τ h_tiny, AddMonObj.comp_zero]
   constructor
   · refine h_test fun {C B} s ψ _ τ h_tiny ↦ ?_

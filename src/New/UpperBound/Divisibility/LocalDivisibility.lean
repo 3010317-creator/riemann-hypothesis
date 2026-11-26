@@ -1,8 +1,10 @@
-import New.UpperBound.Divisibility.ColengthAtLevel
-import New.UpperBound.Divisibility.MarkOperator
-import New.UpperBound.Divisibility.ValuationAtLevel
-import New.UpperBound.Divisibility.ValuationAtNonSplitPrimes
-import New.UpperBound.Size.Estimates
+module
+
+public import New.UpperBound.Divisibility.ColengthAtLevel
+public import New.UpperBound.Divisibility.MarkOperator
+public import New.UpperBound.Divisibility.ValuationAtLevel
+public import New.UpperBound.Divisibility.ValuationAtNonSplitPrimes
+public import New.UpperBound.Size.Estimates
 
 /-!
 # The divisibility of the composite lift at each prime
@@ -74,6 +76,8 @@ Rallis, Langlands' functoriality and the Weil representation, 1982; V. Lafforgue
 valuations p-adiques des valeurs propres des opérateurs de Hecke, 2011; Z. Liu, Test Schwartz
 functions at p for theta lifts of Hida families, arXiv 2510.21644, 2025.
 -/
+
+@[expose] public section
 
 open Module Finset Submodule Real
 
@@ -462,7 +466,6 @@ theorem exists_colengthDvd_gaugeLe_compositeLift {P : Parameters} {D : Data P} {
     -- gain zero.
     rw [allowedLoss, ite_eq_right h_mem, ite_eq_left hN]
     subst hN
-    have h_size : 0 ≤ D.m * D.f * D.b := (HasLogBound.pos D).le
     obtain ⟨l, hl, h_index⟩ : ∃ l : ℕ, l ≤ D.m * D.f * D.b * finrank ℂ D.SourceForm ∧
         ColengthDvd (integralFormsAt D.SourceForm 1) D.upIntegralForms (D.N ^ l) :=
       D.exists_colengthDvd_upIntegralForms_pow

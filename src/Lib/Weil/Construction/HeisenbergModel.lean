@@ -1,4 +1,6 @@
-import Lib.General.Analysis.HolomorphicIntegrals
+module
+
+public import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Heisenberg cocycles, vacua, the reproducing model and Schur's lemma
@@ -29,6 +31,8 @@ by a Heisenberg representation `ρ`. The file proves superposition and Schur's l
 
 Known; see `Lib.Weil.Construction.WeilOperators` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -721,15 +725,6 @@ lemma integral_form_eq_mul_modelInner [LocallyCompactSpace W] {Z : Type*} {m : M
     rw [h_right, h_move, h_vac]
     simp [← conj_modelInner (heisenbergOp y vacElem)]
   rw [← h_right v w, h_form, _root_.smul_apply, smul_eq_mul]
-
-/-- Schur's lemma for a single form: if W is locally compact, a bounded sesquilinear form B on the
-reproducing space that is invariant under all ρ(x) is B(vac, vac) times the inner product. -/
-lemma form_eq_mul_modelInner [LocallyCompactSpace W] (B : Model H →L⋆[ℂ] Model H →L[ℂ] ℂ)
-    (hB_inv : ∀ (x : W) (f g : Model H), B (heisenbergOp x f) (heisenbergOp x g) = B f g)
-    (v w : Model H) : B v w = B vacElem vacElem * modelInner v w := by
-  -- A single form is the integral of a constant family against a point mass.
-  simpa using integral_form_eq_mul_modelInner (ν := .dirac ()) (fun _ : Unit ↦ B)
-    (fun f g ↦ integrable_const (B f g)) (by simpa using hB_inv) v w
 
 end IsVacuum
 

@@ -1,6 +1,8 @@
-import Lib.SiegelWeil.Tower.ConstantTerm
-import Lib.SiegelWeil.Tower.FiniteTateIntegral
-import Lib.SiegelWeil.Tower.LineGaussSums
+module
+
+public import Lib.SiegelWeil.Tower.ConstantTerm
+public import Lib.SiegelWeil.Tower.FiniteTateIntegral
+public import Lib.SiegelWeil.Tower.LineGaussSums
 
 /-!
 # Removing a plane: the constant term on the side of the large space
@@ -49,6 +51,8 @@ times a factor whose size is given by a Hecke L-value. Source: S. Rallis, On the
 conjecture, Compositio Math. 51 (1984), Thm I.1.1; for the unitary case, C. Wu, Irreducibility of
 theta lifting for unitary groups, J. Number Theory 133 (2013), Prop. 3.1.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -198,8 +202,8 @@ theorem integrable_theta_cone [IsBaseAdapted X]
   have h_bound (h : G E t) (q : maxCompact E t' × (InfinitePlace E → ℂ)ˣ) :
       ‖kernel h (coneIntegrand A X μ β x v q)‖ ≤ D * ‖φ q‖ :=
     calc _ ≤ D * (Fock.fockMoment Q (coneIntegrand A X μ β x v q)).toReal :=
-        h_decay _ _ ((hφ q).trans_lt enorm_lt_top).ne
-      _ ≤ _ := by grw [ENNReal.toReal_mono enorm_ne_top (hφ q), toReal_enorm]
+        h_decay _ _ ((hφ q).trans_lt eNorm_lt_top).ne
+      _ ≤ _ := by grw [ENNReal.toReal_mono eNorm_ne_top (hφ q), toReal_eNorm]
   have h_cont : Continuous (Function.uncurry kernel) := by
     simp only [kernel, pairTheta]
     fun_prop

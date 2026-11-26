@@ -1,6 +1,8 @@
-import Lib.Analytic.EntireLFunction
-import Lib.SiegelWeil.Formula.WeilRange
-import Lib.Weil.MixedModel.AdaptedSplitting
+module
+
+public import Lib.Analytic.EntireLFunction
+public import Lib.SiegelWeil.Formula.WeilRange
+public import Lib.Weil.MixedModel.AdaptedSplitting
 
 /-!
 # Siegel–Weil for one vector, Siegel's class sum formula and the ratio of masses
@@ -54,6 +56,8 @@ vectors of norm one and a Gauss sum bound. Source: W. T. Gan, J. Hanke, J.-K. Yu
 formula of Shimura, Duke Math. J. 107 (2001); M. Kirschmer, Definite quadratic and hermitian forms
 with small class number (2016), 4.2.7, 4.2.9.
 -/
+
+@[expose] public section
 
 section OneVector
 
@@ -424,7 +428,7 @@ lemma New.SiegelWeil.siegel_weil_fourierCoeff {E κ : Type} [Field E] [CMType E]
       P (s β +ᵥ z) = (lagrangian (shearSplitting β)).zeroTerm (stdSpace E κ) (twist z) := by
     have h_shift : realAdele (s β +ᵥ z) = toAdele (β : E) + realAdele z := realAdele_add β z
     rw [hP, zeroTerm_shearSplitting (h_twist z), h_shift]
-    refine integral_congr_ae (.of_forall fun x ↦ ?_)
+    congr with x
     simp [mul_sub, ← map_mul, ← mul_assoc, div_eq_inv_mul, add_mul, mul_add, map_sub_eq_div,
       map_add_eq_mul]
     ring
@@ -554,7 +558,7 @@ lemma New.integral_fourierChar_mul_inv_pow {k : ℕ} (hk : 1 ≤ k) {x : ℝ} (h
   have hg : g = 𝓕 p := by
     ext z
     calc g z = (∫ t : ℝ in Set.Ioi 0, (t : ℂ) ^ k * cexp (-(1 + 2 * π * .I * z) * t)) / k ! := by
-          rw [laplace_pow (by simp) k, div_div_cancel_left' (mod_cast k.factorial_ne_zero)]
+          rw [laplace_pow (by simp) k, div_div_cancel_left₀ (mod_cast k.factorial_ne_zero)]
       _ = 𝓕 p z := by
           rw [fourier_eq', ← integral_div, ← integral_indicator measurableSet_Ioi]
           congr with t
@@ -836,7 +840,7 @@ lemma New.norm_sub_one_le_of_normDensity_eq {E n : Type} [Field E] [CMType E] [W
   have h_bound : ‖∫ z in C, F z‖ₑ + ‖∫ z in Cᶜ, F z‖ₑ ≤
       .ofReal (1 + 2⁻¹ ^ (u + 1)) * volÔ E ^ Fintype.card n :=
     calc ‖∫ z in C, F z‖ₑ + ‖∫ z in Cᶜ, F z‖ₑ ≤ (∫⁻ z in C, ‖F z‖ₑ) + ∫⁻ z in Cᶜ, ‖F z‖ₑ :=
-        add_le_add (enorm_integral_le_lintegral_enorm _) (enorm_integral_le_lintegral_enorm _)
+        add_le_add (eNorm_integral_le_lintegral_eNorm _) (eNorm_integral_le_lintegral_eNorm _)
       _ = ∫⁻ z, ‖F z‖ₑ := lintegral_add_compl _ meas
       _ ≤ .ofReal (1 + 2⁻¹ ^ (u + 1)) * volÔ E ^ Fintype.card n := by
         grw [gauss, ← zeta, pow_one]

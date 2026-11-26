@@ -1,5 +1,7 @@
-import Lib.General.NumberTheory.CoefficientRings
-import Lib.PadicHodge.TateSen
+module
+
+public import Lib.General.NumberTheory.CoefficientRings
+public import Lib.PadicHodge.TateSen
 
 /-!
 # Semilinear forms of given weight: independence, finiteness, and jumps read off a basis
@@ -30,6 +32,8 @@ Notions from other files:
 
 Known; see `Lib.PadicHodge.Crystalline.Regularity` for sources.
 -/
+
+@[expose] public section
 
 namespace New.Period
 
@@ -88,7 +92,7 @@ lemma mem_hodgeTateMaps_of_span [Algebra.IsAlgebraic ℤ_[p] R] {ι : Sort*} {s 
   | smul r y _ hy =>
     -- the scalar `γ r = δ r` is algebraic, so it is fixed by `toGp g` for `g` near 1
     filter_upwards [hy, eventually_nearOne_apply_eq Γ (δ r)] with g hgy h_fix
-    simp [hgy, hδ, smul_coe_Cp, h_fix]
+    simp [hgy, hδ, h_fix]
 
 variable [F : Module.Finite R T]
 

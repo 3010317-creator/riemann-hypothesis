@@ -1,4 +1,6 @@
-import Lib.General.Measure.IdempotentKernel
+module
+
+public import Lib.General.Measure.IdempotentKernel
 
 /-!
 # Quotient measures via cutoffs: unfolding, covolume, unimodularity, periodic means
@@ -35,6 +37,8 @@ applications to Palm and related kernels, Probab. Theory Related Fields 139 (200
 cited in D. Gentner, G. Last, Math. Z. 267 (2011), §2); for the classical form, N. Bourbaki,
 Intégration VII, 1963.
 -/
+
+@[expose] public section
 
 /-!
 ## Cutoff weights and the quotient measure
@@ -403,22 +407,6 @@ noncomputable abbrev cosetProdEquiv : (G ⧸ N) × N ≃ G where
     (↑γ⁻¹, ⟨γ⁻¹⁻¹ * (↑γ⁻¹ : G ⧸ N).out, QuotientGroup.eq.1 (↑γ⁻¹ : G ⧸ N).out_eq.symm⟩)
   left_inv x := by aesop
   right_inv x := by aesop
-
-omit [TopologicalSpace G] in
-lemma cosetProdEquiv_apply (q : G ⧸ N) (u : N) :
-    cosetProdEquiv N (q, u) = (u : G) * q.out⁻¹ := rfl
-
-omit [TopologicalSpace G] in
-/-- The coset component of `γ` is the left coset of `γ⁻¹`. -/
-lemma cosetProdEquiv_symm_apply_fst (γ : G) :
-    ((cosetProdEquiv N).symm γ).1 = ((γ⁻¹ : G) : G ⧸ N) := rfl
-
-omit [TopologicalSpace G] in
-/-- The `N`-component of `γ` is `γ` times the chosen representative of the left coset of
-`γ⁻¹`. -/
-lemma cosetProdEquiv_symm_apply_snd (γ : G) :
-    (((cosetProdEquiv N).symm γ).2 : G) = γ * ((γ⁻¹ : G) : G ⧸ N).out := by
-  simp [cosetProdEquiv]
 
 instance : DiscreteTopology (Γ.subgroupOf N) :=
   have h_cont : Continuous (Subtype.val : N → G) := continuous_subtype_val

@@ -1,6 +1,8 @@
-import Lib.Adelic.Reduction.FiniteVolume
-import Lib.Shimura.AbelianScheme.Basic
-import Lib.Shimura.Transfer.MarkedPairs
+module
+
+public import Lib.Adelic.Reduction.FiniteVolume
+public import Lib.Shimura.AbelianScheme.Basic
+public import Lib.Shimura.Transfer.MarkedPairs
 
 /-!
 # Trace formula for algebraic forms, finiteness of signed frame classes, the definite side
@@ -43,6 +45,8 @@ Notions from other files:
 Known; see `Lib.Shimura.TraceFormula.MarkedDefiniteSums` and
 `Lib.Shimura.Uniformisation.AppellHumbert` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -393,7 +397,7 @@ lemma finite_definiteClass (hN : IsNeat n 𝔑) : Finite (DefiniteClass n 𝔑) 
   have h_fin : {c : DoubleCosets toFinGL.range (levelGU n 𝔑) | IsSignedFrame c.out 1}.Finite :=
     h_classes_finite.subset fun c hc ↦ ⟨c.out, ⟨1, hc⟩, c.out_eq⟩
   have := h_fin.to_subtype
-  exact Finite.of_equiv _ (Equiv.subtypeEquivRight fun _ ↦ Set.mem_setOf_eq.to_iff)
+  exact Finite.of_equiv _ (Equiv.subtypeEquivRight fun _ ↦ Set.mem_ofPred_eq.to_iff)
 
 namespace DefiniteClass
 

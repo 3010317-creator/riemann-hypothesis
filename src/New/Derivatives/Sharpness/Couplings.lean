@@ -1,4 +1,6 @@
-import New.Derivatives.Sharpness.LeastValuation
+module
+
+public import New.Derivatives.Sharpness.LeastValuation
 
 /-!
 # Least valuations along couplings
@@ -37,6 +39,8 @@ Notions from other files:
   of degree `ν` in a product `∏ (H_c Θ)(z_c)` over `n` copies, where `Θ = C.thetaProd μ m` and the
   `H_c` run through the ring `C.multiSeriesRing μ`.
 -/
+
+@[expose] public section
 
 /-! ## Families of couplings -/
 
@@ -458,7 +462,7 @@ lemma isUnit_of_rescale_thetaProd_eq [PadicPlace p] {J X : Type} [Fintype J] [Fi
     (hW : (C.thetaProd μ m).rescale (fun _ : X ↦ ϖ) = seriesToCp W * expSubst (κ • seriesToCp Ξ)) :
     IsUnit W := by
   have h_const : (W.constantCoeff : ℂ_[p]) = 1 := by
-    simpa [constantCoeff_thetaProd, constantCoeff_subst_of_constantCoeff_eq_zero, hΞ] using
+    simpa [constantCoeff_thetaProd, PowerSeries.constantCoeff_subst_of_constantCoeff_zero, hΞ] using
       (congrArg (coeff 0) hW).symm
   rw [isUnit_iff_constantCoeff, isUnit_integer_iff_norm_eq_one, h_const, norm_one]
 

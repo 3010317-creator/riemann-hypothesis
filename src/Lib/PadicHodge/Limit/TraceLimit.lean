@@ -1,6 +1,8 @@
-import Lib.GaloisRep.Main.LocalConditions
-import Lib.General.LinearAlgebra.TensorChains
-import Lib.PadicHodge.Limit.CrystallineLimit
+module
+
+public import Lib.GaloisRep.Main.LocalConditions
+public import Lib.General.LinearAlgebra.TensorChains
+public import Lib.PadicHodge.Limit.CrystallineLimit
 
 /-!
 # Hodge–Tate jumps with bounded denominators and local conditions at limits of traces
@@ -78,6 +80,8 @@ représentations cristallines, Compositio Math. 140 (2004) 1473–1498; for the 
 the image of the group ring, P. Wake, C. Wang-Erickson, Deformation conditions for
 pseudorepresentations, Forum Math. Sigma 7 (2019).
 -/
+
+@[expose] public section
 
 /-!
 ## Bounded denominators of Hodge–Tate projectors for jumps in [0, n]
@@ -636,7 +640,7 @@ theorem tendsto_jump (h : IsTraceLimit r A F a ρ) [PadicPlaceEmbedding E A ℓ]
     (hL η).factors o y
   have h_iso {x : PadicAlgCl ℓ} : ‖γ x‖ = ‖x‖ := by
     obtain ⟨g, hg⟩ := exists_gp_eq_algHom γ
-    simp [hg, ← smul_coe_Cp]
+    simp [hg, ← UniformSpace.Completion.algEquiv_smul_coe]
   -- In the twist the jump w is w - (-d).
   obtain ⟨t, ht⟩ := exists_uniform_trace_sum_eq_jump Δ (2 * d) (w - -d)
   choose z hz h_proj using fun θ ↦ ht (finBasis ℤ_[ℓ] (L θ)) 1 ((hL θ).isCrystallineUpTo (h_in θ))

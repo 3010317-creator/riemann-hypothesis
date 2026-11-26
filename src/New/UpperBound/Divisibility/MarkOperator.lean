@@ -1,4 +1,6 @@
-import New.UpperBound.Divisibility.HeckeEdges
+module
+
+public import New.UpperBound.Divisibility.HeckeEdges
 
 /-!
 # Elementary divisors of one scaled Hecke operator on the integral source forms
@@ -39,6 +41,8 @@ integral scalings of Hecke operators, are known. Related work: Arsovski, Limitin
 supersingularities, 2019; Liu–Truong–Xiao–Zhao, Slopes of modular forms and geometry of eigencurves,
 2023; Fakhruddin–Pilloni, Hecke operators and the coherent cohomology of Shimura varieties, 2021.
 -/
+
+@[expose] public section
 
 namespace New.Data
 
@@ -219,7 +223,7 @@ lemma coe_letterEmbedding (σ : D.Φ) (hσ : inducedPlace σ = l ∨ inducedPlac
 lemma not_isUnit_natCast_embValRing : ¬IsUnit (p : embValRing) := by
   rw [← mem_nonunits_iff, ← IsLocalRing.mem_maximalIdeal, Valuation.mem_maximalIdeal_iff]
   change ‖ιₚ (p : ℂ)‖ < 1
-  simpa using norm_p_lt_one
+  simpa using PadicComplex.norm_p_lt_one p
 
 /-- Let `D` be data for the parameters `P`, let `p` be inert in the imaginary quadratic field, let
 `l` be a split finite place of `D.E` and let `e` be odd. The infinite places form a group `(ℤ/q₁)ˣ`,

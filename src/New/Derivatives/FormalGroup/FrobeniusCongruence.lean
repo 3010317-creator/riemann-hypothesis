@@ -1,4 +1,6 @@
-import Lib.CM.FormalGroup.FormalParameter
+module
+
+public import Lib.CM.FormalGroup.FormalParameter
 
 /-!
 # Frobenius congruence for `θ` and the coefficient of `z ^ (p - 1)` in `x`
@@ -33,6 +35,8 @@ Notions from other files:
 * `New.CMLattice.norm_coeff_taylorVia_translatedX_eq_one`: at an inert prime `p` the coefficient
   of `z ^ (p - 1)` in the series `x` is a unit.
 -/
+
+@[expose] public section
 
 /-!
 ## The Frobenius congruence for `θ`
@@ -361,7 +365,7 @@ lemma norm_coeff_pow_taylorVia_translatedX_recursion_lt_one (hp : chiK d p = -1)
         simp only [hx, C.derivative_pow_mul_derivative_taylorVia_translatedX ιₚ n, map_add,
           coeff_smul, smul_eq_mul]
     _ = ‖coeff p (x ^ n * d⁄dX x)‖ * ‖(p : ℂ_[p])‖ := by rw [h_deriv, norm_mul]
-    _ < 1 := (mul_le_of_le_one_left (norm_nonneg _) h_int).trans_lt norm_p_lt_one
+    _ < 1 := (mul_le_of_le_one_left (norm_nonneg _) h_int).trans_lt (PadicComplex.norm_p_lt_one p)
 
 omit [PrimeSevenModEight d] in
 /-- The coefficient of `z ^ (2 m)` in `x ^ m` is `1`, as the Taylor series `x` of

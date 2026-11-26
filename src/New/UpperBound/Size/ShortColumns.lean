@@ -1,7 +1,9 @@
-import Lib.CM.FormalGroup.PrimeNotation
-import Lib.GLn.Dual
-import New.UpperBound.Kernels.JetConjugatesAndBounds
-import New.UpperBound.Objects.Columns
+module
+
+public import Lib.CM.FormalGroup.PrimeNotation
+public import Lib.GLn.Dual
+public import New.UpperBound.Kernels.JetConjugatesAndBounds
+public import New.UpperBound.Objects.Columns
 
 /-!
 # Prime-by-prime divisibility measures; short forms span the ramified source forms
@@ -43,6 +45,8 @@ Notions from other files:
 The exponents are used in `New.UpperBound.Divisibility.LocalDivisibility`, the short forms in
 `New.Reduction.ShortAndEnough` and `New.Determinant.AuxiliaryForms.SpanningForms`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -498,8 +502,8 @@ lemma iInf_ker_sum_pow_eq_range {G V ι : Type*} [CommGroup G] [AddCommGroup V] 
       have h_sum : ↑r - σ w = ∑ i ∈ range r, (1 - y w ^ i) := by simp [σ]
       rw [h_sum]
       exact dvd_sum fun i _ ↦ one_sub_dvd_one_sub_pow (y w) i
-    obtain ⟨q, hq⟩ : ∏ w, (1 - y w) ∣ ∏ w, (↑r - σ w) :=
-      prod_dvd_prod_of_dvd _ _ fun w _ ↦ h_dvd w
+    have h_dvd' : ∀ w ∈ (univ : Finset ι), 1 - y w ∣ ↑r - σ w := fun w _ ↦ h_dvd w
+    obtain ⟨q, hq⟩ := prod_dvd_prod_of_dvd _ _ h_dvd'
     rw [← smul_mem_iff _ (pow_ne_zero _ hr), ← h_scalar univ, hq, map_mul]
     exact ⟨ρ q φ, (Module.End.mul_apply _ _ φ).symm⟩
   · -- `σ w * (1 - z w) = 1 - z w ^ r` acts as `0`.
@@ -934,8 +938,8 @@ lemma finrank_ker_ramifyingOp_le {P : Parameters} (D : Data P) (s : Finset D.piN
     have h_ker : finrank ℂ (D.ramifyingOp (cons w s hw)).ker ≤
         finrank ℂ (1 - D.centralRep (D.scalingGenerator w)).ker +
           finrank ℂ (D.ramifyingOp s).ker := by
-      rw [D.ramifyingOp_cons w hw]
-      exact finrank_ker_mul_le _ _
+      exact (congrArg (fun f : Module.End ℂ D.SourceForm ↦ finrank ℂ f.ker)
+        (D.ramifyingOp_cons w hw)).trans_le (finrank_ker_mul_le _ _)
     calc (finrank ℂ (D.ramifyingOp (cons w s hw)).ker : ℝ)
         ≤ finrank ℂ (1 - D.centralRep (D.scalingGenerator w)).ker +
             finrank ℂ (D.ramifyingOp s).ker := by exact_mod_cast h_ker
@@ -995,12 +999,7 @@ lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
     simp [n]
   have h_bound : 4 ^ D.f * (6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 : ℝ) ^
       (6 * (D.k * D.f + D.f * D.a)) ≤ D.errorUnit.exp :=
-    Real.le_exp_of_log_le <| D.le_of_hasLogBound (h_exp := by
-      obtain ⟨⟨_, _, _, _⟩, _, _, _, _, _⟩ := New.Data.scale_inequalities' D
-      -- `scale_arith D` splits the `max`es into too many cases; distribute them instead
-      simp only [Bool.false_eq_true, ↓reduceIte, Nat.cast_ofNat, neg_zero, ← max_add_add_right,
-        ← max_add_add_left, ← max_sub_sub_right, max_lt_iff]
-      constructorm* _ ∧ _ <;> linarith)
+    Real.le_exp_of_log_le D.le_of_hasLogBound
   have h_rank : Fintype.card (D.X 0) = D.k := by rw [card_X, n, zero_mul, add_zero]
   refine New.span_isShort_eq_top D.classAut_levelX_zero_eq_bot P.conductor_mem_differentIdeal
     (Nat.add_le_add_left h_boxes _) ?_
@@ -1018,8 +1017,8 @@ lemma span_isShort_ramifiedSourceForms_eq_top {P : Parameters} (D : Data P) :
       {φ : D.SourceForm | IsShort D.errorUnit.exp φ.val} := by
     intro φ hφ
     simpa [Z, card_piNPlaces, mul_div_cancel₀] using D.isShort_ramifyingOp univ hφ
-  exact span_setOf_mem_eq_top_of_eq_range D.ramifiedSourceForms_eq_range D.span_isShort_eq_top
-    h_maps
+  exact span_setOf_mem_eq_top_of_eq_range (T := {φ : D.SourceForm | IsShort D.errorUnit.exp φ.val})
+    D.ramifiedSourceForms_eq_range D.span_isShort_eq_top h_maps
 
 end Data
 

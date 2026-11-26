@@ -1,6 +1,8 @@
-import Lib.DiscreteSeries.Bessel.FrameFibre
-import Lib.DiscreteSeries.Bruhat.ComplexPlace
-import New.Spanning.Bessel.GramSection
+module
+
+public import Lib.DiscreteSeries.Bessel.FrameFibre
+public import Lib.DiscreteSeries.Bruhat.ComplexPlace
+public import New.Spanning.Bessel.GramSection
 
 /-!
 # The mean value inequality over the Gram matrix of two frames
@@ -48,6 +50,8 @@ Part of the bound on the open cell for the Bessel integrals at a real place; see
 analytische Theorie der quadratischen Formen, Ann. of Math. 36 (1935).
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace New.RealPlace
@@ -66,7 +70,7 @@ theorem lintegral_fixerHaar {φ : 𝔰.G₁ → ℝ≥0∞} (hφ : Measurable φ
     ∫⁻ s : 𝔰.G₁, φ s ∂fixerHaar 𝔰 =
       ∫⁻ h : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ), ∫⁻ u : besselU0, φ (u.val * embedH h) ∂𝔰.besselHaar₀ := by
   rw [fixerHaar, Floors.lintegral_mconv_symm hφ, lintegral_map (by fun_prop) (by fun_prop)]
-  exact lintegral_congr fun h ↦ lintegral_map (by fun_prop) measurable_subtype_coe
+  exact lintegral_congr fun h ↦ lintegral_map (by fun_prop) measurable_subtypeVal
 
 /-- The integral for `fixerHaar 𝔰`, the measure on the fixer of the frame, in coordinates: the
 iterated integral of the value at `unipotentOf q * embedH h`, for Lebesgue measure in the parameter

@@ -1,5 +1,7 @@
-import Lib.PadicComparison.Crystalline.ComparisonMap
-import Lib.PadicComparison.HodgeTate.PeriodMap
+module
+
+public import Lib.PadicComparison.Crystalline.ComparisonMap
+public import Lib.PadicComparison.HodgeTate.PeriodMap
 
 /-!
 # Crystallinity of p-adic cohomology of charted proper schemes and Frobenius congruences
@@ -78,6 +80,8 @@ through Katz–Messing, Some consequences of the Riemann hypothesis for varietie
 1974, Invent. Math. 23, Thm 2(2); for the ramified base, Berthelot–Ogus, F-isocrystals and de Rham
 cohomology I, 1983, Invent. Math. 72.
 -/
+
+@[expose] public section
 
 /-!
 ## A Frobenius relation on p-adic tests modulo an element of O_C
@@ -667,7 +671,7 @@ private lemma sum_linearFrob_apply_eq_zero {p : ℕ} [ThePrime p] {R : CommRingC
     J Y (tensorAction Bmax ((.ofAdd (a i), toGp (γ i)) : FrobGal)
       (ellAdicCohom.galoisAction R Ω Γ Y n (γ i)) (C z))
   simp [linearFrob_apply h_crys.isPotentiallyCrystalline (hW _), h_fixed, hJ.natural, Ψ, H.map_map]
-  show ∑ i, m i • H.map Ψ (freeAb.map T.ι ≫ freeAb.map (testPoints.map (u i))) n (y i) = 0
+  change ∑ i, m i • H.map Ψ (freeAb.map T.ι ≫ freeAb.map (testPoints.map (u i))) n (y i) = 0
   -- `δ i` takes a point `w` of `T` to `u i w`; `red i` takes it on to the point over the period
   -- ring modulo divided powers, composed with `Frob ^ a i`.
   let δ (i : ι) : T.toFunctor ⟶ V'.toFunctor := T.homOfLe (iInf_le _ i) ≫ Subfunctor.fromPreimage ..

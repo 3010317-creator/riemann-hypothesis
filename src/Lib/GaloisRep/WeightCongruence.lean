@@ -1,5 +1,7 @@
-import Lib.Adelic.AutomorphicForms.PAdicGauge
-import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
+module
+
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
+public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
 
 /-!
 # ℓ-adic models of algebraic forms and congruences that change the weight
@@ -58,6 +60,8 @@ Paškūnas, On the density of supercuspidal points of fixed regular weight, J. �
 (2020); J. Fintzen, S. W. Shin, Congruences of algebraic automorphic forms and supercuspidal
 representations, Camb. J. Math. 9 (2021); Kaplansky, Proc. AMS 1 (1950).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -351,7 +355,7 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
   let κ (d : Φ → ℕ) (τ : Φ) (h : ℕ) : ℕ := (N + 1) ^ (4 * (N - h)) + if h = 1 then d τ else 0
   let E (F : MatrixPoly (Σ _ : Φ, Fin N) k) : C(X, k) :=
     ⟨fun γ ↦ (rowSubst (fun τ ↦ (z γ τ).1) F).eval y, by
-      simp [rowSubst, eval₂_eq, hom_bind₁]
+      simp [rowSubst, eval₂_eq]
       fun_prop⟩
   let S : Submodule k C(X, k) :=
     span k {E F | (d) (F ∈ nabla k Sigma.fst (diagramWeight (fun _ ↦ N + 1) (κ d)))}

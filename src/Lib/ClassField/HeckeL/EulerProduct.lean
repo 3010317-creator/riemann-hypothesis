@@ -1,4 +1,7 @@
-import Lib.ClassField.Places.Ideles
+module
+
+public import Lib.ClassField.Places.Ideles
+public import TauCeti.NumberTheory.RamificationInertia.Tower
 
 /-!
 # Euler products over primes of a number field and densities at primes of degree one
@@ -34,6 +37,8 @@ Notions from other files:
 
 Known; see `Lib.ClassField.HeckeL.ContinuationAtOne` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -86,14 +91,6 @@ def HasPrimeDensity (l : ℂ) : Prop :=
       HasSum (fun v : FinPlace K ↦ ite v.q.Prime (a v) 0 * v.q ^ (-s : ℂ))
         (x s - l * Real.log (s - 1))
 
-/-- At most `[K : ℚ]` primes of `K` lie over a maximal ideal of `ℤ`. -/
-lemma ncard_primesOver_le_finrank (p : Ideal ℤ) [p.IsMaximal] :
-    (p.primesOver (𝓞 K)).ncard ≤ finrank ℚ K := by
-  -- Each term of the fundamental identity `∑ e f = [K : ℚ]` is at least `1`.
-  rw [← RingOfIntegers.rank, ← sum_ramification_inertia_eq_finrank p (𝓞 K),
-    ← Set.fintypeCard_eq_ncard, Fintype.card_eq_sum_ones]
-  exact sum_le_sum fun P _ ↦ mul_pos (P.1.ramificationIdx_pos ℤ) (P.1.inertiaDeg_pos ℤ)
-
 /-- For a finite set `u` of primes of `K`, the sum over `v ∈ u` of `1 / p ^ 2`, with `p` the least
 prime factor of the norm `v.q`, is at most the degree `[K : ℚ]`. -/
 lemma sum_inv_minFac_sq_le_finrank (u : Finset (FinPlace K)) :
@@ -105,7 +102,9 @@ lemma sum_inv_minFac_sq_le_finrank (u : Finset (FinPlace K)) :
     simp [← (v.asIdeal.under ℤ).absNorm_pow_inertiaDeg v.asIdeal,
       (Nat.absNorm_under_prime _).pow_minFac (inertiaDeg_pos ..).ne']
   have h_group (v : FinPlace K) : #{w ∈ u | w.q.minFac = v.q.minFac} ≤ finrank ℚ K := by
-    grw [← ncard_primesOver_le_finrank (v.asIdeal.under ℤ), ← Set.ncard_coe_finset]
+    grw [← RingOfIntegers.rank,
+      ← TauCeti.RamificationInertia.ncard_primesOver_le_finrank (v.asIdeal.under ℤ),
+      ← Set.ncard_coe_finset]
     refine Set.ncard_le_ncard_of_injOn _ (fun w hw ↦ ⟨w.isPrime, ⟨ext ?_⟩⟩) asIdeal_injective.injOn
       (IsDedekindDomain.primesOver_finite ..)
     -- `w` lies over the prime below `v`: two ideals of `ℤ` with the same norm are equal.

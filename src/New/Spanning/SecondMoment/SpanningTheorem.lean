@@ -1,8 +1,10 @@
-import New.Determinant.AuxiliaryForms.RegularParameters
-import New.Spanning.MainTerm.BadTypes
-import New.Spanning.Multiplicities.EqualMultiplicities
-import New.Spanning.Unfolding.Moments
-import New.Spanning.Unfolding.SeriesPeriod
+module
+
+public import New.Determinant.AuxiliaryForms.RegularParameters
+public import New.Spanning.MainTerm.BadTypes
+public import New.Spanning.Multiplicities.EqualMultiplicities
+public import New.Spanning.Unfolding.Moments
+public import New.Spanning.Unfolding.SeriesPeriod
 
 /-!
 # The dimension of the target and one good translate of the Poincaré map
@@ -47,6 +49,8 @@ literature. Related work: Petersson, Über die Entwicklungskoeffizienten der aut
 compactly supported Poincaré series and existence of cusp forms, 2010.
 -/
 
+@[expose] public section
+
 namespace New.Data
 
 variable {P : Parameters} (D : Data P)
@@ -54,14 +58,6 @@ variable {P : Parameters} (D : Data P)
 /-! ## The dimension of the target -/
 
 section TargetDimension
-
-/-- At every infinite place `v`, the parameter `D.paramW v` decreases along the numbering
-`D.basisNumber` of the basis of `Y₀`: exactly `D.basisNumber i` of its entries exceed the entry at
-`i` (`decreasingPosition` is the number of larger entries). -/
-lemma decreasingPosition_paramW (v : D.Φ) (i : D.RowIndex) :
-    decreasingPosition (D.paramW v) i = D.basisNumber i :=
-  D.card_filter_basisNumber (q := fun j : D.RowIndex ↦ D.paramW v i < D.paramW v j) 0
-    (D.basisNumber i) (by simp [paramW_lt_iff]) (by simp)
 
 /-- The forms of principal level on the definite space `D.spaceW D.m`, where the level is free, have
 dimension `#Ḡ · mass_r` times the product over the infinite places of the formal degrees of the

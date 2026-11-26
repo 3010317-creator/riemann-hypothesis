@@ -1,5 +1,7 @@
-import Lib.ClassField.Places.LocalFields
-import Lib.PadicHodge.PeriodRings.AxTheorem
+module
+
+public import Lib.ClassField.Places.LocalFields
+public import Lib.PadicHodge.PeriodRings.AxTheorem
 
 /-!
 # Decomposition groups of places above p as Galois groups of local fields in ℚ̄_p
@@ -46,6 +48,8 @@ Notions from other files:
 Known; see `Lib.ClassField.Places.LocalFields` for sources.
 -/
 
+@[expose] public section
+
 namespace New
 
 /-!
@@ -65,7 +69,7 @@ variable {p : ℕ} [Fact p.Prime] {K : Type*} [Field K]
 
 /-- The place of `Ω` induced by `ι : Ω → ℚ̄_p` lies above `p`. -/
 lemma valuation_comap_intQpBar_lt_one : ((intQpBar p).comap ι) p < 1 := by
-  simp [comap_apply_lt_one_iff, norm_p_lt_one]
+  simp [comap_apply_lt_one_iff, PadicAlgCl.norm_p_lt_one]
 
 /-- The valuation ring that `ℚ̄_p` induces on `ℚ_p` is `ℤ_p`: both consist of the elements of norm
 at most `1`. -/
@@ -264,11 +268,8 @@ lemma exists_inducesPlace [NumberField K] {ι : Ω →+* PadicAlgCl p} {A : Valu
     have h_range :
         g ∈ ((U : Subgroup (Gp p)).subtype.comp res.symm.toMonoidHom).range ↔
           g ∈ (U : Subgroup (Gp p)) := by
-      constructor
-      · rintro ⟨σ, rfl⟩
-        exact (res.symm σ).prop
-      · intro hg
-        exact ⟨res ⟨g, hg⟩, by simp⟩
+      rw [MonoidHom.range_comp, MonoidHom.range_eq_top_of_surjective _ res.symm.surjective,
+        ← MonoidHom.range_eq_map, Subgroup.range_subtype]
     have h_fix :
         g ∈ (U : Subgroup (Gp p)) ↔ ∀ x : K, g (ι (algebraMap K Ω x)) = ι (algebraMap K Ω x) := by
       simp [U, ← AlgEquiv.smul_def, forall_mem_adjoin_smul_eq_self_iff, k]
@@ -793,26 +794,6 @@ lemma ramification_in_tower (h : IsPlaceOver A v) (U : Subgroup Γ) [hU_open : F
   -- If `decompGroup Γ A ≤ U`, the index `e * f` is `1`, so `e = f = 1`.
   obtain ⟨h_e, h_f⟩ := mul_eq_one.mp (h_ef.trans (U.relIndex_eq_one.mpr hU))
   simp [h_q, h_ord_L, h_e, h_f]
-
-/-- Let `A` lie over `v` in `K` and over `w` in `L`, where `U`, open in `Γ`, is the Galois group of
-`Ω / L`. If `U` contains the inertia group of `A`, then `w` is unramified over `K`. -/
-lemma ramificationIdx_eq_one_of_inertiaGroup_le (h : IsPlaceOver A v) (U : Subgroup Γ)
-    [Fact U.IsOpen] {L : Type*} [Field L] [EmbeddedNumberField L] [IsProGalois U L Ω] [Algebra K L]
-    [IsScalarTower K L Ω] {w : FinPlace L} (hw : IsPlaceOver A w) (hI : inertiaGroup Γ A ≤ U) :
-    w.asIdeal.ramificationIdx (𝓞 K) = 1 := by
-  obtain ⟨-, h_unram, -⟩ := h.ramification_in_tower U hw
-  exact h_unram hI
-
-/-- Let `A` lie over `v` in `K` and over `w` in `L`, where `U`, open in `Γ`, is the Galois group of
-`Ω / L`. The index of `U ⊓ decompGroup Γ A` in `decompGroup Γ A` is the ramification index times
-the residue degree of `w` over `K`. -/
-lemma relIndex_decompGroup_eq (h : IsPlaceOver A v) (U : Subgroup Γ) [Fact U.IsOpen] {L : Type*}
-    [Field L] [EmbeddedNumberField L] [IsProGalois U L Ω] [Algebra K L] [IsScalarTower K L Ω]
-    {w : FinPlace L} (hw : IsPlaceOver A w) :
-    U.relIndex (decompGroup Γ A) =
-      w.asIdeal.ramificationIdx (𝓞 K) * w.asIdeal.inertiaDeg (𝓞 K) := by
-  obtain ⟨-, -, h_index⟩ := h.ramification_in_tower U hw
-  exact h_index
 
 /-- Let A lie over v. An open subgroup of `Γ` that contains the inertia group of `A` and a
 Frobenius element `φ` at `v` (`IsFrob A v.q φ`: `φ` stabilises `A` and acts as x ↦ x ^ v.q modulo

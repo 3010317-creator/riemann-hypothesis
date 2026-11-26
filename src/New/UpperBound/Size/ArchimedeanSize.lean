@@ -1,8 +1,10 @@
-import New.Reduction.PrimeSums
-import New.Spanning.Unfolding.FillingAdmissible
-import New.UpperBound.Divisibility.ChainDatumExpansion
-import New.UpperBound.Objects.RowChain
-import New.UpperBound.Size.Estimates
+module
+
+public import New.Reduction.PrimeSums
+public import New.Spanning.Unfolding.FillingAdmissible
+public import New.UpperBound.Divisibility.ChainDatumExpansion
+public import New.UpperBound.Objects.RowChain
+public import New.UpperBound.Size.Estimates
 
 /-!
 # Archimedean size of the composite lift, and passage to target forms by the good projection
@@ -43,6 +45,8 @@ which gives the size side of the product formula. Related work on algebraic modu
 on lattice classes: Gross, Algebraic modular forms, 1999; Greenberg–Voight, Lattice methods for
 algebraic modular forms on classical groups, 2014.
 -/
+
+@[expose] public section
 
 /-!
 ## Archimedean size bound for the composite of theta lifts on source forms
@@ -243,17 +247,7 @@ lemma sqrt_weylNormSq_jetMap_le {P : Parameters} (D : Data P) (σ : ℂ ≃+* �
     grw [D.diagramWeight_le_rowMainLength_add_rowSlack hj, D.rowMainLength_add_rowSlack_le]
     simp only [n, sum_const, card_univ, card_range, nsmul_eq_mul]
     push_cast
-    refine D.le_of_hasLogBound (h_exp := ?_)
-    -- `scale_arith D` splits the `max`es into too many cases; distribute them instead
-    clear_aux_decl
-    clear * - D
-    obtain ⟨⟨_, _, _, _⟩, _, _, _, _, _⟩ := New.Data.scale_inequalities' D
-    simp only [Bool.false_eq_true, ↓reduceIte, Nat.cast_ofNat, neg_zero, ← max_add_add_right,
-      ← max_add_add_left, ← max_sub_sub_right, mul_max_of_nonneg, Nat.ofNat_nonneg, max_lt_iff]
-    constructorm* _ ∧ _
-    all_goals try simp only [max_def, min_def]
-    all_goals try split_ifs
-    all_goals linarith
+    exact D.le_of_hasLogBound
   have h_kernel : √(weylNormSq (σ ∘ (D.liftKernel TameChar.one j).jetMap
       ((D.liftKernel TameChar.one j).ω (g, g') (D.translateDatum t j)) ξ)) ≤
       exp (const + (count + (lengths + D.rowSizeSum j) / 2)) * √(weylNormSq (σ ∘ ξ)) := by
@@ -413,7 +407,7 @@ lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Transl
       2 * (D.m * exp (30 * D.logX) + exp (60 * D.logX) + D.m * exp (50 * D.logX)) +
       32 * (D.f * D.a * D.logB) ≤ D.errorUnit / 2 :=
     D.le_of_hasLogBound
-  have hx (k : ℕ) : D.x ^ k = exp (k * D.logX) := (exp_nat_mul _ _).symm
+  have hx (k : ℕ) : D.x ^ k = exp (k * D.logX) := (exp_natCast_mul _ _).symm
   calc weylNormSq (σ ∘ (restrictedChain TameChar.one Ψ φ).val y)
     _ ≤ exp (D.x ^ 70 - (∑ τ : D.Φ, D.branchExponent τ : ℝ) * log D.N) *
         size D.m (ψ.val (D.borderU y)) ^ 2 := by
@@ -425,7 +419,7 @@ lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Transl
     _ = exp (D.x ^ 70 - (#D.aPlaces * D.a - D.f * (D.m * D.halfGap)) * log D.N +
         2 * (D.m * D.x ^ 30 + (D.x ^ 60 +
           (D.m * D.x ^ 50 + (∑ j ∈ range D.m, D.rowSizeSum j) / 2 + B / 2)))) := by
-      simp [R, ← exp_nat_mul, ← exp_sum, sum_add_distrib, ← sum_div, ← exp_half, ← exp_add]
+      simp [R, ← exp_natCast_mul, ← exp_sum, sum_add_distrib, ← sum_div, ← exp_half, ← exp_add]
     _ ≤ exp (B + (D.mainAmount - D.m * D.totalRemainder +
         2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) := by
       refine exp_le_exp.2 ?_

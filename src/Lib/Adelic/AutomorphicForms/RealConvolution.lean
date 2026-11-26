@@ -1,6 +1,8 @@
-import Lib.Adelic.AutomorphicForms.Basic
-import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
-import Lib.DiscreteSeries.Rigidity.KernelFixes
+module
+
+public import Lib.Adelic.AutomorphicForms.Basic
+public import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+public import Lib.DiscreteSeries.Rigidity.KernelFixes
 
 /-!
 # Convolution over real points, cusp kernels, the Petersson product and Poincaré series
@@ -48,6 +50,8 @@ Known result: convolution over real points, cusp kernels, the Petersson product 
 projected to forms, from the theory of cusp forms. For sources see
 `Lib.Adelic.AutomorphicForms.Cuspidality`.
 -/
+
+@[expose] public section
 
 /-! ## Convolution over the real points; cusp kernels -/
 
@@ -149,11 +153,8 @@ theorem isCuspKernel_typeKernel [Nonempty n] {l : NumberField.InfinitePlace E �
       ‖typeKernel l s x‖ * (∏ w, ‖(x w).val.val‖) ^ (B + 1) := by
     have h_loc : Integrable fun x : GInf E s ↦
         ∏ w, e w (x w) * (‖(x w).val.val‖ : ℂ) ^ (B + 1) :=
-      .fintype_prod (f := fun w g ↦ e w g * (‖g.val.val‖ : ℂ) ^ (B + 1)) fun w ↦ by
-        simpa [e] using (h w).integrable_dsKernel_mul_norm_pow (B + 1) le_rfl
-    refine h_loc.norm.congr (.of_forall fun x ↦ ?_)
-    simp only [h_prod, norm_prod, norm_mul, norm_pow, Complex.norm_real, norm_norm,
-      prod_mul_distrib, prod_pow]
+      .fintype_prod fun w ↦ (h w).integrable_dsKernel_mul_norm_pow (B + 1) le_rfl
+    simpa [h_prod, prod_mul_distrib, prod_pow] using h_loc.norm
   have h_bump (w : NumberField.InfinitePlace E) : ∃ α : DiscreteSeries.Bumps s,
       ∀ g : USign s, ∫ x : USign s, α.val.val x⁻¹ * e w (x⁻¹ * g) = e w g :=
     (h w).exists_bump_conv_dsKernel
@@ -204,10 +205,10 @@ lemma hasLevel_realConv (K : OpenSubgroup (Gf E n)) (h_level : HasLevel F K) :
 
 /-- The oscillation of an average is bounded by that of the kernel in L¹. Let α be integrable on
 G_∞, F bounded and measurable on G, u a real point, real points sitting in G as x ↦ (x, 1), and
-R(α)F(g) = ∫_{G_∞} α(x)F(gx) dx (`realConv`). If C ≥ 0 and |F(gx)| ≤ C for all real x with
+R(α)F(g) = ∫_{G_∞} α(x)F(gx) dx (`realConv`). If |F(gx)| ≤ C for all real x with
 α(u⁻¹x) ≠ α(x), then |R(α)F(gu) − R(α)F(g)| ≤ ‖α(u⁻¹ ·) − α‖₁ C. -/
 lemma norm_realConv_mul_sub_le (hF : IsBoundedMeasurable F) (hα : Integrable α) (g : G E s)
-    (u : GInf E s) {C : ℝ} (_hC_nonneg : 0 ≤ C)
+    (u : GInf E s) {C : ℝ}
     (hC : ∀ x : GInf E s, α (u⁻¹ * x) ≠ α x → ‖F (g * (x, 1))‖ ≤ C) :
     ‖realConv α F (g * (u, 1)) - realConv α F g‖ ≤
       (∫ x : GInf E s, ‖α (u⁻¹ * x) - α x‖) * C := by
@@ -268,7 +269,7 @@ lemma eventually_norm_realConv_sub_le (K : OpenSubgroup (Gf E n)) (hα : Integra
       = ‖realConv α F (g * (u, 1)) - realConv α F g‖ := by
         rw [h_split, hasLevel_realConv K h_level a ha]
     _ ≤ (∫ x : GInf E s, ‖α (u⁻¹ * x) - α x‖) * ‖C‖ :=
-        norm_realConv_mul_sub_le hF hα g u (norm_nonneg C) fun x hx ↦
+        norm_realConv_mul_sub_le hF hα g u fun x hx ↦
           (hC x hx).trans C.le_norm_self
     _ ≤ ε * ‖C‖ := mul_le_mul_of_nonneg_right (le_of_lt hu) (norm_nonneg C)
 

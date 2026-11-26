@@ -1,4 +1,6 @@
-import Lib.General.NumberTheory.PadicLimitsValuation
+module
+
+public import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # The height of a family over all places: products, monotonicity and the product formula
@@ -21,6 +23,8 @@ The multiplier H, and so the bound at infinity, does not depend on ι, while y �
 may use its own twist. Related work: Gaudron, Pentes des fibrés vectoriels adéliques sur un corps
 global, 2006; Bombieri–Gubler, Heights in Diophantine Geometry, ch. 1, 2006.
 -/
+
+@[expose] public section
 
 open Algebra Module Real Finset Filter IntermediateField AdjoinSimple Padic PadicAlgCl
 
@@ -63,7 +67,7 @@ lemma log_product_formula {M : ℕ} {q : ℚ} (h_num_lt : q.num.natAbs < M) (h_d
   have log_q : log q = log q.num.natAbs - log q.den := by simp [q.cast_def, log_div, hq]
   have log_norm (p : ℕ) :
       log (padicNorm p q) = (padicValNat p q.den - padicValNat p q.num.natAbs) * log p := by
-    simp [padicNorm.eq_zpow_of_nonzero hq, padicValRat, padicValInt, Nat.padicValNat_def]
+    simp [padicNorm.eq_zpow_of_ne_zero hq, padicValRat, padicValInt, Nat.padicValNat_def]
   rw [log_q, log_nat (by simpa using hq) h_num_lt, log_nat q.den_nz h_den_lt]
   simp [log_norm, sub_mul]
 

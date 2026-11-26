@@ -1,8 +1,10 @@
-import New.Reduction.IntegralTargetForms
-import New.Spanning.SecondMoment.SpanningTheorem
-import New.UpperBound.Divisibility.LocalDivisibility
-import New.UpperBound.Seesaw.SeesawIdentity
-import New.UpperBound.Size.ArchimedeanSize
+module
+
+public import New.Reduction.IntegralTargetForms
+public import New.Spanning.SecondMoment.SpanningTheorem
+public import New.UpperBound.Divisibility.LocalDivisibility
+public import New.UpperBound.Seesaw.SeesawIdentity
+public import New.UpperBound.Size.ArchimedeanSize
 
 /-!
 # Theorem A (short forms) and Theorem B (enough forms)
@@ -25,6 +27,8 @@ Notions from other files:
 * `D.gain l` is the divisibility asked of the chain at `l`; `D.errorUnit` is `f a log³ b`, with
   `D.logB` standing for `log b`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -136,24 +140,6 @@ abbrev projectedPoincare (s : D.chosenGL) : D.ramifiedSourceForms →ₗ[ℂ] D.
 `𝔭 = c_B c_ss⁻¹ #Ḡ · e₀ 𝒫` (`coe_normalizedPoincare`). -/
 def normalizedPoincare (s : D.chosenGL) : D.ramifiedSourceForms →ₗ[ℂ] D.targetForms :=
   (D.invGainFactor : ℂ) • D.projectedPoincare s
-
-/-- The map `normalizedPoincare s = c_B c_ss⁻¹ #Ḡ · e₀ s 𝒫` is the translate by `s` of
-`𝔭 = normalizedPoincare 1`, in the representation `D.principalRep` of the finite group
-`Ḡ = D.chosenGL` on the forms on `Y₀`. -/
-lemma coe_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) :
-    (D.normalizedPoincare s φ : D.principalForms (D.spaceY 0)) =
-      D.principalRep (D.spaceY 0) s (D.normalizedPoincare 1 φ) := by
-  have h_comm : Commute (D.principalRep (D.spaceY 0) s)
-      ((D.principalRep (D.spaceY 0)).asAlgebraHom D.e₀) := by
-    simpa using (D.isCentralProj_e₀.2.commute (.of ℂ D.chosenGL s)).map
-      (D.principalRep (D.spaceY 0)).asAlgebraHom
-  have h_translate (z : D.principalForms (D.spaceY 0)) :
-      (D.goodProjTranslate s z : D.principalForms (D.spaceY 0)) =
-        D.principalRep (D.spaceY 0) s (D.goodProjTranslate 1 z) := by
-    -- Both sides are `#Ḡ` times the two sides of `h_comm` at `z`.
-    simpa using congrArg ((Nat.card D.chosenGL : ℂ) • ·) (LinearMap.congr_fun h_comm.eq z).symm
-  simp only [normalizedPoincare, LinearMap.smul_apply, Submodule.coe_smul, map_smul]
-  exact congrArg _ (h_translate (D.poincare (D.scaledInclusion φ)))
 
 /-- The ramified source forms that are integral at every `ι`, where `ι` runs over the pairs of a
 prime `l` and an `l`-adic place of `ℂ` (`PrimePadicIso`). -/
@@ -276,7 +262,7 @@ lemma normalizedPoincare_mem_integralVectors {ι : PrimePadicIso} (s : D.chosenG
   have h_lift_mem :
       (D.invGainFactor : ℂ) • D.lowerChainAtLevel ϑ (D.poincare (D.scaledInclusion φ)) ∈
         integralForms ι.place := fun g ↦ by
-    show weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactor : ℂ) •
+    change weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactor : ℂ) •
       (D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ))).val g) ≤ 1
     rw [h_seesaw φ, weylGauge_smul, h_norm, ← weylGauge_smul]
     simpa using h_gauge g

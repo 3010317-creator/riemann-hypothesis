@@ -1,4 +1,6 @@
-import Lib.Weil.Construction.VacuumProjections
+module
+
+public import Lib.Weil.Construction.VacuumProjections
 
 /-!
 # Products of data along a splitting of coordinates, and changes of coordinates
@@ -34,6 +36,8 @@ Notions from other files:
 
 Known; see `Lib.Weil.Construction.VacuumProjections` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -173,14 +177,6 @@ functions. It sends the pair of vacua of `V₁` and `V₂` (each a Gaussian time
 indicator) to the vacuum `V.vacElem` of `V`. -/
 @[simp]
 lemma boxProd_vacElem : boxProd hs V₁.vacElem V₂.vacElem = V.vacElem := tmul_vacElem _
-
-/-- For a splitting of the coordinates of V into those of V₁ and V₂ compatible with the signs,
-the product of data is multiplicative for the inner products:
-⟨f₁ ⊠ f₂, f₁′ ⊠ f₂′⟩ = ⟨f₁, f₁′⟩ ⟨f₂, f₂′⟩. -/
-lemma dataInner_boxProd (f₁ f₁' : 𝒮 V₁) (f₂ f₂' : 𝒮 V₂) :
-    V.dataInner (boxProd hs f₁ f₂) (boxProd hs f₁' f₂') =
-      V₁.dataInner f₁ f₁' * V₂.dataInner f₂ f₂' :=
-  modelInner_tmul _ f₁ f₁' f₂ f₂'
 
 /-- The product respects the insertion of real vectors:
 (v₁ ⊗ f₁) ⊠ (v₂ ⊗ f₂) = (v₁ ⊠ v₂) ⊗ (f₁ ⊠ f₂). Here v ⊗ f = `New.Space.integrated` v f inserts a
@@ -364,12 +360,6 @@ lemma map_rho (x : n → 𝔸 E) (f : 𝒮 V₁) : D.map (V₁.ϱ (D.φ x) f) = 
   repeat erw [heisenbergOp_apply, transport_apply]
   simp [beta_phi]
 
-/-- Let D be a change of adelic coordinates from signs `s₁` to `s` that keeps the Heisenberg
-bicharacter up to the isometric ring endomorphism σ of ℂ. The map `D.map` : 𝒮(V₁) → 𝒮(V) induced by
-D preserves norms. -/
-lemma norm_map (f : 𝒮 V₁) : ‖D.map (V := V) f‖ = ‖f‖ :=
-  norm_transport D.beta_phi D.vacuumFn_apply f
-
 /-- For a change of adelic coordinates `D` from signs `s₁` to signs `s` (a map φ = A × B that keeps
 the Heisenberg bicharacter β up to `σ`, where A keeps the Gaussian and B keeps Ô^n), the induced map
 `D.map` from 𝒮(V₁) to 𝒮(V) sends the vacuum `V₁.vacElem` to the vacuum `V.vacElem`. Here `V` and
@@ -392,8 +382,7 @@ lemma map_omega {g : G E s} {g₁ : G E s₁}
   refine ext fun x ↦ ?_
   show σ ((V₁.ω g₁ f).val (D.φ x)) = c * (V.ω g (D.map f)).val x
   -- write both values at `x` as `weilMultiplier` times an integral
-  repeat erw [Space.ω, weilRep, IsVacuum.smul_apply, ContinuousLinearMap.flip_apply,
-    integrated_apply_eq_integral]
+  repeat erw [Space.ω, weilRep, IsVacuum.smul_apply, integrated_apply_eq_integral]
   -- substitute `D.φ` in the integral on the left: `σ (∫ F) = ∫ σ ∘ F ∘ D.φ` for every `F`, and
   -- `σ (e (D.φ x)) = e x` for the vacuum `e`
   have h_val (y : n → 𝔸 E) : (D.map (V := V) f).val y = σ (f.val (D.φ y)) := transport_apply ..

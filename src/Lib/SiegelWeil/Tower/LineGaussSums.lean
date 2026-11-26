@@ -1,6 +1,8 @@
-import Lib.ClassField.HeckeCharacter.TameModulus
-import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
-import Lib.Weil.MixedModel.Slices
+module
+
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
+public import Lib.Weil.MixedModel.Slices
 
 /-!
 # Standard partners, shear invariance, Gauss sums along lines and coefficients of lifts
@@ -55,6 +57,8 @@ Notions from other files:
 Known; see `Lib.SiegelWeil.Tower.LargeSideConstantTerm` and
 `Lib.SiegelWeil.SingularForms.UnimodularCoefficients` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -387,15 +391,15 @@ lemma mul_stdColDatum_triangularForm (ε : ℂ) (β : Bool) (c : F) (p : Matrix 
   by_cases hM : IsIntMatrix O M
   · by_cases hc : c ∈ O
     · by_cases hz : ∀ i, z i ∈ O
-      · rw [if_pos ⟨hM, hc, hz⟩, if_pos hz, if_pos hM,
+      · rw [ite_eq_left ⟨hM, hc, hz⟩, ite_eq_left hz, ite_eq_left hM,
           invOnUnits_mul (mul_mem hc (hz _)) hM.det_mem, invOnUnits_mul hc (hz _)]
         ring
-      · rw [if_neg fun h ↦ hz h.2.2, if_neg hz]
+      · rw [ite_eq_right fun h ↦ hz h.2.2, ite_eq_right hz]
         simp
-    · have h0 : invOnUnits χ c = 0 := if_neg fun h ↦ hc h.1
-      rw [if_neg fun h ↦ hc h.2.1]
+    · have h0 : invOnUnits χ c = 0 := ite_eq_right fun h ↦ hc h.1
+      rw [ite_eq_right fun h ↦ hc h.2.1]
       split_ifs <;> simp [h0]
-  · rw [if_neg fun h ↦ hM h.1, if_neg hM]
+  · rw [ite_eq_right fun h ↦ hM h.1, ite_eq_right hM]
     simp
 
 /-- The quotient `invOnUnits χ x / invOnUnits χ y` is `χ⁻¹(x) χ(y)` if `x` and `y` are units of

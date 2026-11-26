@@ -1,6 +1,8 @@
-import Lib.General.LinearAlgebra.MatrixPolynomials
-import Lib.General.NumberTheory.FrobeniusOrbits
-import Lib.LocalGL.Green.HallAlgebra
+module
+
+public import Lib.General.LinearAlgebra.MatrixPolynomials
+public import Lib.General.NumberTheory.FrobeniusOrbits
+public import Lib.LocalGL.Green.HallAlgebra
 
 /-!
 # Cuspidal class functions on GL_n over a finite field: μ, supports, values, inner products
@@ -48,6 +50,8 @@ Crapo's complementation theorem, for the vanishing of the Möbius number off sem
 
 See also `Lib.LocalGL.Green.TauFunctions`.
 -/
+
+@[expose] public section
 
 /-! ## Crapo's lemma, the inverse μ of 𝟙, and cuspidality of C_η -/
 
@@ -122,7 +126,7 @@ lemma isSemisimple_of_moebius_ne_zero (h_mu_ne : moebius (simClassOf g) ≠ 0) :
           F (comap (X : Submodule k V).subtype h_subtype U) else 0 := by
       simpa [sum_filter] using sum_comap (g := endOnSub X) (X : Submodule k V).subtype h_subtype F
     -- The sum of the statement, over `g.invtSubmodule`, is the same sum over `StableSubspace g`.
-    show ∑ U ∈ univ.filter fun U : StableSubspace g ↦ U.val ≤ X.val,
+    change ∑ U ∈ univ.filter fun U : StableSubspace g ↦ U.val ≤ X.val,
       moebius (simClassOf U.endOnSub) = 0
     simpa +contextual [hX, h_reindex, sum_filter] using sum_moebius_simClassOf_endOnSub
       (g := endOnSub X)
@@ -140,7 +144,7 @@ product on similarity classes over the finite field k. For any class function `B
 the pointwise product `B μ` over the block triangular endomorphisms with diagonal blocks `a`, `b` is
 `μ a * μ b * B (b ⊕ a)`. Here `b ⊕ a` is the block diagonal map of the chosen representatives of `b`
 and `a`. -/
-@[simp ↓]
+@[simp↓]
 lemma blockAverage_mulMoebius (a b : SimClass k) :
     B.mulMoebius.blockAverage a b =
       moebius a * moebius b * B (simClassOf (b.out.snd.prodMap a.out.snd)) := by

@@ -1,6 +1,8 @@
-import Lib.Adelic.Unitary.RationalPoints
-import Lib.Weil.Construction.FiniteCocycle
-import Lib.Weil.Fock.Basic
+module
+
+public import Lib.Adelic.Unitary.RationalPoints
+public import Lib.Weil.Construction.FiniteCocycle
+public import Lib.Weil.Fock.Basic
 
 /-!
 # The adelic Weil representation on 𝒮(V) and its theta functional
@@ -53,6 +55,8 @@ Notions from other files:
 
 Known; see `Lib.Weil.MixedModel.ZeroTerm` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -151,14 +155,14 @@ sign −1, and Δ_f is `New.finMultiplier`, the multiplier of the action `finAct
 vectors. -/
 def weilMultiplier : ℂ := (∏ w : InfinitePlace E, realMultiplier (g.1 w)) * finMultiplier g.2
 
-set_option synthInstance.maxSize 999
-
 /-- The Haar measure on 𝔸^n that is the image of the product of `New.Fock.normalizedVolume` and
 `New.latticeMeasure` under the isomorphism `New.adelicSum` from real and finite coordinates. The
 isomorphism does not depend on the signs, so the signs `1` are used. -/
 def vacuumMeasure : Measure (n → 𝔸 E) :=
   ((normalizedVolume (InfinitePlace E × n)).prod (latticeMeasure E n)).map (adelicSum E 1).equiv
-  deriving IsAddHaarMeasure
+
+instance : (vacuumMeasure (E := E) (n := n)).IsAddHaarMeasure :=
+  (adelicSum E 1).equiv.isAddHaarMeasure_map _
 
 /-- The function `New.vacuumFn` (Gaussian at infinity times twisted lattice indicator at finite
 places) is a vacuum, in the sense of `New.Heisenberg.IsVacuum`, for the bicharacter β of signs s and
@@ -336,7 +340,6 @@ open Matrix ComplexConjugate Heisenberg.IsVacuum
 variable {E : Type _} [Field E] [CMType E] [WeilData E]
   {n : Type _} [Fintype n] [DecidableEq n]
   {s : n → ℤˣ} (V : Space E n s) (g : G E s) (x y : n → 𝔸 E) (f f' : 𝒮 V)
-
 
 /-- Superposition: a bounded linear map `T` from `𝒮 V` to a complex Banach space is determined by
 its values on the translates ϱ(y) vac of the vacuum `vacElem`. Specifically, `T f` = ∫ ⟨ϱ(y) vac, f⟩

@@ -1,5 +1,7 @@
-import Lib.Weil.Construction.CanonicalTheta
-import Lib.Weil.DualPair.WeilAction
+module
+
+public import Lib.Weil.Construction.CanonicalTheta
+public import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Weil representation of unitary pairs: finite action, sums, negation and change of point
@@ -34,6 +36,8 @@ Notions from other files:
 Known; see `Lib.Weil.DualPair.GaloisLaw` for sources.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace New
@@ -66,7 +70,8 @@ variable {E : Type*} [Field E] [NumberField E] [IsCMField E]
 idele equal to `det g` on `A` and to `1` elsewhere. -/
 lemma Exchange.detOn_preimage_star (g : Gf E n) :
     detOn (star ⁻¹' A) g.val = star (detOn A g.val)⁻¹ := by
-  ext <;> simp [detOn, cutGL, star_idem, ← det_conjTranspose, inv_eq_left_inv g.prop]
+  ext <;> simp [detOn, cutGL, star_idem, ← det_conjTranspose, star_eq_conjTranspose,
+      inv_eq_left_inv (mem_unitaryGroupOf_iff.1 g.prop)]
 
 @[simp↓]
 lemma onHom_snd_inv_mulVec {p : G E s × G E s'} (x : n' × n → 𝔸f E) :
@@ -100,7 +105,7 @@ variable (n) in
 /-- The scalar matrices, as a homomorphism from the finite adeles of norm one to `Gf E n`. -/
 noncomputable def scalarFin : unitary (𝔸f E) →* Gf E n :=
   MonoidHom.codRestrict (MonoidHom.comp (GeneralLinearGroup.scalar n) Unitary.toUnits) (U 1)
-    (by simp [star_mul_self_of_mem, U])
+    (by simp [star_mul_self_of_mem, mem_unitaryGroupOf_iff, star_eq_conjTranspose])
 
 /-- Scalar finite points are central in the finite adelic unitary group. -/
 lemma Seesaw.commute_scalarFin {ν : unitary (𝔸f E)} (g : Gf E n) : Commute (scalarFin n ν) g :=
@@ -329,14 +334,14 @@ lemma theta_boxProd_target (hs : s ∘ e = s₁ ⊕ᵥ s₂) (T : Space E n' s')
     (f : 𝒮 (T.hom V₁)) (f' : 𝒮 (T.hom V₂)) :
     (T.hom V).θ (boxProd (homSigns_sum_target hs) f f') = (T.hom V₁).θ f * (T.hom V₂).θ f' :=
   -- The point of `Hom(T, V)` is block diagonal, as the point of `V` is.
-  by refine theta_boxProd (homSigns_sum_target hs) ?_ f f'; simp_all [Space.hom, ← ext_iff]
+  theta_boxProd _ (by simp_all [Space.hom, ← ext_iff]) f f'
 
 /-- For data f on Hom(V₁,T) and f' on Hom(V₂,T), θ on Hom(V₁ ⊕ V₂, T) of the product f ⊠ f' is
 θ(f)θ(f'). The product is taken along the splitting `New.homSigns_sum_source` of the coordinates. It
 is induced by the identity of the index set n₁ ⊕ n₂ of V₁ ⊕ V₂. -/
 lemma theta_boxProd_source (f : 𝒮 (V₁.hom T)) (f' : 𝒮 (V₂.hom T)) :
     ((V₁.sum V₂).hom T).θ (boxProd homSigns_sum_source f f') = (V₁.hom T).θ f * (V₂.hom T).θ f' :=
-  by refine theta_boxProd homSigns_sum_source ?_ f f'; simp [Space.hom, Space.sum, blockGL, ← ext_iff]
+  theta_boxProd _ (by simp [Space.hom, Space.sum, blockGL, ← ext_iff]) f f'
 
 /-- On Hom(V₁ ⊕ V₂, T), the block diagonal element with blocks g₁ and g₂ acts on a product f ⊠ f'
 factor by factor: ω_{bb',a}(g,h)(f ⊠ f') = ω_{b,a}(g₁,h)f ⊠ ω_{b',a}(g₂,h)f' for data f, f' on

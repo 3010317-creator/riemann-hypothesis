@@ -1,4 +1,6 @@
-import New.Spanning.RemainingTerms.Cut
+module
+
+public import New.Spanning.RemainingTerms.Cut
 
 /-!
 # The gain: a discriminant bound for the common lattice of two terms over one block
@@ -36,6 +38,8 @@ Notions from other files:
 * `S.HasCellRank j γ`: `γ` has cell rank `j ≤ ϱ + 1`, the top one exactly if `S.termDisc γ ≠ 0`.
 * `S.levelGauge j c c' γ`: the gauge `𝗀*` of the term, a positive real bound for discriminants.
 -/
+
+@[expose] public section
 
 namespace New.Filling
 
@@ -677,7 +681,8 @@ lemma map_commonPart_le (h_over : γ ∈ S.termsOver c s c') (h_over' : γ' ∈ 
       simp [translateByClassReps, mul_assoc]
     unfold g g' m
     rw [← frameImage_mul, h_mul]
-  have hm_isometry : mᴴ * J * m = J := mem_U.1 (S.translateByClassReps c c (γ' * γ⁻¹)).property
+  have hm_isometry : mᴴ * J * m = J :=
+    mem_unitaryGroupOf_iff.1 (S.translateByClassReps c c (γ' * γ⁻¹)).property
   have hmy_orth : ((frameImage g')ᴴ * J) *ᵥ m *ᵥ y = 0 := by
     rw [h_frame, mulVec_mulVec, conjTranspose_mul, Matrix.mul_assoc, Matrix.mul_assoc,
       ← Matrix.mul_assoc mᴴ, hm_isometry, hy_orth]
@@ -734,7 +739,8 @@ lemma submoduleIndex_pairLattice_dvd_torsionIndex (h_over : γ ∈ S.termsOver c
     exact Submodule.smul_mem_pointwise_smul _ _ _ (col_mem_colLattice a)
   · -- The products of `k e_a` with the frame of `k` vanish, as `k` is an isometry.
     have h_isometry : kᴴ * (S.latticeMiddle (𝔸f E)).splitGram * k =
-        (S.latticeMiddle (𝔸f E)).splitGram := mem_U.1 (S.translateByClassReps c c' γ').property
+        (S.latticeMiddle (𝔸f E)).splitGram := mem_unitaryGroupOf_iff.1
+            (S.translateByClassReps c c' γ').property
     have h_zero : ((frameImage k)ᴴ * (S.latticeMiddle (𝔸f E)).splitGram) *ᵥ
           (isotropicFramePair (S.translateByClassReps c c' γ')).col (.inr a) = 0 := by
       funext b

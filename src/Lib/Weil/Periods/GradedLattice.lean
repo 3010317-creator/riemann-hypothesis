@@ -1,4 +1,6 @@
-import Lib.Weil.Periods.PointLattice
+module
+
+public import Lib.Weil.Periods.PointLattice
 
 /-!
 # Iwasawa decomposition for the flag of the grades
@@ -29,6 +31,8 @@ Notions from other files:
 Known result: the Iwasawa decomposition of an unramified unitary group. Source: J. Tits, Reductive
 groups over local fields, Proc. Sympos. Pure Math. 33 (1979), 3.3.2.
 -/
+
+@[expose] public section
 
 open Matrix
 
@@ -162,7 +166,7 @@ lemma exists_gram_eq_degreeZeroPart [HasPrimitiveRoot5040 E] {w : ι → ℤ} {k
     exact witt_Ô (isPrimitiveMatrix_submatrix_of_mem_intGL (inv_mem hm) Subtype.val_injective)
       (isPrimitiveMatrix_submatrix_of_mem_intGL hk Subtype.val_injective) (ext h_cols)
   let n : GL ι (𝔸f E) := k⁻¹ * (κ.val * m⁻¹)
-  have hκ_gram : κ.val.valᴴ * 1 * κ.val.val = 1 := κ.property
+  have hκ_gram : κ.val.valᴴ * 1 * κ.val.val = 1 := mem_unitaryGroupOf_iff.1 κ.property
   have hn_gram : n.valᴴ * G * n.val = G₀ :=
     gram_mul_of_gram_eq hk_gram (gram_mul_of_gram_eq hκ_gram hG₀)
   have hn_col (i : ι) {j : ι} (hj : 0 ≤ w j) : n.val i j = (1 : Matrix ι ι (𝔸f E)) i j :=

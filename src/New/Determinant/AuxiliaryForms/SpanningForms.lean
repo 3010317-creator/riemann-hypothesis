@@ -1,7 +1,9 @@
-import New.Determinant.AuxiliaryForms.DiagonalTurns
-import New.Determinant.AuxiliaryForms.FirstPath
-import New.Determinant.AuxiliaryForms.LastPath
-import New.OneLift.ComparisonOperator.FirstFactors
+module
+
+public import New.Determinant.AuxiliaryForms.DiagonalTurns
+public import New.Determinant.AuxiliaryForms.FirstPath
+public import New.Determinant.AuxiliaryForms.LastPath
+public import New.OneLift.ComparisonOperator.FirstFactors
 
 /-!
 # Denominators and sizes on the last path, and the auxiliary forms
@@ -46,6 +48,8 @@ Notions from other files:
   `Y₀` to `Y_m`, with values in algebraic forms. `New.Data.lowerChainAtLevel ϑ` is the same map with
   values in the forms of the last level and its character; `levelY ϑ m` fixes these forms.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -315,16 +319,7 @@ lemma sqrt_weylNormSq_lastPathKernel_le (σ : ℂ ≃+* ℂ) (S : EdgeTuple (1 :
   -- 'le_of_hasLogBound' uses these two bounds for the ranks as local instances.
   have := D.hasLogUpper_of_le (card_lastPathIndex_le z hj)
   have := D.hasLogUpper_of_le (card_lastPathIndex_le z hj.le)
-  -- `scale_arith` does not split the nested `max` of the default proof, and the kernel cannot
-  -- check `grind` with the large numerals of `scale_inequalities'`: derive small ones for `grind`.
-  simpa using D.le_of_hasLogBound (by
-    obtain ⟨⟨h64, -, -, -⟩, hc, hL, hX, hX₁, -⟩ := New.Data.scale_inequalities' D
-    have hcL : 1000 * P.constantBound ≤ Real.log D.logB := by linarith
-    have hXX₁ : 1000 * D.logX ≤ D.logX₁ := by linarith
-    have hX₁B : 1000 * D.logX₁ ≤ D.logB := by linarith
-    clear hc hX hX₁
-    simp only [Bool.false_eq_true, ↓reduceIte, Nat.cast_ofNat]
-    grind)
+  simpa using D.le_of_hasLogBound
 
 /-- Conjugates of `Ξ = lastPathPeriod Ψ y` for the trivial twist. Let `Ψ` be a path datum on the
 last path and `y` a pair of forms fixed by the levels at the outer ends of the two halves, whose
@@ -384,17 +379,7 @@ lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
     grw [hL, ← le_exp_of_log_le]
     simpa [C, log_mul, G, NeZero.ne, card_residueRing_twistModulus, prod_q_chosenPlace,
       toAutChar_one_and_toTwist_one_and_Q_one] using
-      -- `scale_arith` does not split the nested `max` of the default proof, and the kernel cannot
-      -- check `grind` with the large numerals of `scale_inequalities'`: derive small ones for
-      -- `grind`.
-      D.le_of_hasLogBound (by
-        obtain ⟨⟨h64, -, -, -⟩, hc, hL, hX, hX₁, -⟩ := New.Data.scale_inequalities' D
-        have hcL : 1000 * P.constantBound ≤ Real.log D.logB := by linarith
-        have hXX₁ : 1000 * D.logX ≤ D.logX₁ := by linarith
-        have hX₁B : 1000 * D.logX₁ ≤ D.logB := by linarith
-        clear hc hX hX₁
-        simp only [Bool.false_eq_true, ↓reduceIte, Nat.cast_ofNat]
-        grind)
+      D.le_of_hasLogBound
   obtain ⟨a, ha, ha_sum⟩ := Set.mem_nsmul_iff_sum.1 h_sum
   calc _ = ‖∑ i, σ (a i)‖ := by rw [← ha_sum, map_sum]
     _ ≤ n * R := by
@@ -560,10 +545,10 @@ lemma fixedByOuterLevels_lastPathConjDelta (φ : D.gridLevelForms D.m) :
     (principalLevel (D.LastPathIndex true 0) D.gridLevelGen)
   have h_symm : (e.symm φ).1 = D.lastPathToAlgForm true φ.1 := rfl
   refine Bool.forall_bool.2 ⟨?_, ?_⟩
-  · show D.lastPathToAlgForm false (lastPathConjDelta ϑ x v) ∈ _
+  · change D.lastPathToAlgForm false (lastPathConjDelta ϑ x v) ∈ _
     rw [lastPathToAlgForm_lastPathConjDelta]
     exact levelSpace_anti h_level (lastPathDelta ϑ x v).2
-  · show D.lastPathToAlgForm true φ.1 ∈ _
+  · change D.lastPathToAlgForm true φ.1 ∈ _
     rw [← h_symm]
     exact levelSpace_anti (lastPathLevel_le_principalLevel ϑ true 0) (e.symm φ).2
 
@@ -751,7 +736,7 @@ lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → �
           √(weylNormSq (σ ∘ v)) := by ring
       _ ≤ _ := by grw [D.dualHook_mul_exp_le]
   refine (D.weylNormSq_le_of_dualPairing σ (by positivity) h_pair_le).trans_eq ?_
-  rw [mul_pow, sq_sqrt ((weylNormSq_nonneg _).trans (hB 1)), ← exp_nat_mul, Nat.cast_ofNat,
+  rw [mul_pow, sq_sqrt ((weylNormSq_nonneg _).trans (hB 1)), ← exp_natCast_mul, Nat.cast_ofNat,
     ← mul_assoc]
 
 /-- The space `gridLevelForms` of forms of level `J(𝔟)` on `Ỹ^m_0`, the space at the outer end of

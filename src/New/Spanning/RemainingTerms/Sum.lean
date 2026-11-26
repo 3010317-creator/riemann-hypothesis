@@ -1,5 +1,7 @@
-import New.Spanning.RemainingTerms.Count
-import New.Spanning.RemainingTerms.Size
+module
+
+public import New.Spanning.RemainingTerms.Count
+public import New.Spanning.RemainingTerms.Size
 
 /-!
 # The remaining terms: a bound for their sum
@@ -47,6 +49,8 @@ relative trace formulas by congruences and counts is known in the literature. Re
 Michel–Ramakrishnan–Yang, Bessel periods on U(2,1)×U(1,1), 2023; Kowalski–Saha–Tsimerman, Local
 spectral equidistribution for Siegel modular forms, 2012; Blomer, Density theorems for GL(n), 2023.
 -/
+
+@[expose] public section
 
 open ENNReal Fin Finset Module
 
@@ -291,8 +295,8 @@ lemma sum_termSize_mul_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {S : Fi
       gcongr with c _ c' _
       -- Bound each pair by its weights, then extend the sum from `P c c'` to all pairs.
       simp only [_root_.tsum_subtype]
-      rw [← Summable.tsum_finsetSum fun _ _ ↦ ENNReal.summable]
-      refine (ENNReal.tsum_le_tsum fun q : P c c' ↦ h_pair c c' q q.property).trans ?_
+      rw [← Summable.tsum_finsetSum fun _ _ ↦ CompleteLattice.summable]
+      refine (tsum_le_tsum fun q : P c c' ↦ h_pair c c' q q.property).trans ?_
       exact tsum_comp_le_tsum_of_injective Subtype.val_injective fun q ↦
         ∑ l ∈ range (𝔰.n ^ 3 + 1), (S.boundedDiscNearPairs l c c').indicator (weight l c c') q
     _ = ∑ l ∈ range (𝔰.n ^ 3 + 1), ∑ c, ∑ c',
@@ -576,8 +580,8 @@ lemma enorm_amplitudeSum_mul_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {
         .ofReal (S.termSize c c' q.1 * S.termSize c c' q.2) := by
   grw [enorm_amplitudeSum_le_tsum_termSize hT h_sub,
     enorm_amplitudeSum_le_tsum_termSize hT' h_sub']
-  simp_rw [← ENNReal.tsum_mul_right, ← ENNReal.tsum_mul_left, ← ENNReal.tsum_prod]
-  refine ENNReal.tsum_le_tsum fun ⟨p, p'⟩ ↦ le_of_eq ?_
+  simp_rw [← ENNReal.tsum_mul_right, ← ENNReal.tsum_mul_left, ← tsum_prod]
+  refine tsum_le_tsum fun ⟨p, p'⟩ ↦ le_of_eq ?_
   have h_size : 0 ≤ S.termSize c c' p := by
     unfold termSize orbitBound
     positivity
@@ -662,18 +666,18 @@ lemma enorm_amplitudeSum_sq_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {S
     calc
       _ ≤ ∑' (p : ↥diagonalᶜ) (q : nearRepsOfPiece p.val.1 × nearRepsOfPiece p.val.2),
           size (q.1, q.2) :=
-        ENNReal.tsum_le_tsum fun p ↦
+        tsum_le_tsum fun p ↦
           enorm_amplitudeSum_mul_le (hT.inter_piece p.val.1) (hT.inter_piece p.val.2)
             (Set.inter_subset_left.trans h_sub) (Set.inter_subset_left.trans h_sub)
-      _ = ∑' x, size (pair x) := (ENNReal.tsum_sigma' fun x ↦ size (pair x)).symm
+      _ = ∑' x, size (pair x) := (tsum_sigma' fun x ↦ size (pair x)).symm
       _ ≤ ∑' q : apart, size q := tsum_comp_le_tsum_of_injective h_injective fun q ↦ size q
       _ = _ := ENNReal.tsum_mul_left
   calc
     _ ≤ (∑' κ, part κ) ^ 2 := by grw [enorm_amplitudeSum_le_tsum_fibre S.piece]
     _ = ∑' p : Piece E 𝔰 × Piece E 𝔰, product p := by
-      simp_rw [product, sq, ← ENNReal.tsum_mul_right, ← ENNReal.tsum_mul_left, ← ENNReal.tsum_prod]
+      simp_rw [product, sq, ← ENNReal.tsum_mul_right, ← ENNReal.tsum_mul_left, ← tsum_prod]
     _ = ∑' p : diagonal, product p + ∑' p : ↥diagonalᶜ, product p :=
-      (ENNReal.summable.tsum_add_tsum_compl (s := diagonal) ENNReal.summable).symm
+      (CompleteLattice.summable.tsum_add_tsum_compl (s := diagonal) CompleteLattice.summable).symm
     _ ≤ _ := add_le_add h_diagonal.le h_others
 
 /-- **Remaining terms, reduction to one link.** Let `E` be a CM field with a primitive root of unity
@@ -717,7 +721,7 @@ theorem secondMoment_remainingTerms_le {E : Type} [Field E] [CMType E] {𝔰 : S
       obtain rfl : s = s' := eq_of_mem_termsOver (mem_termsOver_of_mem_nearRepresentativesOver hq)
         (mem_termsOver_of_mem_nearRepresentativesOver hq')
       rfl
-    exact (ENNReal.tsum_sigma' fun x ↦ size c c' (pair x)).symm.trans_le
+    exact (tsum_sigma' fun x ↦ size c c' (pair x)).symm.trans_le
       (tsum_comp_le_tsum_of_injective h_injective fun q ↦ size c c' q)
   have h_block (c c' : S.Classes) (s : Ω) : ‖S.amplitudeSum .cut T c s c'‖ₑ ^ 2 ≤
       ∑' Λ, ‖S.amplitudeSum .cut (T ∩ {γ | S.termDisc γ ≠ 0} ∩ link ⁻¹' {Λ}) c s c'‖ₑ ^ 2 +
@@ -811,16 +815,16 @@ theorem linkSecondMoment_le_of_le_meetNorm {E : Type} [Field E] [CMType E]
       rfl
     calc
       _ = ∑' p : Ω × Link, ‖S.amplitudeSum .cut (terms p.2) c p.1 c'‖ₑ ^ 2 :=
-        ENNReal.tsum_prod.symm
+        tsum_prod.symm
       _ ≤ ∑' (p : Ω × Link) (q : nearRepsInLink c c' p × nearRepsInLink c c' p),
           .ofReal (S.unipotentCovolume ^ 2) * size c c' (q.1, q.2) :=
-        ENNReal.tsum_le_tsum fun p ↦ by
+        tsum_le_tsum fun p ↦ by
           rw [sq]
           exact enorm_amplitudeSum_mul_le (h_stable p.2) (h_stable p.2) (h_sub p.2) (h_sub p.2)
       _ = ∑' x, .ofReal (S.unipotentCovolume ^ 2) * size c c' (pair x) :=
-        by rw [ENNReal.tsum_sigma']
+        by rw [tsum_sigma']
       _ ≤ ∑' q : sameLinkPairs c c', .ofReal (S.unipotentCovolume ^ 2) * size c c' q :=
-        ENNReal.tsum_comp_le_tsum_of_injective h_injective fun q ↦
+        tsum_comp_le_tsum_of_injective h_injective fun q ↦
           .ofReal (S.unipotentCovolume ^ 2) * size c c' q
       _ = _ := ENNReal.tsum_mul_left
   calc

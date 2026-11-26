@@ -1,6 +1,8 @@
-import Lib.Shimura.IntegralModel.UniversalFamily
-import Lib.Shimura.TraceFormula.DefiniteTrace
-import Lib.Shimura.Uniformisation.ModelExists
+module
+
+public import Lib.Shimura.IntegralModel.UniversalFamily
+public import Lib.Shimura.TraceFormula.DefiniteTrace
+public import Lib.Shimura.Uniformisation.ModelExists
 
 /-!
 # Balls immerse; holomorphy, arcs and complex points of the covers
@@ -41,6 +43,8 @@ Notions from other files:
 Known; see `Lib.Shimura.IntegralModel.TowerExistence` and `Lib.Shimura.ThetaModuli.UniversalFamily`
 for sources.
 -/
+
+@[expose] public section
 
 open Filter in
 /-- Let `g` be a function on a complex normed space whose derivative has the derivative `D₂` at
@@ -94,7 +98,7 @@ lemma ModuliPoint.isLevelIso_act_of_inv_eq {a a' : ModuliPoint E D.Index ν} {g 
       (a.act g).IsLevelIso K z a' := by
   refine ⟨?_, by simpa [act] using h_refl, fun j ↦ by simp [act, h_P]⟩
   -- The level part `a'.frame⁻¹ * z * (a.frame * g)` is `g⁻¹ * g = 1`.
-  show a'.frame⁻¹ * toFinGL z * (a.frame * g.val) ∈ K
+  change a'.frame⁻¹ * toFinGL z * (a.frame * g.val) ∈ K
   simp [← mul_assoc, ← h_x]
 
 /-- Balls immerse. Let `f` be an analytic family of theta tori over `f.domain`, and `X` a theta

@@ -1,5 +1,7 @@
-import Lib.Adelic.Reduction.FirstMinimumShortBases
-import Lib.General.LinearAlgebra.HermitianMatrices
+module
+
+public import Lib.Adelic.Reduction.FirstMinimumShortBases
+public import Lib.General.LinearAlgebra.HermitianMatrices
 
 /-!
 # Kernels kill bounded radical-invariant functions; dilations along isotropic subspaces
@@ -30,6 +32,8 @@ hypotheses on `H`, `ℓ` and `D` stated below. Source: R. Godement, C. R. Acad. 
 here are B. Barnes, Proc. Edinburgh Math. Soc. 23 (1980), and A. Valette, Math. Ann. 294 (1992)
 277-287.
 -/
+
+@[expose] public section
 
 /-!
 ## A kernel kills bounded functions left invariant under a radical
@@ -131,9 +135,8 @@ lemma kernel_operator_idempotent {G : Type*} [Group G] [TopologicalSpace G] [IsT
   -- The associativity of convolution, applied to `e * e * φ`.
   calc T (T φ) y
     _ = ∫ x : G, e x * ∫ g : G, e g * φ (y * (x * g)) := by simp only [hT, mul_assoc]
-    _ = ∫ g : G, (∫ x : G, e x * e (x⁻¹ * g)) * φ (y * g) := by
-      simpa only [smul_eq_mul, id_eq] using
-        integral_smul_integral_eq_integral_conv_smul id h_ker.integrable h_ker.integrable h_bounded
+    _ = ∫ g : G, (∫ x : G, e x * e (x⁻¹ * g)) * φ (y * g) :=
+      integral_smul_integral_eq_integral_conv_smul id h_ker.integrable h_ker.integrable h_bounded
     _ = T φ y := by simp only [h_ker.convolution_self, hT]
 
 /-- Left translation by `a`, where `(a, z) ∈ D`, preserves the space `V` of the functions fixed by
@@ -241,7 +244,7 @@ lemma eq_zero_of_mem_fixed_invariant {G : Type*} [Group G] [TopologicalSpace G]
     simp [hU, hS, hT, ← integral_const_mul, hχ_shift, mul_left_comm, mul_assoc]
   have h_anti : U * S ^ n = -(S ^ n * U) := by
     have h_exp : exp (1 / n * Real.pi * I) ^ n = -1 := by
-      simp [← exp_nat_mul, hn_pos.ne', field, mul_assoc]
+      simp [← exp_natCast_mul, hn_pos.ne', field, mul_assoc]
     rw [(h_semi.pow_right n).eq, smul_pow, h_exp, neg_one_smul, neg_mul]
   have h_nil : S ^ n = 0 :=
     eq_zero_of_anticommute (norm_one_sub_left_translation_le he hT hV ha hb hb_dist hU) h_anti

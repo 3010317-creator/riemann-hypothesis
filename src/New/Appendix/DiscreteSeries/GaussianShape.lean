@@ -1,5 +1,7 @@
-import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
-import New.Appendix.DiscreteSeries.OneMinor
+module
+
+public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+public import New.Appendix.DiscreteSeries.OneMinor
 
 /-!
 # The Gaussian shape of the coefficient
@@ -28,6 +30,8 @@ Except in the first section, the norm of a matrix is the Frobenius norm.
 
 See `New.Appendix.DiscreteSeries.Periods` for related work.
 -/
+
+@[expose] public section
 
 open Matrix MeasureTheory Finset Fintype Ring Complex ComplexConjugate
 
@@ -179,7 +183,7 @@ lemma exists_weightMinors_conj_reducedExp_eq_cexp (hl : Function.Injective l)
         ← ofReal_sum, ← sum_div, sum_norm_lie_coordProj_sq h_range,
         sum_trace_coordProj_mul h_range, Int.cast_neg, neg_mul, sub_neg_eq_add]
     rw [weightMinors_eq_det_zpow_mul_prod (h_det.trans_ne (exp_ne_zero _)) _ _ h_range, h_det,
-      h_prod, ← exp_int_mul, ← exp_add, Int.cast_neg]
+      h_prod, ← exp_intCast_mul, ← exp_add, Int.cast_neg]
     exact congrArg cexp (by ring)
   · refine (norm_sum_le_of_le _ fun t _ ↦ hr_le t).trans_eq ?_
     simp only [← mul_sum, sum_add_distrib, sum_norm_lie_coordProj_sq h_range]

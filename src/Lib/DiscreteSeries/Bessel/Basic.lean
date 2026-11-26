@@ -1,5 +1,7 @@
-import Lib.DiscreteSeries.Bruhat.FloorMeasures
-import Lib.DiscreteSeries.Haar.CayleyChart
+module
+
+public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+public import Lib.DiscreteSeries.Haar.CayleyChart
 
 /-!
 # The real unitary group G₁, unipotent coordinates and Bessel functions
@@ -43,6 +45,8 @@ Known; see `Lib.DiscreteSeries.Bruhat.FloorGroups`, `Lib.DiscreteSeries.Bessel.U
 and `Lib.DiscreteSeries.Bruhat.ComplexPlace` for sources.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 /-!
@@ -71,7 +75,8 @@ noncomputable def toBesselH (𝔰 : Shape) (N : A) : U (1 : Matrix 𝔰.κ 𝔰.
           map_mul' := by simp [fromBlocks_multiply] }).comp
       (U 1).subtype).codRestrict (𝔰.middleGram N).G
     -- `↓` unfolds membership in the unitary group before the group itself is simplified.
-    (by simp [↓mem_U, middleGram, fromBlocks_conjTranspose, splitGram, fromBlocks_multiply,
+    (by simp [↓mem_unitaryGroupOf_iff, star_eq_conjTranspose, middleGram, fromBlocks_conjTranspose,
+        splitGram, fromBlocks_multiply,
       fromBlocks_mul_fromRows, fromCols_mul_fromBlocks])
 
 @[simp]
@@ -93,7 +98,7 @@ lemma exists_eq_toBesselH {h : (𝔰.middleGram N).G} (hh : h ∈ besselH) (hN :
   -- to `z` (of norm `-N`, a unit) and orthonormal.
   let m : Matrix 𝔰.κ 𝔰.κ A := h.val.val.submatrix 𝔰.indexX₀ 𝔰.indexX₀
   have h_form : h.val.valᴴ * (𝔰.middleGram N).splitGram * h.val.val =
-      (𝔰.middleGram N).splitGram := mem_U.1 h.property
+      (𝔰.middleGram N).splitGram := mem_unitaryGroupOf_iff.1 h.property
   have h_row (a : 𝔰.κ) : h.val.val 𝔰.z (𝔰.indexX₀ a) = 0 := hN.mul_right_eq_zero.1 <| by
     simpa [apply_eq_one_apply_of_mem_floorGroup hh, middleGram, splitGram, Matrix.mul_apply,
       Matrix.one_apply]
@@ -104,7 +109,7 @@ lemma exists_eq_toBesselH {h : (𝔰.middleGram N).G} (hh : h ∈ besselH) (hN :
       Matrix.mul_apply, Matrix.one_apply]
       using congr_fun₂ h_form (𝔰.indexX₀ a) (𝔰.indexX₀ b)
   use U.of (by simp) m h_unitary
-  ext : 2
+  refine Subtype.ext (Units.ext ?_)
   simp [m, apply_eq_one_apply_of_mem_floorGroup hh, h_row, ← ext_iff, Matrix.one_apply]
 
 /-- Assume that A has a chosen element of trace one, that the form `(𝔰.middleGram N).splitGram` (ϱ
@@ -283,6 +288,12 @@ abbrev realFrameGram (y : 𝔰.G₁) : Matrix (Fin (𝔰.ϱ + 1)) (Fin (𝔰.ϱ 
   (𝔰.middleGram 1).frameGram y.val.val
 
 namespace RealPlace
+
+/-- For `γ ∈ G₁`, the matrix `Z(γ) = realFrameGram γ` equals `Fᴴ J₁ γ F`, with `F = 𝔰.frameCols` the
+frame (e₁, …, e_ϱ, z) and `J₁ = 𝔰.J₁`. -/
+lemma realFrameGram_eq_conjTranspose_mul (γ : 𝔰.G₁) :
+    realFrameGram γ = 𝔰.frameColsᴴ * 𝔰.J₁ * (γ.val.val * 𝔰.frameCols) := by
+  simp [← Matrix.ext_iff, inclMatrix, Shape.Form.frameGram, Matrix.mul_apply, Matrix.one_apply]
 
 /-- Coordinates on matrices, as a continuous `ℝ`-linear map. For a set `p` of positions `(a, i)`,
 a matrix `M` goes to its complex entries in row `e_a` and column `i` for `(a, i)` in `p`,

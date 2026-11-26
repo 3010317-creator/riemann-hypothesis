@@ -1,8 +1,10 @@
-import Lib.Adelic.Unitary.Defs
-import Lib.Cohomology.Etale.RelativeChains
-import Lib.Cohomology.LerayHirsch
-import Lib.General.Algebra.CohomologyBaseChange
-import Lib.PadicComparison.HodgeTate.ExtCocycles
+module
+
+public import Lib.Adelic.Unitary.Defs
+public import Lib.Cohomology.Etale.RelativeChains
+public import Lib.Cohomology.LerayHirsch
+public import Lib.General.Algebra.CohomologyBaseChange
+public import Lib.PadicComparison.HodgeTate.ExtCocycles
 
 /-!
 # Tensoring degree-two classes; cohomology theories with ℓ-torsion coefficients
@@ -62,6 +64,8 @@ is stated here. Source: for the setting, Milne, Étale Cohomology, Ch. VI.
 
 See also `Lib.Cohomology.Etale.FilteredLimits` and `Lib.PadicComparison.Duality.GoodPairs`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -342,11 +346,6 @@ lemma Comparison.HasUniversalPoints.on_elements {E' : C' ⥤ Type 1} {u : E' ⟶
     ext
     exact h_uniq g'.1 ⟨hg'_x, congrArg (·.1) hg'_comp⟩
 
-private lemma bijective_map_id (G : AbFunctor C) (b : C) :
-    Bijective fun v : G.obj b ↦ G.map (𝟙 b) v := by
-  rw [G.map_id]
-  exact bijective_id
-
 /-- For an element a = (c, x) of E, the forgetful map from morphisms out of a to morphisms out of c
 has universal points (`New.Variety.Comparison.HasUniversalPoints`) for the restriction of G to the
 category of elements of E. -/
@@ -357,7 +356,7 @@ lemma hasUniversalPoints_reprBy_elements (a : E.Elements) :
   -- the universal point over `y : a.fst ⟶ b` is `y` itself, read as a map from `a` to the
   -- point `E.map y a.snd` over `b`; the coefficient map is the identity of `G b`
   refine ⟨E.elementsMk b (E.map y.down a.val), ⟨⟨y.down, rfl⟩⟩, 𝟙 b, by aesop, ?_,
-    bijective_map_id G b⟩
+    ConcreteCategory.bijective_of_isIso (G.map (𝟙 b))⟩
   rintro d ⟨z, hz⟩ f ⟨⟩
   -- the map `f : b ⟶ d.fst` respects the elements of `E`, as `y ≫ f` does; it gives the unique
   -- lift, as maps between elements are determined by their underlying maps
@@ -378,7 +377,8 @@ lemma hasUniversalPoints_elements :
   intro a y
   -- the universal point over `y` is `(a, y)` itself, with the identity of `a`; the coefficient
   -- map is `G.map (𝟙 a)`, the identity of `G a`
-  refine ⟨X.elementsMk a y, PUnit.unit, 𝟙 a, ?_, fun d z f hf ↦ ?_, bijective_map_id G a⟩
+  refine ⟨X.elementsMk a y, PUnit.unit, 𝟙 a, ?_, fun d z f hf ↦ ?_,
+    ConcreteCategory.bijective_of_isIso (G.map (𝟙 a))⟩
   · -- the tautological section at `(a, y)` is `y`
     aesop
   · refine ⟨⟨f, hf.symm⟩, ?_⟩
@@ -434,7 +434,7 @@ lemma bijective_totalH_iff_isBijective {α : N' ⟶ c.functor ⋙ N} :
       _ = .of _ n (c.pull α n x) := pullbackAlong_of ..
       _ = DirectSum.map (c.pull α) (.of _ n x) := by rw [DirectSum.map_of]
   -- a direct sum of maps is bijective if and only if each summand is
-  show Bijective ((TotalH.comp (.homClass α)).comp
+  change Bijective ((TotalH.comp (.homClass α)).comp
     (TotalH.mapThenComp (N := N) (restrictAlong c.functor) (.homClass c.coeffHom))) ↔ _
   rw [h_total_eq_sum]
   exact .trans (.and (DirectSum.map_injective _) (DirectSum.map_surjective _)) forall_and.symm
@@ -448,7 +448,8 @@ def sliceEquiv :
     TotalH (abTensor N (freeAb X)) F ≃+ TotalH (elementsProj X ⋙ N) (elementsProj X ⋙ F) :=
   -- restrict to the points of `X`, then pull back along
   -- `tensorPoint (freeAbMap tautologicalSection)`, the map `n ↦ n ⊗ [tautological point]`
-  AddEquiv.ofBijective ((TotalH.comp _).comp (TotalH.map (restrictAlong (elementsProj X)))) <| by
+  AddEquiv.ofBijective ((TotalH.comp (.homClass (tensorPoint (freeAbMap tautologicalSection)
+      (elementsProj X ⋙ N)))).comp (TotalH.map (restrictAlong (elementsProj X)))) <| by
     -- by dévissage it suffices to treat `N = ℤ[Y]`, `Y` a sum of representable functors
     -- `h_bij`: the comparison is bijective in every degree at `N`
     have h_bij :=
@@ -898,7 +899,7 @@ lemma IdealFamily.constToZeros_zsmul_mk (c : C) (n : ℤ) :
     I.constToZeros c ⟦n • relFreeAb.mk I.topLocus ⟨⟩⟧ = ⟦⟨.const _ n⟩⟧ := by
   refine congrArg (⟦·⟧) ?_
   -- `oneLocConst` sends the generator to the constant function `1`
-  show ((oneLocConst (g := g)).app c).hom' (n • FreeAddCommGroup.of PUnit.unit) = _
+  change ((oneLocConst (g := g)).app c).hom' (n • FreeAddCommGroup.of PUnit.unit) = _
   have h_one : ((oneLocConst (g := g)).app c).hom' (.of PUnit.unit) =
       ⟨LocallyConstant.const _ (1 : ZMod ℓ)⟩ := freeAb.desc_of ..
   rw [map_zsmul, h_one, ← zsmul_one]

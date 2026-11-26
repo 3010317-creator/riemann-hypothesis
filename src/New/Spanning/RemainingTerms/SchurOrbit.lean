@@ -1,7 +1,9 @@
-import New.Spanning.RemainingTerms.ColumnLattice
-import New.Spanning.RemainingTerms.FrameParts
-import New.Spanning.RemainingTerms.LinkLattice
-import New.Spanning.RemainingTerms.SchurTest
+module
+
+public import New.Spanning.RemainingTerms.ColumnLattice
+public import New.Spanning.RemainingTerms.FrameParts
+public import New.Spanning.RemainingTerms.LinkLattice
+public import New.Spanning.RemainingTerms.SchurTest
 
 /-!
 # Schur's test for one orbit
@@ -36,6 +38,8 @@ Notions from other files:
   `New.Filling.tsum_amplitudeMajorant_orbit_le`: the test, and its form as a bound by
   `New.Filling.orbitBound`.
 -/
+
+@[expose] public section
 
 namespace New.Filling
 
@@ -557,7 +561,7 @@ lemma HasCellRank.exists_majorant_lintegral_le_kernelBound (h_rank : S.HasCellRa
   refine ⟨fun A ↦ φ₀ ((S.shiftScaling j v)ᴴ * of A + 0), h_meas.comp (Continuous.measurable ?_),
     ?_, fun g A hg_gram hg_pair hg_part ↦ h_le g _ hg_gram hg_pair ?_⟩
   · have h_of : Continuous fun A : Fin (min 𝔰.ϱ j) → 𝔰.κ → ℂ ↦ of A := continuous_id
-    show Continuous fun A : Fin (min 𝔰.ϱ j) → 𝔰.κ → ℂ ↦ (S.shiftScaling j v)ᴴ * of A + 0
+    change Continuous fun A : Fin (min 𝔰.ϱ j) → 𝔰.κ → ℂ ↦ (S.shiftScaling j v)ᴴ * of A + 0
     fun_prop
   · -- The change of variables brings in the Jacobian that `kernelBound` carries.
     have h_det : (S.shiftScaling j v)ᴴ.det ≠ 0 := by
@@ -791,7 +795,6 @@ lemma tsum_schurWeight_ratToInf_mul {i : ℕ} {u : S.G E} (hu : u ∈ S.classUni
   conv_lhs => rw [← h_image, tsum_image (S.schurWeight c' · _ _) (by simp)]
   simp [schurWeight, volumeRatio, frameVolume_mul_left, ratToInf_mem_besselU0 hu.2]
 
-set_option synthInstance.maxHeartbeats 200000 in
 /-- **From the lattice to an integral.** Let `γ` have cell rank `j ≥ 1` (`HasCellRank`) and lie in
 `termsOver c s c'`.
 

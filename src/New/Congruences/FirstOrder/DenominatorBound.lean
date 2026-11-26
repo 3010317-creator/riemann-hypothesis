@@ -1,8 +1,10 @@
-import New.Congruences.FirstOrder.AuxiliaryPrimeTie
-import New.Congruences.FirstOrder.HeckeStrings
-import New.Congruences.FirstOrder.RibetElement
-import New.Congruences.FirstOrder.TrianglePrimes
-import New.Congruences.GaloisRepresentations.BaseLevelOfLabel
+module
+
+public import New.Congruences.FirstOrder.AuxiliaryPrimeTie
+public import New.Congruences.FirstOrder.HeckeStrings
+public import New.Congruences.FirstOrder.RibetElement
+public import New.Congruences.FirstOrder.TrianglePrimes
+public import New.Congruences.GaloisRepresentations.BaseLevelOfLabel
 
 /-!
 # The bound for denominators
@@ -50,6 +52,8 @@ works. Related work: Dasgupta–Kakde–Silliman–Wang, The residually indistin
 method for GL2, 2023; Dotto–Thorne, Modularity of residually reducible representations of rank 2,
 2026; Martin–Wakatsuki, Mass formulas and Eisenstein congruences in higher rank, 2024.
 -/
+
+@[expose] public section
 
 namespace New.Selmer
 
@@ -598,7 +602,8 @@ lemma exists_ellVal_le_and_diagOp_mem_ellIntegralForms {P : Parameters} {D : Dat
   -- `N x` is the twist of `x.galRep` by `normalizingAvatar O`, which is continuous, so integral.
   let a : AbsGal D →* EllAdicIntegers :=
     ((coeHom (PadicAlgCl ℓ)).comp (normalizingAvatar O)).codRestrict (intQpBar ℓ)
-      fun g ↦ (norm_eq_one_of_continuous (by fun_prop) g).le
+      fun g ↦ (ContinuousMonoidHom.norm_apply_eq_one_of_compactSpace
+        ⟨normalizingAvatar O, (by fun_prop : Continuous (normalizingAvatar O))⟩ g).le
   have h_twist : BaseLevel.IsGalRepTwist N a := fun _ _ ↦ rfl
   have h_tame (j : J) : a (Q.frobData j).isPlaceOver.tameGenerator = 1 := by
     obtain ⟨h_notMem, -⟩ := h_tri.isTameGeneratorFamily j
@@ -805,7 +810,7 @@ lemma IsLiftGenerator.typeProjection_eq_zero_or_mem_range {P : Parameters} {D : 
       have h_orth : typeProjection O c * typeProjection O c' = 0 := by
         rw [← map_mul, tupleIdem_orthogonal.ortho h_label_ne, map_zero]
       apply h_ne
-      rw [← typeProjection_eq_self_of_mem_range hc', ← End.mul_apply, h_orth, LinearMap.zero_apply]
+      rw [← typeProjection_eq_self_of_mem_range hc', ← mul_apply_eq_comp, h_orth, LinearMap.zero_apply]
     exact hc'
   · -- Otherwise the line of `v` has no nonzero isotypic form, so it lies in the kernel.
     by_contra h_none
@@ -1140,7 +1145,7 @@ lemma preservesHeckeEigenspaces_toLin_diagonal {P : Parameters} {D : Data P} {r 
       T * Matrix.toLin b b (Matrix.diagonal μ) = Matrix.toLin b b (Matrix.diagonal μ) * T :=
     b.ext fun k ↦ by simp [T, Matrix.diagonal, smul_smul, mul_comm]
   have hTz : T z = a • z := Subtype.ext ((hT z).symm.trans hz)
-  rw [hT, ← Module.End.mul_apply, h_comm, Module.End.mul_apply, hTz, map_smul, Submodule.coe_smul]
+  rw [hT, ← mul_apply_eq_comp, h_comm, mul_apply_eq_comp, hTz, map_smul, Submodule.coe_smul]
 
 /-- Bound for denominators. Let the twist `ϑ` have ramification at most `ram` (`IsAuxTwist`), let
 `sel` be finite, and let `Z` be spanned by lift generators: forms in `Z`, of a type compatible with
@@ -1229,7 +1234,7 @@ lemma exp_le_norm_det_smul_of_ellVal_le {ℓ : ℕ} [ThePrime ℓ] [PadicIso ℓ
     rw [h_rpow]
     exact ellVal_le_iff.1 (h_eig μ hμ)
   have h_pow : exp (-(finrank ℂ Z * (B * log ℓ))) = exp (-(B * log ℓ)) ^ finrank ℂ Z := by
-    rw [← exp_nat_mul, mul_neg]
+    rw [← exp_natCast_mul, mul_neg]
   rw [h_pow, LinearMap.det_smul, map_mul, map_pow, map_natCast]
   exact_mod_cast pow_finrank_le_nnnorm_det Λ _ h_eig'
 

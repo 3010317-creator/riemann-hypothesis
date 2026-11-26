@@ -1,5 +1,7 @@
-import Lib.SiegelWeil.Tower.LargeSideConstantTerm
-import Lib.SiegelWeil.Tower.TestVector
+module
+
+public import Lib.SiegelWeil.Tower.LargeSideConstantTerm
+public import Lib.SiegelWeil.Tower.TestVector
 
 /-!
 # The functional equation of the `L`-function of a tamely ramified character
@@ -29,6 +31,8 @@ Known result: analytic continuation and functional equation of Hecke `L`-functio
 arguments `x > -min μ` and absolute values are treated. Source: J. Tate, Fourier analysis in number
 fields and Hecke's zeta-functions (thesis, 1950), §2.5 and Main Theorem 4.4.1.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -316,7 +320,6 @@ lemma exists_analyticOnNhd_eq_L_mul_gammaIntegral (m : InfinitePlace E → ℕ) 
   -- Take the test vector, the empty matrix, the idele `1` and the identity of the group.
   obtain ⟨𝒵, h_analytic, -, h_value⟩ :=
     h_continuation (tateVector s m) (isSchwartzVector_tateVector s m) 0 nofun 1 1 (.inl rfl)
-
   let Φ : Matrix Empty Empty (LocProd 𝔠.ramifiedPlaces) → ℂ := stdColDatum 𝔠.semilocalChar 1
   -- There is only one empty matrix.
   have h_datum : stdRowDatum (Equiv.emptySum Empty Empty) 𝔠.semilocalChar 0 = Φ :=

@@ -1,4 +1,6 @@
-import Lib.CM.Sigma.Basic
+module
+
+public import Lib.CM.Sigma.Basic
 
 /-!
 # Circle means, Taylor series at zero, a power bound, and smooth matrix operations
@@ -29,6 +31,8 @@ The imported notion `New.taylorAtZero f` is the formal power series whose `n`-th
 The results of this file include the mean value property of holomorphic functions and the fact that
 an entire function is determined by its Taylor series at 0.
 -/
+
+@[expose] public section
 
 /-! ## Circle averages, the mean value property and a halving criterion for upper bounds -/
 
@@ -195,7 +199,7 @@ lemma New.pow_le_exp_log_factorial_add (l : ℕ) (x : NNReal) (v : ℝ) :
         gcongr
         exact pow_div_factorial_le_exp _ (by positivity) l
     _ = exp (log l.factorial + l * v + x / exp v) := by
-        simp [exp_add, exp_log, l.factorial_pos, exp_nat_mul]
+        simp [exp_add, exp_log, l.factorial_pos, exp_natCast_mul]
 
 end PowerExpBound
 

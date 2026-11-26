@@ -1,5 +1,7 @@
-import Lib.General.LinearAlgebra.Eigenvalues
-import Lib.Weil.Construction.AdelicRepresentation
+module
+
+public import Lib.General.LinearAlgebra.Eigenvalues
+public import Lib.Weil.Construction.AdelicRepresentation
 
 /-!
 # Hyperbolic space and splittings of a hermitian space along isotropic subspaces
@@ -46,6 +48,8 @@ Notions from other files:
 
 Known; see `Lib.Adelic.Witt.IwasawaDecomposition` and `Lib.Weil.MixedModel.ZeroTerm` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -235,7 +239,8 @@ variable {E : Type*} [Field E] [NumberField E] [IsCMField E] {n n₁ : Type*} [F
 /-- An element `g` of the adelic unitary group preserves the standard form: `gᴴ S g = S`, with
 `S = stdForm E s`. -/
 lemma G.conjTranspose_adeleMatrix_mul_stdForm_mul_adeleMatrix :
-    g.adeleMatrixᴴ * stdForm E s * g.adeleMatrix = stdForm E s := g.toUnitary.prop
+    g.adeleMatrixᴴ * stdForm E s * g.adeleMatrix = stdForm E s :=
+  mem_unitaryGroupOf_iff.1 g.toUnitary.prop
 
 omit [IsCMField E] in
 /-- The standard form `S = stdForm E s` is its own inverse: `S (S a) = a`. -/
@@ -744,7 +749,7 @@ lemma exists_levi_mul_radicalElement_eq :
   refine ⟨two, toAdele (3⁻¹ : E) • b, ?_⟩
   rw [levi_conj_radicalElement, radicalElement_mul]
   -- Both sides are a unipotent element times `levi (two, 1)`; compare the unipotent factors.
-  refine congrArg (· * D.levi (two, 1)) ?_
+  congr 1
   refine ext_adeleMatrix ?_
   -- Expand both matrices and compare the scalar coefficients of each term.
   simp [Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, two]

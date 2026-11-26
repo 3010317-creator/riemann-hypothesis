@@ -1,5 +1,7 @@
-import Lib.Adelic.Hecke.Basic
-import Lib.General.Groups.BesselGroups
+module
+
+public import Lib.Adelic.Hecke.Basic
+public import Lib.General.Groups.BesselGroups
 
 /-!
 # Integral matrices over subrings: Smith normal form, Gelfand's condition and lattices
@@ -46,6 +48,8 @@ Part of a known result: the valuation pairs and integral matrices of this file a
 Witt's extension theorem for unimodular hermitian lattices and for the Iwasawa decomposition (see
 `Lib.Adelic.Witt.IwasawaDecomposition`).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -153,7 +157,8 @@ the identity form, the g in GL_n(A) with gᴴg = 1. -/
 def U.cutAt (he : IsIdempotentElem e) [StarRing A] (hs : star e = e) :
     U (1 : Matrix n n A) →* U (1 : Matrix n n A) :=
   ((cutGL he).comp (U 1).subtype).codRestrict (U 1) <| by
-    simp_all [mem_U, cutGL, he.eq, mul_add, add_mul, smul_smul, mul_sub]
+    simp_all [Matrix.mem_unitaryGroupOf_iff, Matrix.star_eq_conjTranspose,
+      cutGL, he.eq, mul_add, add_mul, smul_smul, mul_sub]
 
 end New
 

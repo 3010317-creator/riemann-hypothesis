@@ -1,7 +1,9 @@
-import Lib.CM.Sigma.Basic
-import Lib.GLn.SchurModule.Basic
-import Lib.General.Algebra.AdicCompletion
-import TauCeti.RingTheory.MvPowerSeries.Derivative
+module
+
+public import Lib.CM.Sigma.Basic
+public import Lib.GLn.SchurModule.Basic
+public import Lib.General.Algebra.AdicCompletion
+public import TauCeti.RingTheory.MvPowerSeries.Derivative
 
 /-!
 # Integral power series over ℂ_p: jets, the chain rule and the exponential
@@ -33,6 +35,8 @@ Notions from other files:
 Known results: the chain rule and the functional equation of the exponential for formal power
 series, and Legendre's formula for the valuation of a factorial.
 -/
+
+@[expose] public section
 
 /-! ## The inclusion of integral power series -/
 
@@ -158,15 +162,6 @@ meaningful when `a` has no constant term. -/
 noncomputable abbrev expSubst (a : MvPowerSeries σ ℂ_[p]) : MvPowerSeries σ ℂ_[p] :=
   (exp ℂ_[p]).subst a
 
-/-- Substituting a series `a` without constant term into `f` keeps the constant term of `f`. -/
-@[simp]
-lemma constantCoeff_subst_of_constantCoeff_eq_zero (a : MvPowerSeries σ ℂ_[p])
-    (ha : a.constantCoeff = 0) (f : ℂ_[p]⟦X⟧) :
-    (subst a f).constantCoeff = constantCoeff f := by
-  rw [constantCoeff_subst (.of_constantCoeff_zero ha),
-    finsum_eq_single _ 0 fun d hd ↦ by simp [ha, hd]]
-  simp
-
 /-- The functional equation `exp (a + b) = exp a * exp b` for series `a`, `b` without constant
 term. -/
 lemma expSubst_add (a : MvPowerSeries σ ℂ_[p]) {b : MvPowerSeries σ ℂ_[p]}
@@ -213,7 +208,7 @@ lemma padicValNat_factorial_mem_Icc {n K : ℕ} (hn : n < p ^ K) :
   -- are at most `K` digits, each at most `p - 1`.
   have hp1 : 1 < p := hp.out.one_lt
   have legendre : (p - 1) * padicValNat p n ! + (p.digits n).sum = n := by
-    rw [Nat.padicValNat_def, sub_one_mul_padicValNat_factorial,
+    rw [Nat.padicValNat_def, Nat.Prime.sub_one_mul_multiplicity_factorial,
       Nat.sub_add_cancel (digit_sum_le p n)]
     exact hp.out
   have digit_le : ∀ d ∈ p.digits n, d ≤ p - 1 :=

@@ -1,5 +1,7 @@
-import Lib.ClassField.Avatar.LocalGlobalCompatibility
-import Lib.GaloisRep.Main.ThetaLift
+module
+
+public import Lib.ClassField.Avatar.LocalGlobalCompatibility
+public import Lib.GaloisRep.Main.ThetaLift
 
 /-!
 # Isotypic spaces of eigenforms and attached Galois representations in every positive rank
@@ -78,6 +80,8 @@ Notions from other files:
 Known; see `Lib.GaloisRep.Main.OddRank`, `Lib.ClassField.Global.CMSplittingCharacters` and
 `Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -349,7 +353,8 @@ lemma New.GaloisRep.Attached.twistByChar_of_scaleRoots_eq {ℓ : ℕ} {E m : Typ
   filter_upwards [hσ.eventually_norm_coeff_le hη, hev] with y hy ⟨hν_val, hQ_monic, hQ_scale⟩
   -- Twisting scales the roots by the value of `ν`, of norm one, so each coefficient of the
   -- difference keeps its norm.
-  have hν_norm : ‖(ν y.frob).val‖ = 1 := norm_eq_one_of_continuous hν y.frob
+  have hν_norm : ‖(ν y.frob).val‖ = 1 :=
+    ContinuousMonoidHom.norm_apply_eq_one_of_compactSpace ⟨ν, hν⟩ y.frob
   have hy_frob (i : ℕ) : ‖(σ y.frob).val.charpoly.coeff i - ιℓ ((Q y.place).coeff i)‖ ≤ η := by
     simpa [coeff_sub, coeff_map] using hy y.frob rfl i
   simpa [← hQ_scale, Units.smul_def, charpoly_smul_coeff, hQ_monic.natDegree_eq, ← hν_val,

@@ -1,6 +1,8 @@
-import Lib.Adelic.AutomorphicForms.Cuspidality
-import Lib.Adelic.TraceFormula.IsotropicStabiliser
-import Lib.Adelic.TraceFormula.KernelBound
+module
+
+public import Lib.Adelic.AutomorphicForms.Cuspidality
+public import Lib.Adelic.TraceFormula.IsotropicStabiliser
+public import Lib.Adelic.TraceFormula.KernelBound
 
 /-!
 # Convergence of the geometric side
@@ -29,6 +31,8 @@ Notions from other files:
 * `New.Space.exists_norm_tsum_polyTerm_le`: the uniform bound for a set of polynomials.
 * `New.Space.exists_tsum_enorm_irreducibleTerm_le`: the absolute bound for irreducible polynomials.
 -/
+
+@[expose] public section
 
 open NumberField MeasureTheory Matrix Polynomial Fintype Norms.L2Operator
 
@@ -102,8 +106,6 @@ lemma partialKernel_ratEmbed_mul {k : GInf E s → ℂ} (φ : Gf E n → ℂ) {Z
     (hν : ∀ γ : U V.J, ν * γ ∈ Z ↔ γ ∈ Z) (g x : G E s) :
     V.partialKernel k φ Z (V.ratEmbed ν * g) x = V.partialKernel k φ Z g x := by
   classical
-  have h_point (γ : U V.J) :
-      (V.ratEmbed ν * g)⁻¹ * V.ratEmbed (ν * γ) * x = g⁻¹ * V.ratEmbed γ * x := by simp [mul_assoc]
   calc V.partialKernel k φ Z (V.ratEmbed ν * g) x
       = ∑' γ : U V.J, V.kernelTerm k φ (Z.indicator 1) (V.ratEmbed ν * g) (ν * γ) x :=
         ((Equiv.mulLeft ν).tsum_eq _).symm

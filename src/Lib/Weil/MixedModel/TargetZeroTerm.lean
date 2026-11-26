@@ -1,5 +1,7 @@
-import Lib.ClassField.HeckeCharacter.TameModulus
-import Lib.SiegelWeil.Tower.RealConeIntegral
+module
+
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.SiegelWeil.Tower.RealConeIntegral
 
 /-!
 # Zero terms of the mixed models of the Weil representation at the real places
@@ -36,6 +38,8 @@ Notions from other files:
 
 Known; see `Lib.Weil.MixedModel.ZeroTerm` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -312,7 +316,6 @@ lemma exists_realTargetZeroTerm_realPairWeil [IsBaseAdapted X] (hn : 2 ∣ card 
     have h_adelic : G.det ((g, 1) : G E t') = divStar m.det * G.det ((h, 1) : G E t) :=
       X.det_eq_divStar_mul (g, 1) (h, 1) m h_frame h_block
     have h_div : (divStar m.det : 𝔸 E).1 w = u w ^ (2 : ℤ) := by
-      have h_inv : a⁻¹.val w = (a.val w)⁻¹ := eq_inv_of_mul_eq_one_left (congrFun a.inv_mul w)
       have h_quotient : (divStar m.det : 𝔸 E).1 w = a.val w / starRingEnd ℂ (a.val w) := by
         simp [coe_divStar, m, div_eq_mul_inv, ← map_inv]
       rw [h_quotient, zpow_two, div_mul_div_comm, ← sq (‖a.val w‖ : ℂ), ← Complex.mul_conj',

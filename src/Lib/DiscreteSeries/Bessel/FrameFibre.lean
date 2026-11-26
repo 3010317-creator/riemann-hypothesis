@@ -1,5 +1,7 @@
-import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
-import Lib.DiscreteSeries.Haar.GramFibre
+module
+
+public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+public import Lib.DiscreteSeries.Haar.GramFibre
 
 /-!
 # Haar measure of G₁ and the fibre measure on frames
@@ -34,6 +36,8 @@ Known result: the fibre measure of the Gram map on tuples of vectors, in terms o
 the unitary group. The file proves the inequality that is used. Siegel, Über die analytische Theorie
 der quadratischen Formen, Ann. of Math. 36 (1935).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -300,7 +304,7 @@ theorem _root_.New.LeGramFibre.mconv_fixerHaar_le {m : Measure 𝔰.G₁} [SFini
         ⟨by simp [Function.Injective, Fin.forall_fin_succ'], by simp +arith⟩
   let ν : Measure 𝔰.G₁ := 𝔰.besselHaar₀.map Subtype.val
   have h_fix : ∀ᵐ g : 𝔰.G₁ ∂ν, g.val.val * 𝔰.frameCols = 𝔰.frameCols := by
-    refine ae_map_mul_eq measurable_subtype_coe fun u ↦ ?_
+    refine ae_map_mul_eq measurable_subtypeVal fun u ↦ ?_
     obtain ⟨q, hq⟩ := mem_besselU0_iff_unipotentOf.1 u.property
     simp [hq, val_unipotentOf_coe, Matrix.add_mul, Matrix.sub_mul, Matrix.mul_assoc,
       inclMatrix_gram_eq_zero, Fin.forall_fin_succ']

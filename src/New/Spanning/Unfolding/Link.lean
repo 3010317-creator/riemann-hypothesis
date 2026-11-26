@@ -1,5 +1,7 @@
-import Lib.DiscreteSeries.Bruhat.BigCell
-import New.Spanning.Unfolding.Terms
+module
+
+public import Lib.DiscreteSeries.Bruhat.BigCell
+public import New.Spanning.Unfolding.Terms
 
 /-!
 # Links of isometries, the link isometry Υ_γ, and invariance under `besselU`
@@ -50,6 +52,8 @@ Notions from other files:
   and `γ f` share a vector with leading coefficients `c` and `1` at `a`.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 /-!
@@ -75,7 +79,7 @@ lemma splitGram_mulVec (v : 𝔰.BesselIndex → F) :
   simp [funext_iff, splitGram, fromBlocks_mulVec, comp_def]
 
 /-- The matrix `linkMatrix γ` sends `t` to the pair of the middle blocks of `t` and of `γ⁻¹ t`. -/
-@[simp ↓]
+@[simp↓]
 lemma linkMatrix_mulVec {γ : T.G} (t : 𝔰.BesselIndex → F) :
     linkMatrix γ *ᵥ t = (fun b : 𝔰.MiddleIndex ↦ t (inr (inl b))) ⊕ᵥ
       fun b : 𝔰.MiddleIndex ↦ (γ⁻¹.val.val *ᵥ t) (inr (inl b)) := by
@@ -84,7 +88,7 @@ lemma linkMatrix_mulVec {γ : T.G} (t : 𝔰.BesselIndex → F) :
 /-- A vector `t` is orthogonal to `A = ⟨e₁, …, e_ϱ⟩` and to `γ A` (so to the span `A + γ A` of the
 columns of `isotropicFramePair γ`) iff the last `ϱ` coordinates, those at the `e*_a`, of both `t`
 and `γ⁻¹ t` vanish. -/
-@[simp ↓]
+@[simp↓]
 lemma orthogonal_isotropicFramePair_iff {γ : T.G} {t : 𝔰.BesselIndex → F} :
     t ∈ ((isotropicFramePair γ)ᴴ * T.splitGram).mulVecLin.ker ↔
       (∀ a : Fin 𝔰.ϱ, t (eStar a) = 0) ∧ ∀ a : Fin 𝔰.ϱ, (γ⁻¹.val.val *ᵥ t) (eStar a) = 0 := by
@@ -747,13 +751,6 @@ theorem linkIsometry_eq_iff {γ γ' : S.G E} :
   · rw [mem_link_iff_linkIsometry, mem_link_iff_linkIsometry, h]
   · obtain ⟨p, hp, rfl⟩ := exists_mem_link_linkSource_eq γ a
     rw [linkIsometry_linkSource hp, linkIsometry_linkSource (h.le hp)]
-
-/-- The link isometry is the same for `u⁻¹ γ u'` as for `γ`, when `u` and `u'` lie in the Bessel
-unipotent group `besselU`, because the two links are equal. -/
-theorem linkIsometry_inv_mul_mul_of_mem_besselU {γ u u' : S.G E} (hu : u ∈ besselU)
-    (hu' : u' ∈ besselU) :
-    linkIsometry (u⁻¹ * γ * u') = linkIsometry γ :=
-  linkIsometry_eq_iff.2 (link_inv_mul_mul_of_mem_besselU hu hu')
 
 /-- The product of two pairs `p`, `q` for the form `S.linkForm = T ⊕ -T`, where `T` is the form of
 `X₀ ⊥ E z_N`, is the difference of the products, in the positive space `X₀ ⊥ E z⁺` with Gram matrix

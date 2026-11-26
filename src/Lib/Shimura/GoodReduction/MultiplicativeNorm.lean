@@ -1,6 +1,8 @@
-import Lib.General.NumberTheory.SUnitsAndClassNumber
-import Lib.Shimura.GoodReduction.GaussSums
-import Lib.Shimura.ThetaModuli.PELThetaTori
+module
+
+public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Lib.Shimura.GoodReduction.GaussSums
+public import Lib.Shimura.ThetaModuli.PELThetaTori
 
 /-!
 # Good reduction of theta tori from shift bounds on kernels of multiplications
@@ -46,6 +48,8 @@ Lett. 18 (2011); R. Kottwitz, Points on some Shimura varieties over finite field
 Soc. 5 (1992), §5 (division algebra case); for the CM case B. Conrad, Semistable reduction for
 abelian varieties (notes), Prop. 6.3, after Serre and Tate, Ann. of Math. 88 (1968).
 -/
+
+@[expose] public section
 
 /-!
 ## Shift bounds on kernels of multiplications and the multiplicative norm
@@ -229,7 +233,7 @@ private lemma exists_averagedPullback_eq_smul (hd : star c = d)
   have Q_commute : ∀ a : B.dualLattice, Commute (h.isAppellHumbert.thetaShiftEnd a) Q := by
     rintro ⟨a, ha⟩
     refine LinearMap.ext fun t ↦ Subtype.ext ?_
-    show B.thetaShift a (h.averagedPullback c d t) = h.averagedPullback c d (B.thetaShift a t)
+    change B.thetaShift a (h.averagedPullback c d t) = h.averagedPullback c d (B.thetaShift a t)
     have shift_eq_smul (s : V → ℂ) : h.normShift a s = (h.multiplier a)⁻¹ • B.thetaShift a s := rfl
     have multiplier_ne : (h.multiplier a)⁻¹ ≠ 0 := by simp [canonicalMultiplier]
     have scaled : (h.multiplier a)⁻¹ • h.averagedPullback c d (B.thetaShift a t) =
@@ -523,7 +527,7 @@ lemma hasShiftBound_one_of_ker {A : LatticeForm L} {w : torsionPoints L} (hd : s
           simp
         _ = F (1 - α * c) w := by rw [eq_sub_of_add_eq' hαγ]
         _ = (w : V) - F α (F c w) := by simp
-    show (w : V) - F d (F γ w) ∈ L
+    change (w : V) - F d (F γ w) ∈ L
     simpa only [T, g, torsionAction, h_apply, sub_sub_cancel] using h.map_mem α _ hw
   have g_mem : F c g ∈ L := by simpa [g, action_comm c] using h.map_mem _ _ hw
   have killed (z : h.MulKernel d) : F d (F c z.out) ∈ L := by simp [action_comm _ c, h.map_mem]

@@ -1,6 +1,8 @@
-import Lib.CM.FormalGroup.IntegralParameter
-import Lib.General.Algebra.AbsIntegrallyClosed
-import TauCeti.RingTheory.PowerSeries.Log
+module
+
+public import Lib.CM.FormalGroup.IntegralParameter
+public import Lib.General.Algebra.AbsIntegrallyClosed
+public import TauCeti.RingTheory.PowerSeries.Log
 
 /-!
 # Integrality of exponentials, logarithms and roots of power series
@@ -42,6 +44,8 @@ closed valued field. Source: Bosch, Güntzer and Remmert, *Non-Archimedean Analy
 Known result: the integrality of the `p`-adic exponential and logarithm on series of large enough
 valuation, and of the binomial series with exponent in `ℤ_p`.
 -/
+
+@[expose] public section
 
 /-!
 ## A general integral point
@@ -121,10 +125,6 @@ open PowerSeries IsUltrametricDist
 namespace New
 variable {p : ℕ} [Fact p.Prime]
 
-/-- If `g(0) = 0`, then `(exp g)' = exp g * g'`, where `exp g` is `expSubst g`. -/
-lemma derivative_expSubst {g : ℂ_[p]⟦X⟧} (hg_zero : constantCoeff g = 0) :
-    d⁄dX (expSubst g) = expSubst g * d⁄dX g := by
-  rw [expSubst, derivative_subst (.of_constantCoeff_zero' hg_zero), derivative_exp]
 
 /-- If `g(0) = 0`, then `exp g` has constant term `1`. -/
 lemma constantCoeff_expSubst {g : ℂ_[p]⟦X⟧} (hg_zero : constantCoeff g = 0) :
@@ -263,7 +263,7 @@ lemma norm_pow_le_norm_factorial_succ {c : ℂ_[p]} (hc : ‖c‖ ≤ p ^ (-(1 /
   have hp : (1 : ℝ) < p := Nat.one_lt_cast.2 (Fact.out : p.Prime).one_lt
   have h_val : (p - 1) * padicValNat p (j + 1).factorial ≤ j := by
     rw [Nat.padicValNat_def]
-    exact Nat.le_of_lt_succ (sub_one_mul_padicValNat_factorial_lt_of_ne_zero p j.succ_ne_zero)
+    exact Nat.le_of_lt_succ (sub_one_mul_multiplicity_factorial_lt_of_ne_zero p j.succ_ne_zero)
   have h_real : (padicValNat p (j + 1).factorial : ℝ) ≤ j / (p - 1) := by
     rw [le_div_iff₀' (sub_pos.2 hp), ← Nat.cast_pred (Fact.out : p.Prime).pos]
     exact_mod_cast h_val

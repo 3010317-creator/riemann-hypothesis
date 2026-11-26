@@ -1,5 +1,7 @@
-import Lib.Cohomology.Hodge.CupProduct
-import Lib.General.Geometry.EtaleCharts
+module
+
+public import Lib.Cohomology.Hodge.CupProduct
+public import Lib.General.Geometry.EtaleCharts
 
 /-!
 # Hodge cohomology on algebras with free modules; universal points of charts
@@ -35,6 +37,8 @@ Notions from other files:
 
 Known; see `Lib.Cohomology.Hodge.FixedPointFormula` for sources.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -189,7 +193,7 @@ lemma exteriorMap_formBasis (f : P ⟶ Q) (j : P.Index ↪o Q.Index)
 
 private lemma HodgeTest.withIndex_map_snd_single (i : ι) :
     ((withIndex ι).map f).2 (single i 1) = single i 1 := by
-  show f ∘ single i 1 = single i 1
+  change f ∘ single i 1 = single i 1
   grind
 
 /-- Let f : A → B be a map of k-algebras and x a form in ⋀_A A^ι. Under the map ⋀_A A^ι → ⋀_B B^ι
@@ -337,6 +341,7 @@ private lemma EtaleChart.existsUnique_univPoint :
 /-- The universal point of an étale chart a with ring R = a.coordRing and d coordinates x_i: the
 k-algebra map u : R → R ⊕ R^d that lifts the identity of R and sends each x_i to (x_i, e_i), where
 e_i is the i-th basis vector of R^d. These two conditions determine u. -/
+@[no_expose]
 def EtaleChart.univPoint : a.coordRing ⟶ HodgeTest.sqZeroExt.obj ⟨a.coordRing, Fin d⟩ :=
   (EtaleChart.existsUnique_univPoint a).exists.choose
 

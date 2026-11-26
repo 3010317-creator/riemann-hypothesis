@@ -1,5 +1,7 @@
-import Lib.Adelic.Witt.WittTheorem
-import Lib.GLn.SchurModule.WeylKernel
+module
+
+public import Lib.Adelic.Witt.WittTheorem
+public import Lib.GLn.SchurModule.WeylKernel
 
 /-!
 # Fock pairing, Hermitian norm and Cartan products for the Gram matrix of the Weyl kernel
@@ -39,6 +41,8 @@ Notions from other files:
 
 Known; see `Lib.GLn.SchurModule.SchurNorm` and `Lib.GLn.Dual` for sources.
 -/
+
+@[expose] public section
 
 /-!
 ## The Fock form and the Gram matrix
@@ -206,11 +210,9 @@ noncomputable def firstColumnExponent (α : ∀ τ : Φ, n τ → ℕ) : ((τ : 
   (Finsupp.equivFunOnFinite.symm fun x : (τ : Φ) × n τ ↦ α x.1 x.2).embDomain
     (Function.Embedding.sectL ((τ : Φ) × n τ) 0)
 
-lemma firstColumnExponent_injective : Function.Injective (firstColumnExponent (n := n)) := by
-  intro α β h_eq
-  funext τ b
-  exact congrFun (Finsupp.equivFunOnFinite.symm.injective (Finsupp.embDomain_injective _ h_eq))
-    ⟨τ, b⟩
+lemma firstColumnExponent_injective : Function.Injective (firstColumnExponent (n := n)) :=
+  (Finsupp.embDomain_injective _).comp <| Finsupp.equivFunOnFinite.symm.injective.comp
+    (Equiv.piCurry fun τ (_ : n τ) ↦ ℕ).symm.injective
 
 /-- A product over the exponent `firstColumnExponent α` runs over the variables in the first
 columns. -/
@@ -402,12 +404,10 @@ lemma posDef_cauchy_schwarz {ι : Type*} [Fintype ι] {M : Matrix ι ι ℂ} (h_
     (x y : ι → ℂ) :
     ‖star x ⬝ᵥ M *ᵥ y‖ ^ 2 ≤ (star y ⬝ᵥ M *ᵥ y).re * (star x ⬝ᵥ M *ᵥ x).re := by
   -- the Cauchy–Schwarz inequality of the inner product `⟪u, v⟫ = u* M v` that `M` defines
-  let _ : SeminormedAddCommGroup (ι → ℂ) := M.toSeminormedAddCommGroup h_posDef.posSemidef
-  let _ : InnerProductSpace ℂ (ι → ℂ) := M.toInnerProductSpace h_posDef.posSemidef
-  have h_inner (u v : ι → ℂ) : inner ℂ u v = star u ⬝ᵥ M *ᵥ v := dotProduct_comm _ _
-  have h_cs : ‖inner ℂ y x‖ * ‖inner ℂ x y‖ ≤ re (inner ℂ y y) * re (inner ℂ x x) :=
-    inner_mul_inner_self_le y x
-  rwa [norm_inner_symm y x, ← sq, h_inner, h_inner, h_inner] at h_cs
+  have h_cs := h_posDef.star_dotProduct_mulVec_mul_le x y
+  rw [eq_re_of_ofReal_le (h_posDef.posSemidef.dotProduct_mulVec_nonneg x),
+    eq_re_of_ofReal_le (h_posDef.posSemidef.dotProduct_mulVec_nonneg y)] at h_cs
+  simpa [mul_conj', mul_comm, ← ofReal_pow, ← ofReal_mul, real_le_real] using h_cs
 
 /-- As a complex number, the squared Gram norm `weylNormSq ξ` is `ξ* G ξ` itself: its imaginary part
 is zero because G is positive semidefinite. -/
@@ -438,7 +438,7 @@ lemma weylNormSq_weylEval_permArray (e : ∀ τ : Φ, n τ ≃ Fin (rankAt n τ)
   have h_form : star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y = 1 := by
     rw [h_star, ← eval_toPoly, toPoly_weylEval]
     exact eval_weylKernel_permArray e
-  show re (star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y) = 1
+  change re (star (weylEval n κ y) ⬝ᵥ weylGramOver *ᵥ weylEval n κ y) = 1
   rw [h_form, one_re]
 
 /-- A tight frame of integral vectors. Let `hk` be the hook number and `⟨ξ, ξ'⟩ = ξ* G ξ'` the form
@@ -619,18 +619,6 @@ lemma comulMatrix_equivariant (g : ∀ τ : Φ, Matrix (n τ) (n τ) R) :
   simp [comulMatrix_mulVec_weylEval, schur_mulVec_weylEval_of_schurDetExp_eq_zero,
     kronecker_mulVec_vec,
     mul_vecMulVec, vecMulVec_mul, vecMul_transpose]
-
-/-- Over an infinite domain, let `C` be the multiplication matrix.
-(a) `Cᵀ (G κ ⊗ G κ') C = G (κ + κ')` for the Gram matrices `G`; this part does not involve `g`.
-(b) `(S κ g ⊗ S κ' g) C = C * S (κ + κ') g` for the Schur matrices `S` of any family `g` of square
-matrices. -/
-lemma comulMatrix_isometry_and_equivariant (g : ∀ τ : Φ, Matrix (n τ) (n τ) R) :
-    let C := comulMatrix R n κ κ'
-    -- (a) the matrix is an isometry for the Gram forms
-    Cᵀ * ((weylGram n κ).map (↑) ⊗ₖ (weylGram n κ').map (Int.cast : ℤ → R) * C) = weylGramOver ∧
-    -- (b) the matrix is equivariant
-    schur κ g ⊗ₖ schur κ' g * C = C * schur (κ + κ') g :=
-  ⟨comulMatrix_isometry, comulMatrix_equivariant g⟩
 
 /-- The integer matrix whose row (p, q) lists the coordinates of the product of the basis minor
 products b_p for κ and b_q for κ', in the basis for κ + κ', has an integer left inverse. -/

@@ -1,7 +1,9 @@
-import Lib.GaloisRep.Main.LocalConditions
-import Lib.PadicComparison.HodgeTate.GaloisWeight
-import Lib.PadicComparison.Primitive.ComparisonTheorem
-import Lib.PadicComparison.Primitive.Periods
+module
+
+public import Lib.GaloisRep.Main.LocalConditions
+public import Lib.PadicComparison.HodgeTate.GaloisWeight
+public import Lib.PadicComparison.Primitive.ComparisonTheorem
+public import Lib.PadicComparison.Primitive.Periods
 
 /-!
 # The period map for ℓ-adic cohomology on p-adic tests, and Hodge–Tate weights
@@ -44,6 +46,8 @@ the kernel of Fontaine's map, and bijectivity is not proved. Source: Scholze, p-
 for rigid-analytic varieties, Forum Math. Pi 1 (2013), Cor. 1.8; the construction follows Bhatt, The
 Hodge–Tate decomposition via perfectoid spaces, Arizona Winter School 2017, §3.4.
 -/
+
+@[expose] public section
 
 /-!
 ## The period map on p-adic tests
@@ -234,7 +238,7 @@ lemma exists_period_map [Algebra ℤ_[p] S] [IsScalarTower ℤ_[p] Ainf S] [IsSc
         · exact congrArg ULift.up (Spec.map_comp_assoc (𝟙 _) ..)
         · -- `genericStructureMap_twist` matches the structure map of the twisted test only up to
           -- instances
-          erw [eq_comm, genericStructureMap_twist, smul_coe_Cp, hj]
+          erw [eq_comm, genericStructureMap_twist, UniformSpace.Completion.algEquiv_smul_coe, hj]
           rfl
   · -- For `Y` proper and charted each of the three factors is bijective: `E Y` as a linear
     -- equivalence, `baseChangeMap` by flat base change, the pull-back by

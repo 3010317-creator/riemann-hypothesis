@@ -1,4 +1,6 @@
-import Lib.Adelic.QuotientMeasure.Basic
+module
+
+public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!
 # Unfolding over orbits and integration in Iwasawa coordinates
@@ -30,6 +32,8 @@ Known result: The unfolding trick and the integration formula in Iwasawa coordin
 by a discrete subgroup. Weil's formula for invariant integration on a quotient is in
 `Lib.Adelic.QuotientMeasure.Basic`.
 -/
+
+@[expose] public section
 
 /-!
 ## Unfolding a sum over an orbit
@@ -312,9 +316,8 @@ lemma New.integral_tsum_orbit_of_lt_top_or_integrable (hi : Function.Injective i
   obtain rfl : D = orbit Λ y := Set.ext fun z ↦ (h_orbit z).trans mem_orbit_symm
   subst hΓ h_stab
   -- The sum over the orbit is at most the sum over all of `Y`.
-  refine integral_tsum_orbit_eq_integral_stabilizer hi hk_meas hk (h_fin.imp_left fun h ↦ ?_)
-  exact (lintegral_mono fun x ↦ ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective
-    fun z ↦ ‖k z x‖ₑ).trans_lt h
+  exact integral_tsum_orbit_eq_integral_stabilizer hi hk_meas hk <| h_fin.imp_left <|
+    (lintegral_mono fun x ↦ ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective _).trans_lt
 
 /-- Left invariance of `k y` and unfolding over the orbit `D` of `y`, as one statement. Here `i`
 maps `Λ` isomorphically onto the discrete subgroup `Γ`, `S` is the image under `i` of the stabiliser
@@ -498,13 +501,13 @@ lemma New.lintegral_iwasawa_inv_mul_translate
 variable [LocallyCompactSpace G]
 
 /-- Iwasawa integration formula. Let `G`, `M` and the closed subgroup `N` be unimodular, `K`
-compact, and `i : M →* G` and `w : M → ℝ` continuous. Suppose that `G = N · i(M) · K` and that
+compact, `i : M →* G` continuous, and `w : M → ℝ`. Suppose that `G = N · i(M) · K` and that
 conjugation by `i m` multiplies integrals over `N` by `w m > 0`. Then the measure `dn dm dk` in the
 coordinates `i m * n * k` is `d` times the Haar measure `μ` on `G`, for some `d ∈ [0, ∞]` (`d` may
 be infinite, for instance if `i` has noncompact kernel). Here `lam`, `ν`, `κ` are Haar measures on
 `N`, `M`, `K`. -/
 lemma New.lintegral_iwasawa [PolishSpace M] [LocallyCompactSpace M]
-    (hN : IsClosed (N : Set G)) (_hw : Continuous w) (hw_pos : ∀ m : M, 0 < w m) (hi : Continuous i)
+    (hN : IsClosed (N : Set G)) (hw_pos : ∀ m : M, 0 < w m) (hi : Continuous i)
     (h_dec : ∀ g : G, ∃ᵉ (n : N) (m : M) (k : K), g = n * i m * k)
     (h_conj : ∀ (m : M) (f : G → ℝ≥0∞), Measurable f →
       ∫⁻ n : N, f (i m * n * (i m)⁻¹) ∂lam = ENNReal.ofReal (w m) * ∫⁻ n : N, f n ∂lam)
@@ -619,7 +622,7 @@ lemma New.integral_quotMeasure_iwasawa [PolishSpace M] [LocallyCompactSpace M]
   let lam' : Measure N := (Γ.subgroupOf N).quotMeasure lam
   have h_finite : IsFiniteMeasure lam' := isFiniteMeasure_quotMeasure_of_cocompact lam h_cocpt
   have : lam.IsMulRightInvariant := isMulRightInvariant_of_finite_covolume h_finite
-  obtain ⟨r, h_iwa⟩ := lintegral_iwasawa (lam := lam) w μ ν κ i hN hw hw_pos hi h_dec h_conj
+  obtain ⟨r, h_iwa⟩ := lintegral_iwasawa (lam := lam) w μ ν κ i hN hw_pos hi h_dec h_conj
   -- For `f = 1` the left side of `h_iwa` is a product of nonzero total masses.
   have hr : r ≠ 0 := fun h ↦ by simpa [h, NeZero.ne] using h_iwa 1 measurable_one
   have hw_meas : Measurable fun p : M × K ↦ ENNReal.ofReal (w p.1) := by fun_prop

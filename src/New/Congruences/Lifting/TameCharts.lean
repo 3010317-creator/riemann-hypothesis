@@ -1,4 +1,6 @@
-import New.Congruences.Lifting.CupProductBound
+module
+
+public import New.Congruences.Lifting.CupProductBound
 
 /-!
 # Tame Kummer charts and the power of p that kills cokernels of Kisin modules
@@ -32,6 +34,8 @@ Notions from other files:
 
 See `New.Congruences.Lifting.CupOrthogonalityBounds` for related work.
 -/
+
+@[expose] public section
 
 namespace New.Lift
 
@@ -564,7 +568,8 @@ lemma pow_smul_z_eq_pow_mul {p : ℕ} [ThePrime p] {c : Chart} {g : Gp p} {ξ : 
 lemma exists_coe_eq_of_pow_eq_p {p e : ℕ} [ThePrime p] (he : e ≠ 0) {ϖ : PadicAlgCl p}
     (hϖ : ϖ ^ e = p) : ∃ ϖ' : OC, ϖ'.val = ϖ ∧ ϖ' ^ e = p := by
   have h_norm : ‖ϖ‖ ≤ 1 := by
-    simpa [← pow_le_one_iff_of_nonneg (norm_nonneg ϖ) he, ← norm_pow, hϖ] using norm_p_lt_one.le
+    simpa [← pow_le_one_iff_of_nonneg (norm_nonneg ϖ) he, ← norm_pow, hϖ] using
+      (PadicAlgCl.norm_p_lt_one p).le
   exact ⟨⟨ϖ, by simpa using h_norm⟩, rfl, Subtype.ext (by simp [coe_eq, ← map_pow, hϖ])⟩
 
 /-- Let the structure map `Γ → G_p = Gal(ℚ̄_p/ℚ_p)` be surjective and `f` a positive integer prime
