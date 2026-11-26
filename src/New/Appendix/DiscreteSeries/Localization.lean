@@ -138,9 +138,6 @@ lemma norm_sub_one_sq (g : USign ε) :
     _ = 2 * ‖y‖ ^ 2 - 2 * x.trace.re := by
       simp [frobenius_norm_sq_eq_sum, trace, re_sum, mul_sum, sum_sub_distrib]
 
-omit [Fintype n] in
-lemma conjTranspose_signMatrix : (signMatrix ε)ᴴ = signMatrix ε := by simp [signMatrix]
-
 lemma norm_signMatrix_mul (A : Matrix n n ℂ) : ‖signMatrix ε * A‖ = ‖A‖ :=
   frobenius_norm_mul_of_unitary (by rw [conjTranspose_signMatrix, signMatrix_mul_self]) A
 
