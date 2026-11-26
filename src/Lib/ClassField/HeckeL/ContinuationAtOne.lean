@@ -714,11 +714,8 @@ private theorem _root_.abs_sub_le_mul_rpow_of_forall_exists_abs_sub_le {G : Type
     {a b : G} (ha_pos : 0 < N a) (h_eq : N b = N a) :
     |θ a - θ b| ≤ C * N a ^ δ * (|φ a| + |φ b|) := by
   obtain ⟨i, hi⟩ := h_approx (N a) ha_pos
-  calc |θ a - θ b| ≤ |i - θ a| + |i - θ b| := by
-        rw [abs_sub_comm i (θ a)]
-        exact abs_sub_le (θ a) i (θ b)
-    _ ≤ C * N a ^ δ * |φ a| + C * N a ^ δ * |φ b| := add_le_add (hi a rfl) (hi b h_eq)
-    _ = C * N a ^ δ * (|φ a| + |φ b|) := by ring
+  exact (dist_triangle_left (θ a) (θ b) i).trans
+    ((add_le_add (hi a rfl) (hi b h_eq)).trans_eq (mul_add _ _ _).symm)
 
 open Units Real ZetaIntegral in
 /-- Let `ψ ≠ 1` be the finite part of a Hecke character of type `n` (`IsHeckeOfType ψ n`). There
