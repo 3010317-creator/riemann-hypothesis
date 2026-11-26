@@ -42,11 +42,6 @@ def CoeffRing.toIntQpBar (O : CoeffRing ℓ) : O.val →+* intQpBar ℓ :=
 @[simp] lemma CoeffRing.coe_toIntQpBar {O : CoeffRing ℓ} (x : O.val) :
     (O.toIntQpBar x).val = x.val := rfl
 
-/-- For coefficient rings `O ≤ O'`, including `O` into `O'` and then into `ℤ̄_ℓ` is the inclusion
-of `O` into `ℤ̄_ℓ`. -/
-lemma CoeffRing.toIntQpBar_comp_inclusion {O O' : CoeffRing ℓ} (hO : O ≤ O') :
-    O'.toIntQpBar.comp (Subalgebra.inclusion hO).toRingHom = O.toIntQpBar := rfl
-
 lemma CoeffRing.dvd_iff_ellVal_le {O : CoeffRing ℓ} {x y : O.val} :
     x ∣ y ↔ ellVal x.val ≤ ellVal y.val := by
   have h_norm : ellVal x.val ≤ ellVal y.val ↔ ‖y.val‖ ≤ ‖x.val‖ := by
@@ -67,8 +62,8 @@ lemma CoeffRing.normLength_addVal_eval₂ {O O' : CoeffRing ℓ} (hO : O ≤ O')
     (P : MvPolynomial σ O.val) (x : σ → O'.val) :
     O'.normLength (addVal O'.val (P.eval₂ (Subalgebra.inclusion hO).toRingHom x)) =
       ellVal (MvPolynomial.eval (fun j : σ ↦ O'.toIntQpBar (x j)) (P.map O.toIntQpBar)).val := by
-  rw [normLength_addVal, ← coe_toIntQpBar, MvPolynomial.eval₂_comp_left, toIntQpBar_comp_inclusion,
-    MvPolynomial.eval_map, Function.comp_def]
+  rw [normLength_addVal, ← coe_toIntQpBar, MvPolynomial.eval₂_comp_left,
+    MvPolynomial.eval_map, Function.comp_def]; rfl
 
 /-- Finitely many elements of `ℤ̄_ℓ` lie in all sufficiently large coefficient rings `O` (rings of
 integers of finite Galois extensions of `ℚ_ℓ` in `ℚ̄_ℓ`, ordered by inclusion), that is, they are
