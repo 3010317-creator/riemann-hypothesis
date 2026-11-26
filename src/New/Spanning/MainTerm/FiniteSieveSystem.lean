@@ -120,8 +120,8 @@ lemma IsFillingData.norm_floorForm_div_massRatio_le {E : Type} {𝔰 : Shape} [F
     {j : ℕ} {p q : ℕ → (LocProd T)ˣ}
     {ξ : LocProd T} {ω : (S.latticeMiddle (LocProd T)).G → ℂ} (hj : j ≤ 𝔰.ϱ) (hξ : IsUnit ξ)
     (hω : (ω = fun x : (S.latticeMiddle (LocProd T)).G ↦
-        P.ψ (ξ * ((S.latticeMiddle (LocProd T)).frameGram x.1.1).diag ⟨j, by lia⟩)) ∨
-      ∃ i : ℕ, j = i + 1 ∧ ω = 1 ∧ ξ = F.levelUnit⁻¹.1 * ((p i)⁻¹.1 - (q i)⁻¹.1)) :
+        P.ψ (ξ * ((S.latticeMiddle (LocProd T)).frameGram x.val.val).diag ⟨j, by lia⟩)) ∨
+      ∃ i : ℕ, j = i + 1 ∧ ω = 1 ∧ ξ = F.levelUnit⁻¹.val * ((p i)⁻¹.val - (q i)⁻¹.val)) :
     ‖F.floorForm j p q Z.besselVector ω / Z.massRatio.toReal‖ ≤
       S.frequencyDecay T ξ * (finHeadWeight (𝔰.n ^ 6) j p * finHeadWeight (𝔰.n ^ 6) j q) := by
   obtain ⟨pow_four_le, half_pow_le_inv_pow_six, pow_seven_le⟩ : 10 ^ 10 * 𝔰.n ^ 4 ≤ 𝔰.n ^ 6 ∧
