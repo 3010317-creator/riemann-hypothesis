@@ -148,10 +148,12 @@ private lemma div_stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) {i j :
     t / stepTorus ϖ j ∈ dominantTorus := by
   -- In terms of the integers `log (v (t a))`: adding `1` to the entries before `j` keeps them
   -- monotone.
+  have ht' : ∀ ⦃a b : Fin N⦄, a ≤ b → (v (t a).val).log ≤ (v (t b).val).log := by
+    simpa [dominantTorus, ← log_le_log, Monotone] using ht
   simp [dominantTorus, stepTorus, ← log_le_log, ← log_lt_log, apply_ite, hϖ, Monotone]
-    at ht h_lt hcov ⊢
-  have h_from_j (b : Fin N) (hb : j ≤ b) : (v (t j).val).log ≤ (v (t b).val).log := ht hb
-  have h_to_i (a : Fin N) (ha : a ≤ i) : (v (t a).val).log ≤ (v (t i).val).log := ht ha
+    at h_lt hcov ⊢
+  have h_from_j (b : Fin N) (hb : j ≤ b) : (v (t j).val).log ≤ (v (t b).val).log := ht' hb
+  have h_to_i (a : Fin N) (ha : a ≤ i) : (v (t a).val).log ≤ (v (t i).val).log := ht' ha
   grind
 
 variable [CompactSpace 𝒪[F]]
@@ -568,8 +570,8 @@ lemma exists_sorted_isIwahoriEigen_of_diagGL_smul (hϖ : v ϖ.val = exp (-1))
     rw [apply_symm_apply]
     exact (AwayMap.lift_eq _ loc hχs t).symm
   have hθτ (i : Fin N) (ε : Fˣ) (hε : v ε.val = 1) : θ i ε = τ (mulSingle i ε) := by
-    simp +contextual [E, smul_left_inj, hy_eigen, hθ, y_ne, normAbsChar] at hyE
-    exact hyE i ε hε
+    revert i ε
+    simpa +contextual [E, smul_left_inj, hy_eigen, hθ, y_ne, normAbsChar] using hyE
   have y_eig : IsIwahoriEigen ρ (torusChar θ) (y : ρ) := by
     refine ⟨by simpa using y_ne, y.prop, fun t ht ↦ ?_⟩
     rw [← hθ ⟨t, ht⟩]
