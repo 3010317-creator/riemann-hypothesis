@@ -593,6 +593,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/ClassField/GaloisCohomology/TateIndexFormula` (311): Coker/ker indices and Tate's index formula for cyclic actions of prime order
 - `Lib/ClassField/GaloisCohomology/KummerCyclicClasses` (437): Cup products, Hilbert 90, Kummer cocycles and cyclic symbols in Galois cohomology
 - `Lib/ClassField/GaloisCohomology/TameSelmerCocycles` (170): Selmer groups unramified outside a set and cocycles of tamely ramified actions
+- `Lib/ClassField/GaloisCohomology/TameSelmerClasses` (83): Local classes at a tamely ramified place, bounded with an H⁰ term
 
 **Global**: Global class field theory
 
