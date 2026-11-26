@@ -297,7 +297,7 @@ lemma exists_traceIdeal_multiplier_eq_sum_det [Fintype J] {r : Type} [Fintype r]
 /-- The projector to the characters: if every block `ρ x` has an element `γ x` acting by a scalar
 `y x` with `y x - 1` a unit, on which every character is `1`, then some element of `O[X j][G]` is
 `1` on every character and `0` on every block. -/
-lemma exists_character_projector [Fintype J] {r : Type} [Fintype r] [DecidableEq r] {t : ℕ}
+lemma exists_character_projector {r : Type} [Fintype r] [DecidableEq r] {t : ℕ}
     {𝓧 : Type} [Fintype 𝓧] (ρ : 𝓧 → G →* Matrix r r O) {ξ : Fin t → G →* O} {γ : 𝓧 → G} {y : 𝓧 → O}
     (hργ : ∀ x : 𝓧, ρ x (γ x) = y x • 1) (hy_unit : ∀ x : 𝓧, IsUnit (y x - 1))
     (hξγ : ∀ (x : 𝓧) (e : Fin t), ξ e (γ x) = 1) :
