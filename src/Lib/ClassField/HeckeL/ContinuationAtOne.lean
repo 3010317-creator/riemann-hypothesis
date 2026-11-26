@@ -535,11 +535,9 @@ open NumberField.mixedEmbedding (mixedSpace)
 private theorem _root_.Valuation.map_eq_one_of_one_lt_of_mul_map_sub_one_le {R Γ₀ : Type*}
     [Ring R] [LinearOrderedCommGroupWithZero Γ₀] (v : Valuation R Γ₀) {a x : R} (ha : 1 < v a)
     (h_mul : v a * v (x - 1) ≤ 1) : v x = 1 := by
-  have h_sub : v (x - 1) < v 1 := by
-    rw [map_one]
-    by_contra! h_ge
-    exact (ha.trans_le (le_mul_of_one_le_right' h_ge)).not_ge h_mul
-  rw [← sub_add_cancel x 1, v.map_add_eq_of_lt_right h_sub, map_one]
+  have h_sub : v (x - 1) < 1 := lt_of_mul_lt_mul_of_le₀
+    (h_mul.trans_lt (ha.trans_eq (mul_one _).symm)) (zero_lt_one.trans ha) le_rfl
+  exact (v.map_eq_of_sub_lt (h_sub.trans_eq v.map_one.symm)).trans v.map_one
 
 /-- Let `v` be a valuation and `a`, `x` elements with `v a ≤ 1` and `v x ≤ 1`. Then
 `v a * v (x - 1) ≤ 1`. -/
