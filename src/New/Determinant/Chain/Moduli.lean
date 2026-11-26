@@ -373,7 +373,7 @@ lemma CriticalPair.lValueProd_mul_zpow_eq (p : D.CriticalPair) (ξ : D.Twist) (e
         (ξ.normQ : ℝ) ^ p.z ^ 2 * D.lRatioProd p.character p.z ξ.toTameChar ^ 2 := by
   rw [places_twistModulus, ← p.lValueProd_mul_inv_eq]
   obtain rfl | rfl := Int.units_eq_one_or sign
-  · simp only [Units.val_one, zpow_one, lValueProd, p.L_mul_inv]
+  · simp only [Units.val_one, zpow_one, lValueProd, CriticalPair.L_inv_mul (p := p)]
   · simp
 
 /-- Let `p = (ν, z)` be a ramified critical pair of `D` of weight `-negWeight`, so the tame part of
