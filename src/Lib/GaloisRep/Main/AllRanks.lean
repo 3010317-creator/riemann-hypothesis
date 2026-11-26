@@ -507,7 +507,7 @@ lemma New.GaloisRep.sphericalCompat_std {ℓ : ℕ} {E n : Type} [ThePrime ℓ] 
     (GeneralLinearGroup.scalar (Fin 1)).comp (ψ i l)
   have hχ_cont (i : Fin 2) (l : Fin t) : Continuous (χ i l) := by
     refine .of_coeHom_comp (.matrix_diagonal ?_)
-    simp
+    simp only [Pi.constRingHom_eq_algebraMap]
     fun_prop
   choose hρ_good hρ_jumps hρ_kill using fun i : Fin 2 ↦ hρ_loc i hfK A hA
   -- The trace of `r` is `tr ρ i - ∑ l, ψ i l`, so the local clauses pass from `ρ i` to `r`.

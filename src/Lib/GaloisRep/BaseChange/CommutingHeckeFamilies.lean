@@ -218,7 +218,8 @@ lemma adeleMap_pow_finrank_eq_one [IsGalois E E'] :
   -- `σ ^ [E' : E] = 1`, as the order of the Galois group is the degree. The image of
   -- `1 : Gal(E'/E)` is the identity ring map up to unfolding.
   ext x v
-  simp [adeleMap_gal_pow, ← card_aut_eq_finrank]
+  simp only [← card_aut_eq_finrank, Nat.card_eq_fintype_card, adeleMap_gal_pow, pow_card_eq_one,
+    RingHom.coe_one, id_eq]
   exact congrArg (fun y ↦ (y v).toCompletion) (adeleMap_id x)
 
 end BaseChangePlaces
@@ -551,9 +552,10 @@ lemma isLocalRetraction_ofSplitPlace (n : Type*) [Fintype n] [DecidableEq n] {w 
     simp_all [IsLocalRetraction, ← below_star, star_eq_iff_star_eq, atPlace_star_eq_one_iff,
       atPlace_ofSplitPlace_of_ne, SetLike.ext_iff, placesAbove]
   · -- (c) the component at `ū` is integral exactly when that at `u` is
-    simp_all [← below_star, star_eq_iff_star_eq, SetLike.ext_iff, placesAbove, localLevel]
+    suffices h : ∀ x : Gf E' n,
+        atPlace u x ∈ localIntGL n u ↔ atPlace u x ∈ intGL n Valued.v.integer by
+      simp_all [← below_star, star_eq_iff_star_eq, SetLike.ext_iff, placesAbove, localLevel]
     -- what is left: `localIntGL n u` is `GL_n` of the valuation integers at `u`
-    change ∀ x : Gf E' n, atPlace u x ∈ localIntGL n u ↔ atPlace u x ∈ intGL n Valued.v.integer
     exact fun x ↦ Iff.rfl
 
 /-- If no place of `T` lies in `S` or in its conjugate, the elements supported on `S ∪ S̄` are
