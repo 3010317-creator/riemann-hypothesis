@@ -330,7 +330,8 @@ lemma GaugeLe.restrictToY_of_diag {d : Gf D.E (D.X D.m)}
         (if star (inducedPlace τ) ∈ D.piNPlaces then D.N else 1) := by
     rw [(isEquiv_placeOfEmb (weightEmbedding ιₚ τ)).eq_iff]
     split <;> simp_all [inducedPlace, placeOfEmb_comp_star, ← v_algebraMap_eq_valuation,
-      v_algebraMap_eq_intValuation, intValuation_piN, D.isSplitLevel_piNPlaces.v_natCast, piNPlaces]
+      v_algebraMap_eq_intValuation, intValuation_piN, D.isSplitLevel_piNPlaces.v_natCast, piNPlaces,
+      -IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion_eq_algebraMap_adicCompletionIntegers]
   have h_scalar : ‖ιₚ a‖ = ‖((∏ τ, s τ ^ D.branchExponent τ : ℂ_[p]ˣ) : ℂ_[p])‖ := by
     have h_prod : ∏ τ, ‖weightEmbedding ιₚ τ (D.piN : D.E)‖ ^ D.branchExponent τ =
         ∏ τ, ‖weightEmbedding ιₚ τ (if star (inducedPlace τ) ∈ D.piNPlaces then (D.N : D.E) else 1)‖

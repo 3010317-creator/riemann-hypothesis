@@ -174,6 +174,9 @@ lemma CoeffRing.dvd_iff_norm_le (x y : ↑O) : x ∣ y ↔ ‖y.val‖ ≤ ‖x.
     have h_zero (hx : x.val = 0) : y.val = 0 := by simpa [hx] using h_le
     exact ⟨⟨y.val / x.val, h_quot⟩, Subtype.ext (mul_div_cancel_of_imp' h_zero).symm⟩
 
+-- With Tau Ceti imported, its instance `IsAdicComplete.henselianLocalRing` makes the search for
+-- the order on the ideals of `O` below time out.
+attribute [-instance] TauCeti.IsAdicComplete.henselianLocalRing in
 /-- A coefficient ring O is a discrete valuation ring (`New.DVR O`: a domain and a DVR): it is a
 Noetherian valuation ring, and it is not a field. -/
 instance : DVR O :=

@@ -283,7 +283,8 @@ lemma exists_levelGU_invTransposeGL_le [IsCMField E] {H : Subgroup (Gf E n)} (hH
     calc v (((u⁻¹.atPlace w).val - 1) i j)
       _ ≤ v (algebraMap E (LocField w.val) N) * v (algebraMap E (LocField w.val) y) := by
         -- the entry of `u⁻¹` at `w` is that of `(u at w)⁻¹` only after unfolding `atPlace`
-        simpa [← evalAt_apply, eq_comm, -coe_units_inv] using! hu_cong j i w
+        simpa [← evalAt_apply, eq_comm, -coe_units_inv,
+          -IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion_eq_algebraMap_adicCompletionIntegers] using! hu_cong j i w
       _ ≤ .exp (-(k w).succ) := mul_le_of_le_one_of_le (coe_algebraMap_mem ..) (hy_val w)
 
 end New.Variety
