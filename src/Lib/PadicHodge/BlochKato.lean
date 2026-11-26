@@ -85,8 +85,7 @@ cocycle `c` of `ρ` to the crystalline cocycle `f ∘ c` of `σ`. -/
 lemma comp_mem (hc : c ∈ crysCocycles ρ) (f : T →ₗ[ℤ_[p]] T')
     (hf : ∀ (g : Γ) (x : T), f (ρ g x) = σ g (f x)) : f ∘ c ∈ crysCocycles σ := by
   -- The witness is the image under `b ⊗ x ↦ b ⊗ f x` of the witness for `c`.
-  obtain ⟨y, hy⟩ :
-      ∃ y : Bmax ⊗[ℤ_[p]] T, ∀ g : Γ, 1 ⊗ₜ c g = tensorAction Bmax (toGp g) (ρ g) y - y := hc
+  obtain ⟨y, hy⟩ := hc
   refine ⟨periodTensorMap Bmax Bmax f y, fun g ↦ ?_⟩
   rw [tensorAction_periodTensorMap (hf g), ← map_sub, ← hy]
   simp [periodTensorMap]
@@ -100,8 +99,7 @@ g, h. -/
 lemma apply_mul [Free ℤ_[p] T] (hc : c ∈ crysCocycles ρ) :
     ∀ g h : Γ, c (g * h) = c g + ρ g (c h) := by
   intro g h
-  obtain ⟨y, hy⟩ :
-      ∃ y : Bmax ⊗[ℤ_[p]] T, ∀ g : Γ, 1 ⊗ₜ c g = tensorAction Bmax (toGp g) (ρ g) y - y := hc
+  obtain ⟨y, hy⟩ := hc
   -- `x ↦ 1 ⊗ x` is injective, so it suffices to check the identity in `Bmax ⊗ T`, where it reads
   -- `g h y - y = (g y - y) + g (h y - y)`.
   have h_faithful : FaithfulSMul ℤ_[p] (Bmax (p := p)) :=
@@ -124,9 +122,7 @@ non-zero element of ℤ_p and a·c lies in Z_f(T), then c lies in Z_f(T). -/
 lemma mem_of_smul_mem {a : ℤ_[p]} (ha : a ≠ 0) : a • c ∈ crysCocycles ρ → c ∈ crysCocycles ρ := by
   -- `a` is invertible in `Bmax` and its inverse is Galois invariant: divide the witness by `a`.
   intro h_smul_mem
-  obtain ⟨y, hy⟩ :
-      ∃ y : Bmax ⊗[ℤ_[p]] T, ∀ g : Γ, 1 ⊗ₜ (a • c) g = tensorAction Bmax (toGp g) (ρ g) y - y :=
-    h_smul_mem
+  obtain ⟨y, hy⟩ := h_smul_mem
   refine ⟨algebraMap ℚ_[p] Bmax a⁻¹ • y, fun g ↦ ?_⟩
   calc (1 : Bmax) ⊗ₜ[ℤ_[p]] c g
       = algebraMap ℚ_[p] Bmax (a : ℚ_[p])⁻¹ • (1 ⊗ₜ[ℤ_[p]] (a • c) g) := by
