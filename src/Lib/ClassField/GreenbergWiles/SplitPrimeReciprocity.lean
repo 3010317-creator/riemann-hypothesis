@@ -687,7 +687,7 @@ family `liftToFixedField s`, and of order `cyclotomicCharMod Ω m g * f (i, g)` 
 `(i, g)`. Then `z = κ x • a` is trivialised at the places above `N` and infinity, and its
 corestriction to `G` has the values `z (γ i) = ∑ g, g (f (i, g) • a)`. -/
 private lemma IsLargeLevel.SplitPlaces.exists_mem_trivialisedCocycles_of_valuation {γ : ι → G}
-    (hγ : ∀ i : ι, IsTameGeneratorFor m (s.valuationSubring i) (γ i)) [Fintype ι]
+    (hγ : ∀ i : ι, IsTameGeneratorFor m (s.valuationSubring i) (γ i))
     (h_triv : V.TrivialOn U.toOpenSubgroup.toSubgroup)
     [IsTotallyComplex (fixedFieldOf U.toOpenSubgroup.toSubgroup)]
     {κ : (unitsModule U.toOpenSubgroup.toSubgroup).H0 →+
