@@ -184,7 +184,7 @@ lemma smul_eq_adeleMatrix_mulVec (x : n → 𝔸 E) : g • x = g.adeleMatrix *�
 
 instance : ContinuousSMul (G E s) (n → 𝔸 E) := by
   refine ⟨?_⟩
-  simp
+  simp only [smul_eq_adeleMatrix_mulVec]
   fun_prop
 
 end

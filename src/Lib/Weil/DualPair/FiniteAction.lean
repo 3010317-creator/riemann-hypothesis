@@ -490,7 +490,8 @@ lemma exists_theta_negSource :
   -- with `‖c‖ = 1` (`CoordChange.exists_theta_omega_map` with `g = 1`).
   have h_rat (x : n' × n → 𝔸 E) (hx : (negSource (s := s) (s' := s')).φ x ∈ (S.hom T).ratVectors) :
       (1 : G E (homSigns (-s) s')) • x ∈ (S.neg.hom T).ratVectors := by
-    simp [Space.neg, mem_ratVectors_hom] at hx ⊢
+    simp only [mem_ratVectors_hom, coe_units_inv, Space.neg, one_smul, Units.smul_inv,
+      Units.val_smul, Matrix.mul_smul] at hx ⊢
     rwa [← smul_mul, ← T.x.val.mul_smul]
   obtain ⟨c, hc, hθ⟩ := negSource.exists_theta_omega_map (S.hom T) (S.neg.hom T) 1 h_rat
   exact ⟨conj c, by simpa using hc, fun f ↦ by simp [hθ f]⟩

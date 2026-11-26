@@ -569,7 +569,8 @@ lemma Exchange.exists_conj_modKernel_eq_swap (a b : AutChar E) :
       (fun v ↦ conj (D (𝔪.normNegOne⁻¹ • v))) = matrixFourier 𝔪.primAddChar fun v ↦ conj (D v) := by
     ext ρ
     apply sum_equiv (MulAction.toPerm 𝔪.normNegOne⁻¹)
-    simp [-map_neg]
+    simp only [Units.coe_star, AddChar.mulShift_apply, MulAction.toPerm_apply, Matrix.mul_smul,
+      trace_smul, mul_eq_mul_left_iff, map_eq_zero]
     -- Termwise the characters agree: `𝔪.normNegOne⁻¹` is the class of `-star normNegOne`.
     exact fun v ↦ Or.inl rfl
   rw [h_neg a b 𝔪, h_flip, h_ft, mul_assoc]
