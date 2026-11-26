@@ -639,7 +639,7 @@ lemma exists_linear_centreCoeff (h𝒟 : IsEquivariantLift 𝔠 X M 𝒟) [Finty
     { toFun Ψ := H.centreCoeff T (𝒟 Ψ) x
       map_add' Ψ Φ := by
         simpa using H.centreCoeff_add (h𝒟.isAutFunction Ψ.2) (h𝒟.isAutFunction Φ.2) T x
-      map_smul' := by simp [centreCoeff, ← quotMean_const_mul, mul_left_comm] }
+      map_smul' := by simp [centreCoeff, mul_left_comm] }
   obtain ⟨L, hL₀ : L ∘ₗ M.subtype = L₀⟩ := L₀.exists_extend
   have hL Φ (hΦ : Φ ∈ M) : L Φ = H.centreCoeff T (𝒟 Φ) x := LinearMap.congr_fun hL₀ ⟨Φ, hΦ⟩
   refine ⟨L, fun Ψ hΨ ↦ ⟨hL Ψ hΨ, fun z ↦ ?_⟩⟩
