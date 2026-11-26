@@ -384,12 +384,6 @@ section Interlacing
 
 open MvPolynomial Finset Finsupp Algebra MonomialOrder
 
-/-- The map `aevalTower g y` is `eval₂` with the coefficient map `g`. -/
-private lemma MvPolynomial.aevalTower_apply {S R A σ : Type*} [CommSemiring S] [CommSemiring R]
-    [CommSemiring A] [Algebra S R] [Algebra S A] (g : R →ₐ[S] A) (y : σ → A)
-    (p : MvPolynomial σ R) : aevalTower g y p = eval₂ (g : R →+* A) y p :=
-  rfl
-
 namespace New.GL
 
 /-- Let the exponents `n` and `γ` agree outside the columns `i` and `i + 1` and have the same sum
@@ -499,7 +493,9 @@ lemma degree_rowExpansion_mem_interlacing (hf : f ∈ nabla R c l) :
         θ ((rowExpansion x f).coeff n) *
           (.X ^ n i * (X (i + 1) ^ n i * (X i ^ n (i + 1) * monomial n 1) : MvPolynomial ℕ P).coeff
             δ) := by
-      rw [AlgHom.comp_apply, MvPolynomial.aevalTower_apply, eval₂_eq]
+      rw [AlgHom.comp_apply]
+      change (eval₂ _ _ ((rowExpansion x).toAlgHom f) : MvPolynomial ℕ P).coeff δ = _
+      rw [eval₂_eq]
       -- Flags as in `h_weight`; `-map_aeval` keeps `θ` applied to the coefficients.
       simp [prod_mul_distrib, -pow_ite, prod_pow_eq_pow_sum, -map_aeval, ↓if_mem_support,
         algHom, single_apply, mul_pow, ← map_pow, mul_assoc, ← pow_mul, ← map_prod, -C_pow]
