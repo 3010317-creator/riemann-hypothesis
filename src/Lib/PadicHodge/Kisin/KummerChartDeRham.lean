@@ -341,13 +341,6 @@ lemma valueField_eq_adjoin_union :
       (Set.forall_mem_range.mpr algebraMap_bicommutant_mem_valueField)
       (Set.forall_mem_range.mpr phiInvToBdR_mem_valueField))
 
-/-- The image in B_dR of an element `s` of S is the image of `s` under S_B → B_dR: both maps
-factor through B^+. -/
-private lemma algebraMap_ainf_eq_algebraMap_bicommutant (s : k.S) :
-    algebraMap Ainf BdR s =
-      algebraMap k.bicommutant BdR ⟨Chart.ainfToBPlus s, k.ainfToBPlus_mem_bicommutant s⟩ :=
-  rfl
-
 /-- The field `𝒦_0` is contained in `𝒦_a`. -/
 lemma valueField_zero_le : valueField 0 ≤ valueField a := by
   rw [valueField_eq_adjoin_union (a := 0)]
@@ -355,9 +348,8 @@ lemma valueField_zero_le : valueField 0 ≤ valueField a := by
     (Set.forall_mem_range.mpr algebraMap_bicommutant_mem_valueField)
     (Set.forall_mem_range.mpr fun s ↦ ?_))
   -- At level `0` the image of `S` lies in the image of `S_B`.
-  rw [show phiInvToBdR 0 (s : Ainf) = algebraMap Ainf BdR s by simp [phiInvToBdR],
-    algebraMap_ainf_eq_algebraMap_bicommutant]
-  exact algebraMap_bicommutant_mem_valueField _
+  rw [show phiInvToBdR 0 (s : Ainf) = algebraMap Ainf BdR s by simp [phiInvToBdR]]
+  exact algebraMap_bicommutant_mem_valueField ⟨Chart.ainfToBPlus s, k.ainfToBPlus_mem_bicommutant s⟩
 
 /-- An element of `B_dR` fixed by `Γ'` lies in `Fil⁰` and in `𝒦₀`. -/
 lemma mem_hodgeFil_zero_and_mem_valueField_zero_of_fixed
