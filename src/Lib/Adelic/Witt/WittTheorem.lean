@@ -442,29 +442,23 @@ lemma exists_isUnit_add_Ô (a x y : Matrix n n (Ô E)) :
   obtain ⟨p, -, q, -, d, rfl : a = p.val * diagonal d * q.val⟩ :=
     isValuationPair_Ô.top.smith_normal_form a
   set D : Matrix n n (Ô E) := diagonal d
-  let ε (i : n) : Ô E := ⟨idem {w : FinPlace E | reduceAt w (d i) = 0}, idem_mem_Ô _⟩
-  let e : Matrix n n (Ô E) := diagonal ε
+  let e : Matrix n n (Ô E) := diagonal fun i ↦ ⟨idem {w | reduceAt w (d i) = 0}, idem_mem_Ô _⟩
   refine ⟨p * e * q, isUnit_of_forall_isUnit_reduceAt fun w ↦ ?_⟩
   set r : Matrix n n (Ô E) →+* Matrix n n (ResField w) := (reduceAt w).mapMatrix (m := n)
   -- modulo `w`, in each diagonal position exactly one of `D` and `e` is non-zero
-  have hε_red (i : n) : reduceAt w (ε i) = if reduceAt w (d i) = 0 then 1 else 0 := by
-    -- `reduceAt_eq_zero` would rewrite the condition that defines `ε i`
-    simp [ε, -reduceAt_eq_zero]
-  have hr_diagonal (v : n → Ô E) : r (diagonal v) = diagonal fun i ↦ reduceAt w (v i) :=
-    diagonal_map (map_zero _)
   have ⟨D_mul_e, e_mul_D, e_mul_e⟩ : r D * r e = 0 ∧ r e * r D = 0 ∧ r e * r e = r e := by
-    simp [D, e, hr_diagonal, hε_red, funext_iff, -reduceAt_eq_zero]
-  have d_add_ε (i : n) : reduceAt w (d i) + reduceAt w (ε i) ≠ 0 := by grind [hε_red i]
-  have h_add_unit : IsUnit (r D + r e) := by
-    simp [D, e, hr_diagonal, isUnit_iff_isUnit_det, Finset.prod_ne_zero_iff, d_add_ε]
+    simp [D, e, r, diagonal_map (map_zero _), funext_iff, -reduceAt_eq_zero]
   -- these relations show that `D + e` is a two-sided multiple of the matrix modulo `w`
-  have h_multiple : r ((1 + D * q * x * p * e) * p⁻¹ *
-      (p * D * q + (1 - p * D * q * x) * (p * e * q) * (1 - y * (p * D * q))) *
-      (q⁻¹ * (1 + e * q * y * p * D))) = r D + r e := by
+  refine isUnit_of_mul_isUnit_right (x := r ((1 + D * q * x * p * e) * p⁻¹))
+    (isUnit_of_mul_isUnit_left (y := r (q⁻¹ * (1 + e * q * y * p * D))) ?_)
+  suffices h : IsUnit (r D + r e) by
+    convert h using 1
+    rw [← map_mul, ← map_mul]
     simp [add_assoc, mul_assoc, mul_add, add_mul, mul_sub, sub_mul, D_mul_e, e_mul_D, e_mul_e,
       ← mul_assoc (r D) (r e), ← mul_assoc (r e) (r D), ← mul_assoc (r e) (r e)]
-  rw [← h_multiple, map_mul, map_mul] at h_add_unit
-  exact isUnit_of_mul_isUnit_right (isUnit_of_mul_isUnit_left h_add_unit)
+  simp [D, e, r, diagonal_map (map_zero _), isUnit_iff_isUnit_det, Finset.prod_ne_zero_iff,
+    -reduceAt_eq_zero]
+  grind
 
 /-- For left invertible matrices `X`, `Y` over the ring `Ô E` of integral finite adeles of a CM
 field `E` with `Xᴴ X = Yᴴ Y`, some invertible `a` sends `X` to `Y` while its adjoint sends `Y`
