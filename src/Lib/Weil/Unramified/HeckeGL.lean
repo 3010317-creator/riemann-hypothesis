@@ -336,7 +336,7 @@ lemma exists_residueKer_eq_and_inv_mul_mem_localIntGL (hg : g ∈ basicDoubleCos
     exact Matrix.ext fun i j ↦ residueOrZero_coe ⟨(l : GL n (LocField w)) i j, l.2.isIntMatrix i j⟩
   have h_comap : U = (residueKer g.val).comap e.toLinearMap :=
     U.eq_of_le_of_finrank_eq
-      (fun x hx ↦ by simpa [← he ⟨x, hx⟩] using (f ⟨x, hx⟩).2)
+      (fun x hx ↦ by simp [← he ⟨x, hx⟩])
       (by rw [← h_finrank, (e.ofSubmodule' _).finrank_eq])
   refine ⟨g * l, by simpa using mul_mul_mem_basicDoubleCoset hg (one_mem _) l.property, ?_, by simp⟩
   -- Reduction is multiplicative, so `residueKer (g * l)` is that same preimage.
