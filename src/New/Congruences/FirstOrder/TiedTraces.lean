@@ -194,13 +194,12 @@ lemma localFormRep_apply_eq_lineRep (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j
       (D.lineRep Q j ⟨reduceGL ⟨k, hk.1⟩, reduceGL_mem_residueLineStabilizer_iff.2 hk⟩).val y :=
   (residueRep_mulSingle hQ ⟨k, hk.1⟩ y).symm
 
-/-- Let `V` be the standard hermitian space (`IsStd`), let `E` carry Weil representation data
-(`WeilData`), and let the auxiliary places be off the base level. If the elements of the stabiliser
+/-- Let the auxiliary places be off the base level. If the elements of the stabiliser
 of the line in `GL_n(𝔽_w)`, `w = Q.place j`, with first entry and determinant `1` fix a form `y` of
 weight `κ`, then the pro-unipotent Iwahori subgroup `proIwahori` of `GL_n(E_w)` fixes it: `y` lies
 in the space `levelSpace` of its fixed vectors for the action `localFormRep` of `GL_n(E_w)` on
 forms. -/
-lemma mem_levelSpace_proIwahori (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j)) [V.IsStd]
+lemma mem_levelSpace_proIwahori (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
     {j : J} {y : D.formsOfLevel Q.place}
     (hy : ∀ k : residueLineStabilizer (ResField (Q.place j)) (card n),
       firstEntry k = 1 → Matrix.GeneralLinearGroup.det k.val = 1 →
