@@ -701,13 +701,21 @@ def basePt : (projLineAlong g).sections :=
 unit `New.Variety.projLine.rowUnit` of the chosen rows. -/
 def cocycle : Cocycle (freeAb (projLineAlong g)) (ringOf g ⋙ Gm) where
   component f := ofHom (rowUnit ((ringOf g).map f))
-  cocycle_comp _ _ := by
+  cocycle_comp f h := by
     -- Both sides are the unit by which `unimodularRow` changes along the composite map.
-    ext : 2
+    ext q : 2
     symm
-    apply add_rowUnit_eq
-    erw [← unimodularRow_map, ← unimodularRow_map]
-    aesop
+    let F := (ringOf g).map f
+    let H := (ringOf g).map h
+    let q' := projLine.map F q
+    change Gm.map H (rowUnit F (.of q)) + rowUnit H (.of q') =
+      rowUnit ((ringOf g).map (f ≫ h)) (.of q)
+    let K := (ringOf g).map (f ≫ h)
+    apply add_rowUnit_eq (q' := projLine.map K q)
+    change ((rowUnit F (.of q)).down.toMul.val • unimodularRow (projLine.map F q)).map H H =
+      (rowUnit K (.of q)).down.toMul.val • unimodularRow (projLine.map K q)
+    rw [← unimodularRow_map F q, ← unimodularRow_map K q]
+    ext <;> simp [F, H, K]
 
 /-- The determinant `a v' - v a'` of the rows `(a, v)` and `(a', v')` of two points `p`, `p'` of the
 projective line. -/
