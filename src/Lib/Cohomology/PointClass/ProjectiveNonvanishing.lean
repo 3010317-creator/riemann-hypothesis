@@ -305,8 +305,11 @@ lemma thickeningOver.teichmullerLift_epsTilt (c : PadicTest) :
   have h_lift : teichmullerLift (k := k) c (algebraMap OFlat (tilt.obj c) epsTilt) =
       algebraMap (WittVector p OFlat) c.Thickening (teichmuller p epsTilt) :=
     congrArg (algebraMap (WittVector p c.TiltRing) c.Thickening) (map_teichmuller ..).symm
-  erw [h_lift, ← map_one c.thickeningProj, mulMu_thickeningProj]
-  simp only [mu_eq, _root_.map_sub, map_one, mul_one]
+  have h_mu : mulMu c (1 : genericOver.obj c) = algebraMap Ainf c.Thickening mu :=
+    (congrArg (mulMu c) c.thickeningProj.map_one).symm.trans
+      ((mulMu_thickeningProj c 1).trans (mul_one _))
+  refine h_lift.trans (Eq.trans ?_ (congrArg (fun z : c.Thickening ↦ 1 + z) h_mu).symm)
+  simp only [mu_eq, _root_.map_sub, map_one]
   let x : c.Thickening := algebraMap Ainf c.Thickening (teichmuller p epsTilt)
   change x = 1 + (x - 1)
   rw [add_comm, sub_add_cancel]
@@ -480,13 +483,15 @@ lemma teichmullerCoordinate_comp_proj_charTwist (c : PadicTest) (i : Bool)
       (((algebraMap OFlat (AddMonoidAlgebra OFlat ℚ≥0)).toMonoidHom.comp
         (epsPow.comp g.toMultiplicative)) *
         AddMonoidAlgebra.of OFlat ℚ≥0) (AddMonoidAlgebra.of OFlat ℚ≥0 (.ofAdd 1))) = _
-    erw [AddMonoidAlgebra.lift_of, MonoidHom.mul_apply, _root_.map_mul]
+    simp only [AddMonoidAlgebra.lift_of, MonoidHom.mul_apply, _root_.map_mul]
     exact congrArg (fun z ↦ z * t.down.hom (.single 1 1)) (t.down.hom.commutes (epsPow sign))
   apply ULift.down_injective
   funext j
   change proj c (teichmullerLift c ((charTwist epsPow g ≫
     t.down).hom (.single 1 1))) = proj c (teichmullerLift c (t.down.hom (.single 1 1)))
-  erw [h_twist, _root_.map_mul, _root_.map_mul]
+  let F : tilt.obj c →* genericOver.obj c :=
+    (proj (k := k) c).hom.toRingHom.toMonoidHom.comp (teichmullerLift c)
+  refine (congrArg F h_twist).trans ((map_mul F _ _).trans ?_)
   change θ sign * proj c (teichmullerLift c (t.down.hom (.single 1 1))) = _
   rw [θ.mem_ker.mp h_eps, one_mul]
 
