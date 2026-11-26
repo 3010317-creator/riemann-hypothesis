@@ -163,7 +163,7 @@ structure EtaleChart where
   /-- The `d` coordinates on the chart. -/
   coordinate : Fin d → coordRing
   /-- The coordinates make `R` étale over the polynomial ring in `d` variables. -/
-  etale : (MvPolynomial.aeval (R := k) coordinate).1.Etale
+  etale : (MvPolynomial.aeval (R := k) coordinate).toRingHom.Etale
   /-- The map `Spec R → X` is injective on `A`-points, for every `A`. -/
   injective (A : CommAlg k) : Function.Injective (X.map (X := coordRing) (Y := A) · point)
   /-- The image of `Spec R → X` is an open subfunctor. -/

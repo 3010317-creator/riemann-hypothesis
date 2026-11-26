@@ -72,7 +72,7 @@ class Place extends IsTopologicalRing A, ContinuousStar A, LocallyCompactSpace A
   /-- The modulus is measurable. -/
   measurable_modulus : Measurable modulus
   /-- δ is skew: δ̄ = −δ. -/
-  star_skewUnit : star skewUnit.1 = -skewUnit
+  star_skewUnit : star skewUnit.val = -skewUnit
   /-- The map (a, b) ↦ τδ⁻¹a + b on pairs of skew elements carries ν × ν to the volume of A. -/
   measurePreserving_split : MeasurePreserving
     (fun p : skewAdjoint A × skewAdjoint A ↦ element * skewUnit⁻¹ * p.1 + p.2)
@@ -268,7 +268,7 @@ structure IsDisintegration (J : Matrix ι ι A) (l : skewAdjoint A → Measure (
   ν, of the integral of f(δ⁻¹b, x) against `l b`. -/
   lintegral_eq (f : A × (ι → A) → ℝ≥0∞) : Measurable f →
       ∫⁻ x : ι → A, f (star x ⬝ᵥ J *ᵥ x, x) ∂μ =
-        ∫⁻ b : skewAdjoint A, ∫⁻ x : ι → A, f (skewUnit⁻¹.1 * b, x) ∂l b ∂skewMeasure
+        ∫⁻ b : skewAdjoint A, ∫⁻ x : ι → A, f (skewUnit⁻¹.val * b, x) ∂l b ∂skewMeasure
 
 lemma modulus_star (x : A) : P.modulus (star x) = P.modulus x := (modulus_star_and_neg x).left
 
@@ -534,7 +534,7 @@ lemma lintegral_form_eq_lintegral_flatChart (hT : Tᴴ = T)
     f (star (![s, t.val] ⊕ᵥ w) ⬝ᵥ planeSumGram T *ᵥ (![s, t.val] ⊕ᵥ w), ![s, t.val] ⊕ᵥ w)
   let starInv : Aˣ := star t⁻¹
   let shift : A := P.element * star w ⬝ᵥ T *ᵥ w
-  let s (b a : skewAdjoint A) : A := starInv * (P.element * skewUnit⁻¹.1 * b + a - shift)
+  let s (b a : skewAdjoint A) : A := starInv * (P.element * skewUnit⁻¹.val * b + a - shift)
   let scale (a : skewAdjoint A) : skewAdjoint A := hermitianMul ↑(t * star t) (star_mul_star ..) a
   have h_point (b a : skewAdjoint A) : ![s b (scale a), t] ⊕ᵥ w = flatChart T b ((t, w), a) := by
     have h_coord : s b (scale a) =
@@ -545,7 +545,7 @@ lemma lintegral_form_eq_lintegral_flatChart (hT : Tᴴ = T)
   have h_scale : skewMeasure.map scale = (P.modulus ↑(t * star t) ^ (2⁻¹ : ℝ))⁻¹ • skewMeasure := by
     rw [map_skewMeasure_hermitianMul, rpow_neg, one_div]
   -- The Jacobian of the substitution is `modulus (star t)⁻¹ * modulus (t t̄) ^ (1 / 2) = 1`.
-  have h_jac : P.modulus starInv * P.modulus (t * star t).1 ^ (2⁻¹ : ℝ) = 1 := by
+  have h_jac : P.modulus starInv * P.modulus (t * star t).val ^ (2⁻¹ : ℝ) = 1 := by
     simp [starInv, ← sq, ← rpow_natCast_mul, ENNReal.inv_mul_cancel]
   calc ∫⁻ y, G y = P.modulus starInv * ∫⁻ y, G (starInv * (y - shift)) := by
         rw [lintegral_eq_mul_lintegral_map (map_mul_volume starInv) (by simp) (by simp),
