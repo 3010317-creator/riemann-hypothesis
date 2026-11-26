@@ -841,8 +841,8 @@ variable {N k : ℕ} [NeZero N] {W K : Type} [CommRing W] [IsLocalRing W] [Field
 
 /-- The variable `x = (b, s)` is deep if `s` is even and `r ≤ b`, or `s` is odd and `b < r`. Give a
 deep variable the cost `1 / P ^ (2 r)` if `2 r ≤ b` and `1 / P` otherwise, and the other variables
-the cost `0`. For `0 < 2 r ≤ k` the costs add up to at most `N (k / P ^ (2 r) + r ^ 2 / P)`. -/
-lemma New.FrobeniusCycle.sum_deepIndicator_div_le (T : FrobeniusCycle N W K) {r : ℕ} (hr : 0 < r)
+the cost `0`. For `2 r ≤ k` the costs add up to at most `N (k / P ^ (2 r) + r ^ 2 / P)`. -/
+lemma New.FrobeniusCycle.sum_deepIndicator_div_le (T : FrobeniusCycle N W K) {r : ℕ}
     (hk : 2 * r ≤ k) :
     ∑ x : Fin k × ZMod N, (T.deepIndicator r x / T.P ^ (if 2 * r ≤ x.1 then 2 * r else 1) : ℝ) ≤
       N * (k / T.P ^ (2 * r) + r ^ 2 / T.P) := by
@@ -852,7 +852,6 @@ lemma New.FrobeniusCycle.sum_deepIndicator_div_le (T : FrobeniusCycle N W K) {r 
       ∑ s : ZMod N, (T.deepIndicator r (b, s) / T.P ^ (if 2 * r ≤ b.val then 2 * r else 1) : ℝ) =
         (N / 2 : ℕ) / T.P ^ (if 2 * r ≤ b.val then 2 * r else 1) := by
     rw [← T.sum_deepIndicator r b, cast_sum, Finset.sum_div]
-  have _ := hr
   have hr_sq : (r : ℝ) ≤ r ^ 2 := mod_cast Nat.le_self_pow two_ne_zero r
   have hN_half : ((N / 2 : ℕ) : ℝ) ≤ (N : ℝ) / 2 := by
     simpa only [Nat.cast_ofNat] using (Nat.cast_div_le (α := ℝ) (m := N) (n := 2))
@@ -906,7 +905,7 @@ lemma New.FrobeniusCycle.sum_finrank_deepForms_le (T : FrobeniusCycle N W K) [Ch
         simp only [cost, weight_eq_sum, nsmul_eq_mul, Finset.sum_comm (γ := Exponents N k n),
           ← Finset.sum_mul, h_mean, ← Finset.mul_sum]
     _ ≤ total * n / k * (N * (k / T.P ^ (2 * r) + r ^ 2 / T.P)) :=
-        mul_le_mul_of_nonneg_left (T.sum_deepIndicator_div_le hr hk)
+        mul_le_mul_of_nonneg_left (T.sum_deepIndicator_div_le hk)
           (div_nonneg (mul_nonneg (pow_nonneg (Nat.cast_nonneg _) _) (Nat.cast_nonneg _)) hk_pos.le)
     _ = T.divisorConstant k n r * total := by
         rw [divisorConstant]
