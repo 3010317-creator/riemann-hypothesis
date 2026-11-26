@@ -1164,8 +1164,10 @@ lemma shortExact_of_app (h_inj : ∀ A : C, Function.Injective (α A))
     (h_exact : ∀ A : C, Function.Exact (α A) (g A)) (h_surj : ∀ A : C, Surjective (g A)) :
     ∃ w : α ≫ g = 0, ShortExact ⟨α, g, w⟩ := by
   obtain ⟨w, hw⟩ := exact_of_app h_exact
-  have h_mono : Mono α := by grind [mono_iff_mono_app, AddCommGrpCat.mono_iff_injective]
-  have h_epi : Epi g := by grind [epi_iff_epi_app, AddCommGrpCat.epi_iff_surjective]
+  have h_mono : Mono α := (mono_iff_mono_app _).2 fun A ↦
+    (AddCommGrpCat.mono_iff_injective _).2 (h_inj A)
+  have h_epi : Epi g := (epi_iff_epi_app _).2 fun A ↦
+    (AddCommGrpCat.epi_iff_surjective _).2 (h_surj A)
   exact ⟨w, .mk' hw h_mono h_epi⟩
 
 /-- For `f : N ⟶ F` with `α ≫ f = 0`, the induced morphism `coker α ⟶ F` through which `f`
