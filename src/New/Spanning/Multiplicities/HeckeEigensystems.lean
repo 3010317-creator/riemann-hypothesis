@@ -307,15 +307,6 @@ lemma hasHeckePolynomial_of_mem_eigenPart {p : FinPlace D.E × ℕ → ℂ} {y :
   hasHeckePolynomial_of_heckeSplit (D.principalForms_le_sphericalAt V hw y.prop) fun i ↦ by
     rw [← D.coe_heckeOperator_apply V hw, (D.mem_eigenPart V).1 hy, coe_smul]
 
-/-- Let `T` be in the Hecke algebra, `T_x = D.heckeOperator x` for a pair `x = (w, i)`, and `a, b`
-complex numbers. On a form `y` of principal level with eigensystem `d`, the operator
-`a (T T_x - b T)` acts as `a (d x - b) T`. -/
-lemma smul_mul_heckeOperator_sub_smul_apply {d : FinPlace D.E × ℕ → ℂ} {y : D.principalForms V}
-    (hy : y ∈ D.eigenPart V d) (T : D.heckeAlgebra) (x : FinPlace D.E × ℕ) (a b : ℂ) :
-    (a • (T * D.heckeOperator x - b • T)).val V y = (a * (d x - b)) • T.val V y := by
-  simp only [SetLike.val_smul, AddSubgroupClass.coe_sub, MulMemClass.coe_mul, Pi.smul_apply,
-    Pi.sub_apply, Pi.mul_apply, LinearMap.smul_apply, LinearMap.sub_apply, mul_apply_eq_comp,
-    (D.mem_eigenPart V).1 hy x, map_smul, ← sub_smul, ← mul_smul]
 
 open scoped Classical in
 /-- For an eigensystem `q` and a finite set `F` of eigensystems, one member `T` of the Hecke algebra
