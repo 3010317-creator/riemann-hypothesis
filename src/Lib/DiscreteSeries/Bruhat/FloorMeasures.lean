@@ -218,8 +218,9 @@ lemma exists_col_eq_heisenbergElem (i : 𝔰.BesselIndex) (c : A) (h : g ∈ flo
   set w : 𝔰.BesselIndex → A := g.val.val *ᵥ Pi.single i c
   -- `w` vanishes on the floors below `a`, has the entry `1` at `e*_a`, and is isotropic
   have lower (j : 𝔰.BesselIndex) (hj : floorOf j < a) : w j = 0 := by
-    simp [w, apply_eq_one_apply_of_mem_floorGroup h j i (by grind),
-      one_apply_ne (show j ≠ i by grind)]
+    have hji : j ≠ i := fun h_eq ↦ hj.ne ((congrArg floorOf h_eq).trans h_floor)
+    simp [w, apply_eq_one_apply_of_mem_floorGroup h j i (.inl ⟨hj, hj.trans a.isLt⟩),
+      one_apply_ne hji]
   have top : w (eStar a) = 1 := by simpa [w, mul_comm] using h_entry
   have isotropic : star w ⬝ᵥ T.splitGram *ᵥ w = 0 := by
     have h_zero : star (Pi.single i c) ⬝ᵥ T.splitGram *ᵥ Pi.single i c = 0 := by
