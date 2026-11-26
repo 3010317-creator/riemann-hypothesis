@@ -133,6 +133,7 @@ lemma neg_mem_flipSpace_Gamma_iff (U : Space E b u) (g : G E u) :
   simp [flipSpace, Space.mem_Gamma_iff_range, ← map_inv, ← smul_one_eq_diagonal, ← mul_assoc,
     ← star_mul]
 
+omit [DecidableEq r] in
 /-- Multiplying the argument by a unit `ε` of `O` divides the second of two matched functions by
 `χ ε ^ card b`, the value of `χ` at the determinant of the scalar matrix `ε` of size `b`. -/
 lemma _root_.New.AreMatched.right_eq_pow_mul_apply_smul {R : Type} [CommRing R] {O : Subring R}
