@@ -223,7 +223,7 @@ lemma besselTranslate_mul [HasPrimitiveRoot5040 E] {s t : S.ResidueGL}
   have h_matrix : S.besselTranslate (s * t) φ (c, i) =
       ∑ k : S.BesselCoord, star ((M * N) i k) * φ (c'', k) :=
     besselTranslate_apply (mul_mem hγ hδ) (termsOver.mul hγ_over hδ_over) hMN φ i
-  rw [h_matrix, End.mul_apply, besselTranslate_apply hγ hγ_over hM]
+  rw [h_matrix, mul_apply_eq_comp, besselTranslate_apply hγ hγ_over hM]
   simp only [besselTranslate_apply hδ hδ_over hN, Matrix.mul_apply, star_sum, star_mul', sum_mul,
     mul_sum, mul_assoc]
   exact sum_comm
@@ -267,8 +267,8 @@ lemma hilbertSchmidtNorm_besselTranslate_comp [HasPrimitiveRoot5040 E] {t : S.Re
       besselTranslate_one]
   have h_norm (x : EuclideanSpace ℂ (S.Classes × S.BesselCoord)) :
       ‖S.besselTranslate t x‖ = ‖x‖ := by
-    rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), ← LinearMap.adjoint_inner_right, ← End.mul_apply,
-      h_adjoint, End.one_apply, ← norm_eq_sqrt_re_inner]
+    rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), ← LinearMap.adjoint_inner_right, ← mul_apply_eq_comp,
+      h_adjoint, one_apply_eq_self, ← norm_eq_sqrt_re_inner]
   exact le_antisymm (hilbertSchmidtNorm_le_of_norm_le fun x ↦ (h_norm (A x)).le)
     (hilbertSchmidtNorm_le_of_norm_le fun x ↦ (h_norm (A x)).ge)
 
@@ -363,7 +363,7 @@ lemma HasAmplitudeBlocks.rep_comp_eq_comp_besselTranslate [HasPrimitiveRoot5040 
         P.adjoint (ρ s⁻¹ (P (S.besselTranslate t φ))) :=
       LinearMap.congr_fun (hP.adjoint_comp_rep_mul_right s⁻¹ ht) φ
     have h_zero : P.adjoint (ρ s⁻¹ d) = 0 := by
-      rw [hd, map_sub, map_sub, ← h_apply, map_mul, End.mul_apply, sub_self]
+      rw [hd, map_sub, map_sub, ← h_apply, map_mul, mul_apply_eq_comp, sub_self]
     rw [← hρ s⁻¹, ρ.inv_self_apply, ← LinearMap.adjoint_inner_right, h_zero, inner_zero_right]
   have h_self : ⟪d, d⟫_ℂ = 0 := by
     calc ⟪d, d⟫_ℂ = ⟪ρ t (P φ), d⟫_ℂ - ⟪P (S.besselTranslate t φ), d⟫_ℂ := inner_sub_left ..

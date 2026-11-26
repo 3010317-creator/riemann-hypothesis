@@ -398,7 +398,7 @@ lemma letterProj_mem_withOrders (hx : x ∈ L.frobKisinAinf l) :
   have h_iter (n : ℕ) : L.mulZeta.wittMap^[n] x ∈ L.frobKisinAinf l :=
     MapsTo.iterate (fun _ ↦ mulZeta.wittMap_mem_frobKisinAinf) n hx
   refine mem_withOrders_stdOrders_iff.2 ⟨?_, letterProj_mem_letterPart⟩
-  simp [letterProj, letterOp, smul_pow, End.pow_apply, sum_mem, smul_of_tower_mem,
+  simp [letterProj, letterOp, smul_pow, pow_apply_eq_iterate, sum_mem, smul_of_tower_mem,
     smul_of_tower_mem _ _ (h_iter _)]
 
 /-- Let `x` lie in `L.frobKisinAinf l`, and let all forms take values in the subfield

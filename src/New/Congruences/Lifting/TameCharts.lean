@@ -259,7 +259,7 @@ lemma aeval_linearFrob_extensionLattice_eq_zero {p : ℕ} [ThePrime p] [Γ : Gro
   calc aeval β (q * (X - 1)) y
       = aeval β q (ι.baseChange Bmax x) := by simp [hx]
     _ = ι.baseChange Bmax (aeval (linearFrob S.ρ d.tameGen 0) q x) := by
-      simp [aeval_eq_sum_range, End.pow_apply, h_comm.iterate_right _ x]
+      simp [aeval_eq_sum_range, pow_apply_eq_iterate, h_comm.iterate_right _ x]
     _ = 0 := by simp [hqY]
 
 /-- A tame chart `d` has an exponent `e`, prime to `p`, and an element `ξ = d.tameMultiplier` of

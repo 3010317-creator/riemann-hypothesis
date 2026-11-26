@@ -893,7 +893,7 @@ lemma doubleLiftEvalY_inclXFin (i : ℕ) (hi : 2 * i + 1 + 1 ≤ 2 * D.ϱ + 1) (
       D.doubleLiftEvalY i = R.finEval ∧ R.embX (1, u) = (1, u) :=
     ⟨_, _, _, _, dite_eq_left (by omega), rfl⟩
   -- `using!`: the two index types `2 * i + 1 + 1` and `2 * i + 2` agree only after unfolding.
-  simpa only [hR, MonoidHom.map_one, Prod.mk_one_one, Module.End.one_apply] using!
+  simpa only [hR, MonoidHom.map_one, Prod.mk_one_one, one_apply_eq_self] using!
     R.finEval_arrowProduct_equivariant 1 b (g := 1) (g' := 1) h_emb Φ Φ'
 
 /-- If `z`, conjugated by `y (j + 1)`, lies in the level `levelY ϑ (j + 1)`, then `(1, z)` fixes the
@@ -905,8 +905,8 @@ lemma liftWeilFin_translatedPointDatumY (j : ℕ) {z : Gf D.E (D.Y (j + 1))}
       translatedPointDatumY ϑ y j := by
   have h_conj : (1, z) * (y j, y (j + 1)) =
       (y j, y (j + 1)) * (1, (y (j + 1))⁻¹ * (z * y (j + 1))) := by simp
-  rw [translatedPointDatumY, ← Module.End.mul_apply, ← map_mul, h_conj, map_mul,
-    Module.End.mul_apply,
+  rw [translatedPointDatumY, ← mul_apply_eq_comp, ← map_mul, h_conj, map_mul,
+    mul_apply_eq_comp,
     liftWeilFin_pointDatumY ϑ _ (one_mem _) hz]
 
 /-- Let `ϑ` be a tame character and `y k` finite points of U(Y_k). The tensor

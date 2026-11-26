@@ -696,7 +696,7 @@ theorem integratedRep_integratedRep_eq_self (hp : OscillatorPair T π π') [None
   have h_second : proj (T.swap.oscRows.centredCasimir T.swap.centre Φ) =
       (∑ c, (l' c / 2 - T.swap.centre) ^ 2 - card C * (card C ^ 2 - 1) / 12 : ℂ) • proj Φ := by
     rw [T.centredCasimir_swap_oscRows_eq_add, LinearMap.add_apply, map_add, h_first,
-      LinearMap.smul_apply, Module.End.one_apply, map_smul, ← add_smul,
+      LinearMap.smul_apply, one_apply_eq_self, map_smul, ← add_smul,
       hΦ.centred_casimirValue_eq]
   -- Restore the centre of the second group.
   have h_casimir' : proj (T.swap.oscRows.casimirK 1 Φ) = (l'.casimirValue : ℂ) • proj Φ := by
