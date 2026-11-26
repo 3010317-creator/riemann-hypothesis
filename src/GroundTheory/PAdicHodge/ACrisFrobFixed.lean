@@ -214,16 +214,14 @@ theorem exists_theta_eq_sum_of_phi_iterate {y : ACris K p} {N : ℕ} (hN : 1 ≤
     have hw2 : w = ∑ i ∈ Finset.range m, teichmuller p (a i) * (p : AInf K p) ^ i +
         (p : AInf K p) ^ m * w'' := by rw [← hw'']; ring
     conv_lhs => rw [hw2]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_add (f := _), map_sum, map_mul, map_pow, map_natCast]
+    rw [map_add (f := _), map_sum, map_mul, map_pow, map_natCast]
     congr 1
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_mul, map_pow, map_natCast, WittVector.frobeniusEquiv_pow_teichmuller]
   refine ⟨θ ((φ ^ n) w'') + theta K p ((phi (K := K) (p := p) ^ n) z'), ?_⟩
   conv_lhs => rw [hyn]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_add (f := _), map_mul, map_pow, map_natCast, theta_algebraMap, hwn, map_add (f := _), map_sum, map_mul,
-    map_pow, map_natCast]
+  rw [map_add (f := _), map_mul, map_pow, map_natCast, theta_algebraMap, hwn, map_add (f := _), map_sum, map_mul,
+  map_pow, map_natCast]
   simp only [map_mul, map_pow, map_natCast, fontaineTheta_teichmuller]
   push_cast
   ring_nf

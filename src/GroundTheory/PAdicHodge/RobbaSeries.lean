@@ -11,8 +11,6 @@ public import Mathlib.Topology.Order.LiminfLimsup
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

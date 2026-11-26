@@ -11,8 +11,6 @@ public import GroundTheory.PAdicHodge.ACrisBdR
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

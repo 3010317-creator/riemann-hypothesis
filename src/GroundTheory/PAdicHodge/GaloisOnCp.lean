@@ -9,8 +9,6 @@ import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open UniformSpace Topology Filter

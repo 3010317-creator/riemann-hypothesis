@@ -11,8 +11,6 @@ public import Mathlib.LinearAlgebra.Dimension.Finite
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open Polynomial Module Finset

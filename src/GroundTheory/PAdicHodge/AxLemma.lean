@@ -17,8 +17,6 @@ public import Mathlib.RingTheory.Polynomial.Vieta
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open Polynomial

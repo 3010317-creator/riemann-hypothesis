@@ -6,8 +6,6 @@ public import GroundTheory.LocalFields.Examples
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge
