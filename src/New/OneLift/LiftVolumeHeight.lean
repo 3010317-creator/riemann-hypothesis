@@ -1,5 +1,6 @@
 module
 
+public import New.Determinant.Chain.NormOfChain
 public import New.OneLift.ComparisonOperator.GluingMaps
 public import New.OneLift.HeckeValues.TwistedValueHeights
 

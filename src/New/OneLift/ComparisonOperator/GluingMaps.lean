@@ -1,6 +1,5 @@
 module
 
-public import New.Determinant.Chain.NormOfChain
 public import New.OneLift.ComparisonOperator.GluedForms
 public import New.OneLift.ComparisonOperator.ProductsSpan
 public import New.OneLift.FalseLifts.PeriodsOfFalseLifts
