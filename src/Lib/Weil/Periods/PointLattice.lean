@@ -318,7 +318,7 @@ lemma exists_isPrimitiveMatrix_basis :
   obtain ⟨b, -, hb⟩ := isValuationPair_Ô.exists_isPrimitiveMatrix_mul h_inv
   refine ⟨S * b.val, by rwa [← Matrix.mul_assoc], fun y ↦ ⟨fun hy ↦ ⟨(b⁻¹.val * Sᵀ) *ᵥ y,
     by simpa [h_proj, mulVec_mulVec, Matrix.mul_assoc] using hy⟩, fun ⟨c, hc⟩ ↦ hc ▸ by
-    simp [h_proj, mulVec_mulVec, ← Matrix.mul_assoc, h_left, Matrix.mul_assoc S]⟩⟩
+    simp [h_proj, mulVec_mulVec, ← Matrix.mul_assoc, h_left]⟩⟩
 
 /-- A vector `z` of `X^⊥` lies in the projection `Λ'⁺` of the lattice of `x` to `X^⊥` if and only
 if its products with the intersection `Λ'⁻` of this lattice with `X^⊥` are integral. -/
