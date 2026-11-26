@@ -919,13 +919,6 @@ lemma exists_etaClass_supported_diagonal (q q' : (projLineAlong g).sections) :
     Ext.contravariant_sequence_exact₂ h_exact _ _ h_dies
   exact ⟨ξ, by rw [pullbackAlong_of, pullbackAlong_of, hξ]⟩
 
-/-- `mapThenComp Φ u x` is `Φ x` followed by `u`. -/
-private lemma mapThenComp_eq_comp_map {E E' : Type 1} [Category E] [Category E']
-    (Φ : AbFunctor E ⥤ AbFunctor E') [IsExactFunctor Φ] {N F : AbFunctor E} {K : AbFunctor E'}
-    (u : TotalH (Φ.obj F) K) (x : TotalH N F) :
-    mapThenComp Φ u x = comp (map Φ x) u :=
-  rfl
-
 namespace TorsionCoeff
 
 variable [InvertsPrime A ℓ]
@@ -994,7 +987,8 @@ lemma etaAt_naturality (b : freeAb (onePointFunctor C) ⟶ freeAb (projLineAlong
     _ = comp (homClass (tensorPoint (φ.whiskerLeft b) (φ ⋙ K.functor)))
           (comp (etaTensorClass (φ ⋙ g) (φ ⋙ K.functor)).toTotalH
             (mapThenComp (restrictAlong φ) T K.tateAction.toTotalH)) := by
-        rw [map_comp_assoc, map_comp_assoc, mapThenComp_eq_comp_map, map_homClass,
+        simp only [mapThenComp, AddMonoidHom.coe_comp, Function.comp_apply, AddMonoidHom.flip_apply]
+        rw [map_comp_assoc, map_comp_assoc, map_homClass,
           map_restrictAlong_etaTensorClass]
         -- the sides differ only in implicit objects, `(restrictAlong φ).obj F` against `φ ⋙ F`
         rfl
