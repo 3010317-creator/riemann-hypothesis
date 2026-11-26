@@ -434,14 +434,20 @@ lemma teichmullerCoordinate_mul_inv (c : PadicTest) (t : monoidAlg ℚ ⟶ tilt 
       (discToTorus g ≫ t).hom (AddMonoidAlgebra.single 1 1) =
         t.hom (AddMonoidAlgebra.single (g 1) 1) := by
     change t.hom (AddMonoidAlgebra.mapDomain g (AddMonoidAlgebra.single 1 1)) = _
-    erw [AddMonoidAlgebra.mapDomain_single]
+    exact congrArg t.hom (AddMonoidAlgebra.mapDomain_single ..)
+  let liftCoord := (teichmullerLift (k := k) c).comp t.hom.toMonoidHom
+  let u : AddMonoidAlgebra OFlat ℚ := .single 1 1
+  let v : AddMonoidAlgebra OFlat ℚ := .single (-1) 1
+  have h_mul : u * v = 1 := by
+    simp [u, v, AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.one_def]
   change teichmullerLift c ((discToTorus coeHom ≫ t).hom (.single 1 1)) *
     teichmullerLift c ((discToTorus (-coeHom) ≫ t).hom (.single 1 1)) = 1
-  erw [h_coord, h_coord, ← map_mul, ← map_mul]
-  have h_mul : (AddMonoidAlgebra.single (1 : ℚ) 1 : AddMonoidAlgebra OFlat ℚ) *
-      AddMonoidAlgebra.single (-1) 1 = 1 := by
-    simp [AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.one_def]
-  erw [h_mul, map_one, map_one]
+  calc
+    _ = liftCoord u * liftCoord v :=
+      congrArg₂ (· * ·) (congrArg (teichmullerLift (k := k) c) (h_coord coeHom))
+        (congrArg (teichmullerLift (k := k) c) (h_coord (-coeHom)))
+    _ = liftCoord (u * v) := (liftCoord.map_mul u v).symm
+    _ = 1 := (congrArg liftCoord h_mul).trans liftCoord.map_one
 
 /-- Followed by the projection `B → T = R[1/p]`, the Teichmüller coordinate does not change when the
 point is twisted by `charTwist`, which multiplies `u` by `ε` or by `ε⁻¹`. -/
