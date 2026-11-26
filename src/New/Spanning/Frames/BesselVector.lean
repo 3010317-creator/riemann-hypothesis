@@ -553,7 +553,6 @@ theorem lintegral_inner_besselVector_sq_mul_le (x : T.G) :
     (∫⁻ y : T.G, ‖⟪Z.besselVector x, Z.besselVector y⟫_ℂ‖ₑ ^ 2 ∂F.quotientMeasureFrom 0) *
         F.unipotentMass * F.unipotentMass ≤
       ‖Z.besselVector x‖ₑ ^ 2 * F.groupMeasure F.congruenceSubgroup := by
-  classical
   -- Only the `y` in a set `S` of mass vol(K(g)) / fl count, and `√fl ‖W_Z y‖ ≤ 1` bounds
   -- `√fl |⟨W_Z x, W_Z y⟩|` by `‖W_Z x‖`.
   let θ : Measure T.G := F.quotientMeasureFrom 0

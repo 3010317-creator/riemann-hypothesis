@@ -179,7 +179,6 @@ lemma pivotL1Norm_sq_le (hk : F.IsPairingKernel j k d) {u v : T.G → ENNReal}
       ‖F.partialCorrelation (l + 1) k (σ * g) (σ * y)‖ₑ ^ 2 ≤ u (σ * g) * v σ)
     (hu : Measurable u := by fun_prop) (hv : Measurable v := by fun_prop) :
     F.pivotL1Norm l k g y ^ 2 ≤ K * ∫⁻ σ : T.G, v σ ∂F.floorMeasure l := by
-  classical
   -- `F.floorMeasure l` lives on `floorGroup l`, so the integrand may be cut to that group; the cut
   -- function `f` vanishes outside the set `N` on which `h_mass` bounds the integral of `u`.
   let f : T.G → ENNReal :=

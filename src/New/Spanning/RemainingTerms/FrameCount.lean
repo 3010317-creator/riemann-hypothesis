@@ -498,7 +498,6 @@ lemma skewSolution_mul (h_gram : μᴴ * P = -(Pᴴ * μ)) (h_solve : μ * α * 
 lemma isIntMatrix_skewSolution {O : Subring R} [IsStarStable O] (hP : IsIntMatrix O P)
     (hμ : IsIntMatrix O μ) (hα : IsIntMatrix O α) (hδ : δ ∈ O) :
     IsIntMatrix O (skewSolution P μ α δ) := by
-  classical
   have hμα : IsIntMatrix O (μ * α) := hμ.mul hα
   have h_third : IsIntMatrix O (αᴴ * (Pᴴ * μ) * α) :=
     (hα.conjTranspose.mul (hP.conjTranspose.mul hμ)).mul hα

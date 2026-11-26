@@ -195,7 +195,6 @@ lemma normDensity_indicator_eq_mul [WeilData E] (hψ : P.ψ = S.charOnPlaces T) 
       ∫ b : skewAdjoint (LocProd T), ∫ y : κ → LocProd T,
         Ψ y * P.ψ (P.element * (b : LocProd T) * (star y ⬝ᵥ y - evalPlaces T β))
         ∂volume ∂P.skewMeasure := by
-  classical
   -- Split first the frequency and then the vector into their parts at `T` and off `T`.
   let L : Set (κ → 𝔸f E) := intVectors (integralOff T) κ
   have L_meas : MeasurableSet L := (isOpen_intVectors (isOpen_integralOff T)).measurableSet

@@ -516,7 +516,6 @@ omit ok in
 lemma hilbertSchmidtNorm_one_sq_eq_sourceDim :
     hilbertSchmidtNorm (1 : End ℂ (EuclideanSpace ℂ (S.Classes × S.BesselCoord))) ^ 2 =
       S.sourceDim := by
-  classical
   simp [hilbertSchmidtNorm_sq_eq_sum (basisFun _ ℂ), sourceDim]
 
 /-- Let `S` be admissible filling data (`Filling`, `IsAdmissible`) for a unitary group `G` over the

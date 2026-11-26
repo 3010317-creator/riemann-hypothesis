@@ -90,7 +90,6 @@ lemma toRows_classCoord_mul {γ : S.G E} {ρ : Type} [Fintype ρ] (c : S.Classes
     (S.classCoord c * finAdeleMatrix t * w).toRows₂.toRows₁ = S.classCoordX₀ c * p := by
   -- The first half of the images is the middle part of `t w`, and `S.classCoord c` is block
   -- diagonal.
-  classical
   have h_middle : (finAdeleMatrix t * w).toRows₂.toRows₁ = fromRows p 0 := by
     rw [← hp]
     simp [← ext_iff, linkMatrix, Matrix.mul_apply, Matrix.one_apply]

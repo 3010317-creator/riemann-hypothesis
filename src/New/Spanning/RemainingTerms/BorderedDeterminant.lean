@@ -295,7 +295,6 @@ omit [CMType E] in
 /-- If `v` has a left inverse, the number of its columns is the dimension of their span. -/
 lemma card_eq_finrank_colSpan {v : Matrix σ τ E} (h : HasLeftInv v) :
     Fintype.card τ = Module.finrank E (colSpan v) := by
-  classical
   simp [v.mulVecLin.finrank_range_of_inj h.injective_mulVec]
 
 /-- In the lattice coordinates `S.classCoord c`, the frame pair `framePair γ` (entries embedded in

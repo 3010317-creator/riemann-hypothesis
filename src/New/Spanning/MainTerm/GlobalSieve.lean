@@ -1010,7 +1010,6 @@ parameter, `n = ϱ + 1`, and `f` is the number of infinite places. -/
 lemma globalWeight_scaledHead_le [S.IsAdmissible] {A : Finset Eˣ}
     (hA : ∀ t ∈ A, (t : E) ∈ ratIntegralOff T) {i : ℕ} (hi : i ≤ 𝔰.ϱ) (p : Fin i → A) :
     S.globalWeight T i (S.scaledHead T p 1) ≤ S.b ^ (120 * 𝔰.n ^ 8 * numInfPlaces E * i) := by
-  classical
   have hb : 1 ≤ S.b := S.one_le_b
   by_cases hp : S.globalWeight T i (S.scaledHead T p 1) = 0
   · exact hp.trans_le (by positivity)
@@ -1048,7 +1047,6 @@ lemma sum_globalWeight_le [S.IsAdmissible] {A : Finset Eˣ}
     (hA : ∀ t ∈ A, (t : E) ∈ ratIntegralOff T) {i : ℕ} (hi : i ≤ 𝔰.ϱ) :
     ∑ p : Fin i → A, S.globalWeight T i (S.scaledHead T p 1) ≤
       S.b ^ (130 * 𝔰.n ^ 9 * numInfPlaces E) := by
-  classical
   have hb : 1 ≤ S.b := S.one_le_b
   let P : Finset (Fin i → A) := {p | S.globalWeight T i (S.scaledHead T p 1) ≠ 0}
   have h_card : (#P : ℝ) ≤ (1 + 2 * S.b ^ (120 * 𝔰.n ^ 2)) ^ (i * numInfPlaces E * 2) := by

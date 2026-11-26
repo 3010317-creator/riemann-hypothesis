@@ -398,7 +398,6 @@ theorem IsFillingData.exists_intermediateGroup_one_place (h : S.IsFillingData T 
           o.elim 1 (fun _ : Sg ↦ ENNReal.ofReal (S.b ^ (6 * 𝔰.k))) ≤
         F.massIntegral (unitaryLevel P.integers 1 (S.latticeMiddle (LocProd T)).splitGram) *
           F.groupMeasure Z := by
-  classical
   -- Without a place take `Z = K`. At a place `w` take for `Z` the image of the group `H` of those
   -- `k` whose reduction at `w` fixes the vector; its index in `K` is that of `H`.
   let p : S.latticeStabilizer →* U (S.latticeMiddle (LocProd T)).splitGram :=
@@ -494,7 +493,6 @@ product of the completions at `T`, which is the character of the finite adeles o
 extension by zero, is the product of the characters of the fibres. -/
 theorem charOnPlaces_eq_prod_fibers [Fintype ι] (x : LocProd T) :
     S.charOnPlaces T x = ∏ i : ι, S.charOnPlaces (placeFiber T blk i) (evalFiber T blk i x) := by
-  classical
   -- An adele supported on `T` is the sum of its parts on the fibres.
   have h_sum :
       adeleOfLocal T x = ∑ i : ι, adeleOfLocal (placeFiber T blk i) (evalFiber T blk i x) := by
