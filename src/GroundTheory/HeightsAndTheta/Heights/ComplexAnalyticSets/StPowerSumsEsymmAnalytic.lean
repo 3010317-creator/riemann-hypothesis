@@ -6,8 +6,6 @@ public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Topology Filter
