@@ -204,9 +204,7 @@ lemma eq_rev_iff_of_odd (hs : Odd s) (c : Fin s) : c = c.rev ↔ c = ⟨s / 2, b
 /-- For even `s`, the reversal `c ↦ s - 1 - c` of `Fin s` has no fixed point. -/
 lemma ne_rev_of_not_odd (hs : ¬ Odd s) (c : Fin s) : c ≠ c.rev := by
   obtain ⟨k, rfl⟩ := Nat.not_odd_iff_even.mp hs
-  intro h
-  have hc : (c : ℕ) < k + k := c.isLt
-  rw [Fin.ext_iff, Fin.val_rev] at h
+  rw [ne_eq, Fin.ext_iff, Fin.val_rev]
   omega
 
 /-- A ring homomorphism carries `gluedGram p q` to the form with parameters `(f p, f q)`. -/
