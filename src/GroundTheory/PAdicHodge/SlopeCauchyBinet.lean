@@ -99,8 +99,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open Matrix Finset Equiv

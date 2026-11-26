@@ -9,8 +9,6 @@ public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 open Ideal WittVector IsLocalRing

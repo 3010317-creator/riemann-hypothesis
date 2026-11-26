@@ -10,8 +10,6 @@ public import GroundTheory.PAdicHodge.BdRInvariants
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

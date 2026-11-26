@@ -10,8 +10,6 @@ public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open IntermediateField Polynomial

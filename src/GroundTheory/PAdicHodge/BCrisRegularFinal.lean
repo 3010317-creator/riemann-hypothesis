@@ -8,8 +8,6 @@ public import GroundTheory.PAdicHodge.BCrisEigen
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

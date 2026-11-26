@@ -24,8 +24,6 @@ import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 section -- clump:auto
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

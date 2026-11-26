@@ -54,8 +54,6 @@ open scoped GroundTheory.PAdicHodge.LocalBridge
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 noncomputable section
 
 namespace GroundTheory.PAdicHodge

@@ -11,8 +11,6 @@ import Mathlib.RingTheory.SimpleRing.Principal
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.PAdicHodge
 
 open IntermediateField Polynomial Module
