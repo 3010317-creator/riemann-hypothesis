@@ -811,6 +811,10 @@ structure New.BesselSystem.IsKernelBound {𝔰 : Shape} {B : ℝ} {f : ℕ} (X :
   ae_mem_of_besselLength_le :
     ∀ᵐ x : T ∂m, ∀ z ∈ frameBox M, besselLength (g x * z) ≤ M → z ∈ A
 
+private lemma cast_frameRank_le_rank {𝔰 : New.Shape} : (𝔰.n : ℝ) ≤ 𝔰.r :=
+  Nat.cast_le.2 (by simpa only [Fintype.card_fin] using
+    Fintype.card_le_of_injective 𝔰.besselFrame New.besselFrame_injective)
+
 /-- The open cell bound at the section `γ_Z = gramSection Z`, for the uncut function
 `W = X.besselFn .full` of a Bessel system `X` with scale `B`. Here `n = ϱ + 1` and `I = X.Index`.
 
@@ -836,10 +840,9 @@ lemma New.BesselSystem.exists_isKernelBound_gramSection {𝔰 : Shape} {B M : �
   -- Take for `A` a tube over a set `Ω ⊆ besselU0`, for `m` Haar measure conditioned on `v ∈ Ω`, and
   -- for `ν` a multiple of `‖W‖²` on `A`; Schur's bound gives the contraction.
   have hB : 8 * 𝔰.r ≤ B := X.eight_mul_rank_le
-  have h_rank : (𝔰.r : ℝ) = 𝔰.ϱ + (card 𝔰.κ + 1 + 𝔰.ϱ) := by
-    dsimp only [Shape.r]
-    simp only [card_sum, Fintype.card_fin, card_unique, Nat.cast_add, Nat.cast_one]
-  have hM_eight : 8 * (𝔰.ϱ + 1) ≤ M := by linarith [Nat.cast_nonneg (α := ℝ) (card 𝔰.κ)]
+  have hM_eight : 8 * (𝔰.ϱ + 1) ≤ M := by
+    rw [← Nat.cast_succ]
+    linarith [cast_frameRank_le_rank (𝔰 := 𝔰)]
   have hM_two : 2 ≤ M := by linarith
   have h_disc_half : 0 < gramDiscReal Z / 2 :=
     half_pos (h_disc.trans_lt' (inv_pos.2 (by linarith)))
@@ -945,11 +948,8 @@ lemma New.BesselSystem.exists_isOpenCellBound {𝔰 : Shape} {B : ℝ} {f : ℕ}
       X.IsOpenCellBound γ ρ A ν m t := by
   -- Reduce to the section: with `Z` the Gram matrix of the two frames, the shifts `t` satisfy
   -- `γ t(h, v) = s γ_Z (v h)⁻¹`. Use the scale `M = ρ ^ (9 n) / gramDiscReal Z`.
-  have hn_rank : (𝔰.n : ℝ) ≤ 𝔰.r := Nat.cast_le.2 (by
-    dsimp only [Shape.n, Shape.r]
-    simp only [card_sum, Fintype.card_fin, card_unique]
-    omega)
-  have hρ_n : 𝔰.n ≤ ρ := by linarith [X.eight_mul_rank_le, Nat.cast_nonneg (α := ℝ) 𝔰.n]
+  have hρ_n : 𝔰.n ≤ ρ := by
+    linarith [X.eight_mul_rank_le, Nat.cast_nonneg (α := ℝ) 𝔰.n, cast_frameRank_le_rank (𝔰 := 𝔰)]
   have hρ_one : 1 ≤ ρ := (Nat.one_le_cast.2 𝔰.ϱ.succ_pos).trans hρ_n
   have hZρ (a c : Fin (𝔰.ϱ + 1)) : ‖realFrameGram γ a c‖ ≤ ρ ^ 2 :=
     (norm_realFrameGram_le_mul γ y a c).trans
