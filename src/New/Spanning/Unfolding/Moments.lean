@@ -885,6 +885,7 @@ lemma integral_extendedBesselChar_conj_eq {T : Finset (FinPlace E)} [T.StarStabl
         rw [setIntegral_congr_fun measurableSet_unitaryLevel h_const, setIntegral_const,
           mul_smul_comm]
 
+omit [WeilData E] ok in
 /-- Let `S` be admissible filling data for a unitary group `G` over the CM field `E`, which carries
 Weil data, and let `Ḡ = S.ResidueGL` be the product of the general linear groups over the residue
 fields at the chosen places above the two level primes `p₀`, `p₁`. Let `M = p₀ p₁`, and let `T` be a
