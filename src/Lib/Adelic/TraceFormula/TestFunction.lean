@@ -96,7 +96,7 @@ lemma convIndicator_single_mul {K : Subgroup G} (hK_open : IsOpen (K : Set G))
 
 /-- The representation of `G × G` on test functions by translation is smooth: each test function is
 fixed by all translations near the identity. -/
-instance [WeaklyLocallyCompactSpace G] : IsSmoothRep (TestFunction.translate (G := G)) := by
+instance : IsSmoothRep (TestFunction.translate (G := G)) := by
   refine ⟨fun f : TestFunction G ↦ ?_⟩
   have h_const : IsLocallyConstant fun (g : G × G) (x : G) ↦ f.val (g.1⁻¹ * x * g.2) :=
     schwartzBruhat.isLocallyConstant_curry f.property (fun (g : G × G) (x : G) ↦ g.1⁻¹ * x * g.2)
