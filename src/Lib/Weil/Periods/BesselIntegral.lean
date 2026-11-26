@@ -429,25 +429,16 @@ lemma integral_besselMeasure_eq_of_mean {q : Type*} [Fintype q]
   -- `u b` gives 0, so its integral for `Y.besselMeasure` vanishes; and `M ∘ pr` integrates to a
   -- multiple of `∫ M`.
   intro row
-  obtain ⟨pr, pr_cont, unip_part, pr_section, mem_unip, pr_rat⟩ :
-      ∃ pr : Y.besselGroup →* G E (1 : X → ℤˣ), Continuous pr ∧
-        (∀ r : Y.besselGroup, (r : G E ε) * (Y.inclX (pr r))⁻¹ ∈ Y.unipotent) ∧
-        (∀ a : G E (1 : X → ℤˣ), pr ⟨Y.inclX a, Y.inclX_mem_besselGroup a⟩ = a) ∧
-        (∀ r : Y.besselGroup, (r : G E ε) ∈ Y.unipotent ↔ pr r = 1) ∧
-        ∀ r : Y.besselGroup, (r : G E ε) ∈ Y.ratBessel → pr r ∈ (stdSpace E X).Γ :=
+  obtain ⟨pr, pr_cont, unip_part, pr_section, mem_unip, pr_rat⟩ :=
     Y.exists_besselGroup_proj
-  obtain ⟨u, u_cont, u_mem, row_mul⟩ : ∃ u : (q × X → 𝔸 E) → G E ε, Continuous u ∧
-      (∀ b : q × X → 𝔸 E, u b ∈ Y.unipotent) ∧
-      ∀ n : G E ε, n ∈ Y.unipotent → ∀ b : q × X → 𝔸 E, row (n * u b) = b + row n :=
+  obtain ⟨u, u_cont, u_mem, row_mul⟩ :=
     Y.exists_continuous_unipotent_besselRow_mul v
   let S : Subgroup Y.besselGroup := (stdSpace E X).Γ.comap pr
   have S_closed : IsClosed S.carrier := isClosed_of_discreteTopology.preimage pr_cont
   have unimodular : (haar : Measure S).IsMulRightInvariant :=
     Y.isMulRightInvariant_haar_comap_Gamma pr_rat
   -- `∫ M ∘ pr = κ • ∫ M`, so it remains to see `∫ φ = ∫ M ∘ pr`.
-  obtain ⟨κ, push⟩ : ∃ κ : ℝ, ∀ F : G E (1 : X → ℤˣ) → ℂ, Measurable F →
-      (stdSpace E X).Γ.FixesLeft F →
-      ∫ r : Y.besselGroup, F (pr r) ∂Y.besselMeasure = κ • ∫ a, F a ∂(stdSpace E X).quotMeasure :=
+  obtain ⟨κ, push⟩ :=
     exists_integral_comp_quotMeasure_eq_smul (V := ℂ) (Γ := (stdSpace E X).Γ)
       (Y.ratBessel.subgroupOf Y.besselGroup) volume haar
       pr_cont (fun a ↦ ⟨⟨Y.inclX a, Y.inclX_mem_besselGroup a⟩, pr_section a⟩) pr_rat
