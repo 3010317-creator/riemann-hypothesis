@@ -454,14 +454,9 @@ lemma hodgeTateMap_map {q h : ℕ} (α : N' ⟶ N) (x : HodgeH N q) :
     hodgeTateMap h (HodgeH.map α x) = PairH.map α (hodgeTateMap h x) := by
   -- restriction to pairs commutes with precomposition by the class of `α`; then compose with
   -- `contractionPow h`
-  have h_nat :
-      comp ((Ext.mk₀ α).mapExactFunctor (restrictAlong pairAlg)).toTotalH
-          (comp ((Comparison.restrict toHodgeTest hodgeCoeff).pull
-            (Functor.whiskerRight toSqZero N) q x).toTotalH (contractionPow h)) =
-        comp ((Comparison.restrict toHodgeTest hodgeCoeff).pull (Functor.whiskerRight toSqZero N') q
-          (((Ext.mk₀ α).mapExactFunctor (restrictAlong HodgeTest.sqZeroExt)).comp x
-            (zero_add q))).toTotalH (contractionPow h) :=
-    comp_assoc_of_eq (Comparison.pull_comp_restrictAlong (.mk₀ α) x (zero_add q)) (contractionPow h)
+  have h_nat := comp_assoc_of_eq (Comparison.pull_comp_restrictAlong
+    (c := Comparison.restrict toHodgeTest hodgeCoeff) (η := toSqZero) (.mk₀ α) x (zero_add q))
+    (contractionPow h)
   -- both sides, written as precompositions with the classes of `α`
   change comp ((Comparison.restrict toHodgeTest hodgeCoeff).pull
         (Functor.whiskerRight toSqZero N') q
