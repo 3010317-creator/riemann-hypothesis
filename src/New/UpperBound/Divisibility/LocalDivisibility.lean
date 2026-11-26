@@ -141,18 +141,19 @@ variable {ϑ : D.Twist} {Ψ : D.Translations →₀ ℂ}
 invariance conditions, of tuples `x` of translations. The datum `translateDatum x j` of the `j`-th
 theta lift is the normalised vacuum vector translated by `x j`. That it lies in
 `raises 1 1 (p ^ r j)` says that this lift, with both gauges based at the identity, multiplies
-`p`-adic gauges by at most `p ^ r j`. Suppose this holds for every `x` in the support of `Ψ`, that
+`p`-adic gauges by at most `p ^ r j`. Suppose this holds for every `x` in the support of `Ψ` and
+`j < D.m`, that
 `p ≠ D.N`, and that `p` is prime to `ϑ.normQ`, the product of the norms of the places in the set Q
 of `ϑ`. Then `restrictedChain ϑ Ψ`, the combination with coefficients `Ψ` of chains of `D.m` lifts,
 sends an integral source form to a form of gauge at most `p ^ ∑ j < D.m, r j`. -/
 lemma IsWeakChainDatum.gaugeLe_restrictedChain_of_mem_raises (hΨ : IsWeakChainDatum ϑ Ψ)
     (hQ : p.Coprime ϑ.normQ) (hN : p ≠ D.N) {r : ℕ → ℝ}
-    (h_raises : ∀ x ∈ Ψ.support, ∀ j : ℕ,
+    (h_raises : ∀ x ∈ Ψ.support, ∀ j < D.m,
       D.translateDatum x j ∈ (D.liftKernel ϑ j).raises 1 1 (p ^ r j))
     {v : D.SourceForm} (hv : v ∈ D.integralSourceForms) :
     GaugeLe 1 (p ^ ∑ j ∈ range D.m, r j) (restrictedChain ϑ Ψ v) := by
   exact GaugeLe.restrictToY D hN (hΨ.gaugeLe_chain hQ (t := 1) (by simp) (d := 1)
-    (fun x hx j _ ↦ h_raises x hx j) hv.2)
+    h_raises hv.2)
 
 /-- Let `Ψ` be a weak chain datum for the twist `ϑ`: coefficients, subject to integrality and
 invariance conditions, of tuples of translations. Let `p` be a prime prime to the norm of the level
@@ -179,7 +180,7 @@ lemma IsWeakChainDatum.gaugeLe_restrictedChain_one (hΨ : IsWeakChainDatum ϑ Ψ
         (hΨ.translateDatum_mem_standardData hQ hN hx j (.inl rfl))
     rwa [h_ratio, one_pow, ← rpow_zero p] at h_standard
   have h_chain : GaugeLe 1 (p ^ ∑ _j ∈ range D.m, (0 : ℝ)) (restrictedChain ϑ Ψ v) :=
-    hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hN h_raises hv
+    hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hN (fun x hx j _ ↦ h_raises x hx j) hv
   simpa using h_chain
 
 /-- Let `Ψ` be a weak chain datum for the twist `ϑ`, and `p < x₁` a non-split prime
@@ -210,7 +211,7 @@ lemma IsWeakChainDatum.gaugeLe_restrictedChain_collisionSum (hΨ : IsWeakChainDa
       div_le_div_of_nonneg_right (D.le_loss p) hm_pos.le
     rw [sub_div]
     linarith
-  refine (hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hp_N h_raises hv).rpow_mono ?_
+  refine (hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hp_N (fun x hx j _ ↦ h_raises x hx j) hv).rpow_mono ?_
   calc ∑ j ∈ range D.m, -D.divisibilityBound p j ∅
       ≤ ∑ _j ∈ range D.m, (D.collisionSum p ∅ + (D.loss p - D.gain p) / D.m) := sum_le_sum h_lift
     _ = D.m * D.collisionSum p ∅ + D.loss p - D.gain p := by
