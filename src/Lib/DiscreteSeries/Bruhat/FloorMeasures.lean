@@ -177,8 +177,8 @@ lemma heisenbergElem_mul :
     star_dotProduct_mulVec_comm IsHermitianUnit.conjTranspose_eq v' v
   refine Subtype.ext (Units.ext ?_)
   refine ext_iff_mulVec.2 fun w ↦ ?_
-  simp [← hv, ← hv', ← mulVec_mulVec, mulVec_add, mulVec_smul, hv_coord, hv'_coord, h_star]
-  rw [eq_sub_of_add_eq' (element_add_star (A := A))]
+  simp [← hv, ← hv', ← mulVec_mulVec, mulVec_add, mulVec_smul, hv_coord, hv'_coord, h_star,
+    eq_sub_of_add_eq' (element_add_star (A := A))]
   module
 
 /-- An isotropic vector w that vanishes on the floors below a and has coordinate 1 at e*_a is
