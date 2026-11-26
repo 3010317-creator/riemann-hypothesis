@@ -820,15 +820,17 @@ lemma besselOrbitalIntegral_ratToInf_besselU_mul {side : FullOrCut} {u u' : S.G 
         besselOrbitalIntegral volume
           (fun y : InfinitePlace E → 𝔰.G₁ ↦ WithLp.toLp 2 (S.besselFn side y)) (S.ratToInf γ) := by
   let χ : ℂ := S.unipotentChar (S.ratToFin u) * star (S.unipotentChar (S.ratToFin u'))
-  have h_norm (x : S.GFin) : ‖S.unipotentChar x‖ = 1 := norm_selfDualChar
-  have h_ne (x : S.GFin) : S.unipotentChar x ≠ 0 := norm_ne_zero_iff.1 (by simp [h_norm])
+  have h_inv {x : S.G E} (hx : x ∈ besselU) :
+      S.unipotentChar (S.ratToFin x)⁻¹ = (S.unipotentChar (S.ratToFin x))⁻¹ := by
+    rw [unipotentChar, simpleRootSum_inv _
+      (mem_partialUnitriangularGroup_of_mem_besselU (ratToFin_mem_besselU_iff.2 hx)),
+      mul_neg, AddChar.map_neg_eq_inv, unipotentChar]
+  have h_phase : ‖S.unipotentChar (S.ratToFin u')‖ = 1 := norm_selfDualChar
   have h_kernel (y : InfinitePlace E → 𝔰.G₁) :
       S.besselKernel side (u⁻¹ * γ * u') y = χ • S.besselKernel side γ (S.ratToInf u * y) := by
-    have h_move := besselKernel_besselU_mul (side := side) hu hu' (u⁻¹ * γ * u') y
-    rw [show u * (u⁻¹ * γ * u') * u'⁻¹ = γ by group] at h_move
-    simp only [χ]
-    rw [h_move, smul_smul, Complex.star_def, ← Complex.inv_eq_conj (h_norm _), mul_mul_mul_comm,
-      mul_inv_cancel₀ (h_ne _), inv_mul_cancel₀ (h_ne _), one_mul, one_smul]
+    simpa [χ, h_inv hu, h_inv hu', Complex.star_def,
+      ← Complex.inv_eq_conj h_phase, mul_assoc] using
+      besselKernel_besselU_mul (side := side) (inv_mem hu) (inv_mem hu') γ (S.ratToInf u * y)
   ext i
   calc
     _ = ∫ y, S.besselKernel side (u⁻¹ * γ * u') y i := rfl
