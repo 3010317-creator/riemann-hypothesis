@@ -184,7 +184,6 @@ lemma exists_period_map [Algebra ℤ_[p] S] [IsScalarTower ℤ_[p] Ainf S] [IsSc
   -- bijective on cohomology as soon as `primitiveMap` is modulo `p`, given flat base change
   -- and finiteness (`hγ_bij`).
   obtain ⟨γ, hγ, hγ_bij⟩ := exists_primitive_period_comparison K θ hS
-  have := Flat.trans ℤ_[p] ℚ_[p] K
   algebraize [(algebraMap _ ℂ_[p]).comp e]
   let α (Y : Over (Spec R)) :
       freeAb (testPoints Y) ⟶ genericTest ⋙ freeAb (testIncl ⋙ geomPoints R Ω Y) :=

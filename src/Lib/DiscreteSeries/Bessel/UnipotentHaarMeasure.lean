@@ -817,7 +817,6 @@ lemma besselHaar₀_homogeneousBall_add_le {t : ℝ} (ht : 0 < t) :
     𝔰.besselHaar₀ (homogeneousBall (𝔰.r ^ 2 * t + t)) ≤
       3 * 𝔰.besselHaar₀ (homogeneousBall (𝔰.r ^ 2 * t)) := by
   -- The radius grows by the factor `1 + 1 / r ^ 2`, and the exponent `d` is at most `r ^ 2`.
-  have hr_pos : (0 : ℝ) < 𝔰.r := mod_cast card_pos
   set d : ℕ := 2 * 𝔰.ϱ * (𝔰.k + 𝔰.ϱ) with hd_def
   have hd : d ≤ 𝔰.r ^ 2 := by
     rw [hd_def, show 𝔰.r = 𝔰.ϱ + (𝔰.k + 1 + 𝔰.ϱ) by simp]

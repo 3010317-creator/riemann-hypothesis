@@ -616,7 +616,6 @@ theorem fockLaplacian_eq_zero {a : R} {G : Submodule ℂ (MvPolynomial ι ℂ)} 
     hQ.trans (LinearMap.sum_apply ..)
   have h_sign (c : C) : T.varSign (b, c) = -T.varSign (a, c) := by
     simp [pairSign, (units_ne_iff_eq_neg.1 hab.symm)]
-  have h_η (r : R) (c : C) : T.indexSign (T.varEquiv (r, c)) = T.varSign (r, c) := by simp
   have hQ_deg : Q ∈ polyDegreeLE (j - 2) := by
     rw [hQ_sum]
     exact sum_mem fun c hc ↦ glOp_mem_polyDegreeLE hP_deg (by grind [Units.val_neg, Units.val_one])
