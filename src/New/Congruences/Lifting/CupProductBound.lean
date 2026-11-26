@@ -684,8 +684,8 @@ lemma liftIdeal_le_of_p_pow_mem {S : PairingSide O} {l : ℕ} {i : Letter} {c : 
       S.liftIdeal 0 l i ⊔ span {(p : Ainf)} • span {(p : Ainf) ^ c} := by
     simp [liftIdeal, sup_comm, span_singleton_mul_span_singleton, pow_succ']
   rw [h_split] at h_mem ⊢
-  exact sup_le le_rfl (smul_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _)
-    (IsAdicComplete.le_jacobson_bot _) (by simpa using h_mem))
+  exact sup_le le_rfl (smul_le_of_le_smul_of_le_jacobson (fg_span_singleton _)
+    (IsAdicComplete.le_jacobson _) (by simpa using h_mem))
 
 /-- Nakayama at one letter: if `p ^ κ` lies in `S.liftIdeal (p ^ (κ + 1)) 0 i`, then `p ^ κ` kills
 the cokernel at `i`. -/

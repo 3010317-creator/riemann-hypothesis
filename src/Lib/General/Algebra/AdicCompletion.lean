@@ -166,9 +166,9 @@ lemma eq_of_forall_pow_dvd_sub (π : R) [IsHausdorff (span {π}) R]
 lemma isUnit_of_dvd_sub [IsAdicComplete (span {π}) R] (hy : IsUnit y) (h_dvd : π ∣ x - y) :
     IsUnit x := by
   -- `x - y` lies in the Jacobson radical, so `(x - y) * y⁻¹ + 1 = x * y⁻¹` is a unit
-  have h_jac : x - y ∈ jacobson ⊥ :=
-    IsAdicComplete.le_jacobson_bot (span {π}) (mem_span_singleton.2 h_dvd)
-  simpa [sub_mul] using mem_jacobson_bot.1 h_jac ↑hy.unit⁻¹
+  have h_jac : x - y ∈ Ring.jacobson _ :=
+    IsAdicComplete.le_jacobson (span {π}) (mem_span_singleton.2 h_dvd)
+  simpa [sub_mul] using Ring.mem_jacobson_iff.1 h_jac ↑hy.unit⁻¹
 
 omit [Fact p.Prime] in
 /-- An `S`-algebra that is `p`-adically complete as a ring is `p`-adically complete as an
