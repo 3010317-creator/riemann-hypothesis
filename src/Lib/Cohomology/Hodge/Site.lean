@@ -112,7 +112,7 @@ lemma semilinearOfBasis_single (i : ι) : semilinearOfBasis a v (single i 1) = v
 /-- The functor sending a pair (A, M) to the square-zero extension A ⊕ M, as a k-algebra. -/
 def HodgeTest.sqZeroExt : HodgeTest k ⥤ CommAlg k where
   obj X := CommAlgCat.of k (TrivSqZeroExt X.baseAlg (X.Index → X.baseAlg))
-  map f :=
+  map {_ Y} f :=
     ofHom
       { toFun x := (f.1 x.fst, f.2 x.snd)
         map_one' := by apply TrivSqZeroExt.ext <;> simp
@@ -121,9 +121,12 @@ def HodgeTest.sqZeroExt : HodgeTest k ⥤ CommAlg k where
           apply TrivSqZeroExt.ext
           · simp
             rfl
-          · simp
-            erw [TrivSqZeroExt.snd_mul, op_smul_eq_smul]
-            rfl
+          · let image (z : TrivSqZeroExt _ _) : TrivSqZeroExt Y.baseAlg (Y.Index → Y.baseAlg) :=
+              (f.1 z.fst, f.2 z.snd)
+            change f.2 (x * y).snd = (image x * image y).snd
+            rw [TrivSqZeroExt.snd_mul, TrivSqZeroExt.snd_mul, op_smul_eq_smul,
+              op_smul_eq_smul]
+            simp [image]
         map_zero' := by apply TrivSqZeroExt.ext <;> simp
         map_add' := by
           intro x y
