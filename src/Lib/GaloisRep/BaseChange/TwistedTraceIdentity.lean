@@ -745,13 +745,6 @@ private lemma New.IsMatchingRoots.semiconjBy_inv (R : New.IsMatchingRoots σ K f
   rw [H.map_apply_eq_self]
   exact R.commute_inv h_good
 
-/-- `B ν` commutes with `e ν` for a good `ν`: take `g = ν' = ν` in
-`IsMatchingRoots.good_and_conj_of_semiconjBy`. -/
-private lemma New.IsMatchingRoots.commute_map (R : New.IsMatchingRoots σ K f φ j ω e Good A B)
-    {ν : U (1 : Matrix n n E')} (h_good : Good ν) : Commute (B ν) (e ν) := by
-  obtain ⟨-, -, hB⟩ := R.good_and_conj_of_semiconjBy ν h_good rfl
-  exact mul_eq_of_eq_mul_inv hB
-
 /-- For a good base change `j γ`, the twisted norm of `(A (j γ))⁻¹` is `j γ`. -/
 private lemma New.IsMatchingRoots.twistedNorm_inv (R : New.IsMatchingRoots σ K f φ j ω e Good A B)
     (H : New.IsBaseChangeMaps σ j ω e) {γ : U (1 : Matrix n n E)} (h_good : Good (j γ)) :
@@ -771,7 +764,9 @@ private lemma New.IsMatchingRoots.apply_inv_mul_embFin_mul_eq [IsGalois E E']
   -- Take `δ = (A (j γ))⁻¹` in `exists_inv_mul_eq`; its twisted norm is `j γ`.
   have h_semi : SemiconjBy (A (j γ))⁻¹ (ω (j γ)) (j γ) := R.semiconjBy_inv H h_good
   obtain ⟨r, hrδ, h_match⟩ := R.exists_inv_mul_eq h_good h_semi
-  have h_comm_B : Commute (B (j γ)) (e (j γ)) := R.commute_map h_good
+  have h_comm_B : Commute (B (j γ)) (e (j γ)) := by
+    obtain ⟨-, -, hB⟩ := R.good_and_conj_of_semiconjBy (j γ) h_good rfl
+    exact mul_eq_of_eq_mul_inv hB
   set y : Gf E' n := (B (j γ))⁻¹ * baseChangeGf x
   have hr_eq : r = e (A (j γ))⁻¹ * (galoisGf σ (B (j γ)))⁻¹ * B (j γ) := by
     simpa [eq_inv_mul_iff_mul_eq, eq_mul_inv_iff_mul_eq, mul_assoc] using congrArg Inv.inv hrδ
