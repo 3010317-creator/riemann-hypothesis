@@ -4,8 +4,6 @@ public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open scoped ENNReal NNReal

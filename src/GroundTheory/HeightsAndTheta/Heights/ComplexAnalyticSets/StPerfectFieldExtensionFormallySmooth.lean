@@ -5,8 +5,6 @@ public import Mathlib.RingTheory.Smooth.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 def PerfectFieldExtensionFormallySmooth.Statement : Prop :=
