@@ -311,7 +311,7 @@ algebras, with `k` algebraically closed of characteristic `0`. If `f` kills no b
 `f' (piMatrixUnit i)` has trace `1`, then `f'` is a retract of `f`: some `B` with a left inverse `C`
 satisfies `f z * B = B * f' z` for all `z`. -/
 lemma New.exists_retract_of_trace_map_piMatrixUnit_eq_one {k N n : Type} [Field k] [CharZero k]
-    [IsAlgClosed k] [Fintype N] [DecidableEq N] [Fintype n] [DecidableEq n] {b : ℕ}
+    [Fintype N] [DecidableEq N] [Fintype n] [DecidableEq n] {b : ℕ}
     {d : Fin b → ℕ} [∀ i : Fin b, NeZero (d i)] (f : PiMatrix k d →ₐ[k] Matrix N N k)
     (f' : PiMatrix k d →ₐ[k] Matrix n n k) (f_ne : ∀ i : Fin b, f (piMatrixUnit i) ≠ 0)
     (f'_trace : ∀ i : Fin b, (f' (piMatrixUnit i)).trace = 1) :
