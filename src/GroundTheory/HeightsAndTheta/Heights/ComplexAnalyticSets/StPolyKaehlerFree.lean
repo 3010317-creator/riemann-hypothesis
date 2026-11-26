@@ -4,8 +4,6 @@ public import Mathlib.RingTheory.Kaehler.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 def PolyKaehlerFree.Statement : Prop :=

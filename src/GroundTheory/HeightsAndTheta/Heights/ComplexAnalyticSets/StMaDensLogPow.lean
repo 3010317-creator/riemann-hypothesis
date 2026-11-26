@@ -5,8 +5,6 @@ import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Statements
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open ReciprocityTheory.AnForm ReciprocityTheory.AnForm.A ComplexSets

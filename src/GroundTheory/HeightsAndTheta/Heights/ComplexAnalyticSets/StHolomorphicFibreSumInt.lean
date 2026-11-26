@@ -4,8 +4,6 @@ public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.Lintegra
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MeasureTheory ReciprocityTheory.AnForm.A

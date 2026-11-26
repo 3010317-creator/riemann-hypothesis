@@ -4,8 +4,6 @@ public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StIsolate
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial Topology ComplexSets

@@ -6,8 +6,6 @@ import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.ComplexHessianI
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open ReciprocityTheory.AnForm ReciprocityTheory.AnForm.A
