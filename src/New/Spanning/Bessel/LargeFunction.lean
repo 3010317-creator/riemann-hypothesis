@@ -835,11 +835,6 @@ lemma integrable_besselIntegrand (h_cont : Continuous rep) (hv_norm : ‖v‖ = 
     (lintegral_enorm_besselIntegrand_le x hv_norm h_gap y).trans_lt
       (mul_lt_top ofReal_lt_top (besselBallVolume_ne_top x).lt_top)⟩
 
-private lemma besselValueRep_mul_val (k₁ k₂ : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ)) (w : EuclideanSpace ℂ I) :
-    (besselValueRep rep (k₁ * k₂)).val w =
-      (besselValueRep rep k₁).val ((besselValueRep rep k₂).val w) := by
-  rw [(besselValueRep rep).map_mul k₁ k₂, Submonoid.coe_mul, mul_apply_eq_comp]
-
 private lemma besselValueRep_inv_val (k : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ)) :
     (besselValueRep rep k⁻¹).val = ContinuousLinearMap.adjoint (besselValueRep rep k).val := by
   have hBA : (besselValueRep rep k⁻¹).val * (besselValueRep rep k).val = 1 := by
@@ -879,7 +874,8 @@ lemma besselAverage_mul (h_cont : Continuous rep) (hv_norm : ‖v‖ = 1)
       change (t.val.snd * s.val.snd⁻¹)⁻¹ = _
       rw [_root_.mul_inv_rev, inv_inv]
     rw [h_fst, h_snd, mul_assoc t.val.fst, inv_mul_cancel_left, h_wave t,
-      besselValueRep_mul_val, ContinuousLinearMap.map_smul, ContinuousLinearMap.map_smul,
+      (besselValueRep rep).map_mul, Submonoid.coe_mul, mul_apply_eq_comp,
+      ContinuousLinearMap.map_smul, ContinuousLinearMap.map_smul,
       smul_smul, smul_smul, smul_smul]
     refine congrArg (· • _) ?_
     ring
