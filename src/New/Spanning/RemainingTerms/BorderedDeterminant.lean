@@ -375,7 +375,7 @@ abbrev isotropicRows : Matrix (Fin 𝔰.ϱ) (Fin (𝔰.ϱ + 1)) R := Z.submatrix
 
 /-- The first `j` rows of `Z`, completed by rows of the identity matrix. -/
 def paddedLeading [CommRing R] : Matrix (Fin (𝔰.ϱ + 1)) (Fin (𝔰.ϱ + 1)) R :=
-  of fun a b ↦ if a.1 < ↑j then Z a b else if a = b then 1 else 0
+  of fun a b ↦ if a.val < ↑j then Z a b else if a = b then 1 else 0
 
 /-- The matrix `paddedLeading j Z` keeps the first `j` rows of `Z` and completes them by the
 remaining rows of the identity matrix. Its determinant is the leading minor `D_j` of `Z`. -/
