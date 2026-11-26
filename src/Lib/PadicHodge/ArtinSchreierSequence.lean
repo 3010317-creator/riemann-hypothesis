@@ -88,12 +88,6 @@ private lemma coeff_oFlat_mul (n : ℕ) (a b : OFlat) :
       Perfection.coeff (ModP OC p) p n a * Perfection.coeff (ModP OC p) p n b :=
   map_mul (Perfection.coeff (ModP OC p) p n) a b
 
-/-- The `n`-th coordinate of `O^♭` is additive on differences. -/
-private lemma coeff_oFlat_sub (n : ℕ) (a b : OFlat) :
-    Perfection.coeff (ModP OC p) p n (a - b) =
-      Perfection.coeff (ModP OC p) p n a - Perfection.coeff (ModP OC p) p n b :=
-  map_sub (Perfection.coeff (ModP OC p) p n) a b
-
 /-- For `h` near `g`, the elements `h • x` and `g • x` of the tilt have the same `n`-th coordinate
 modulo `p`: it comes from the translate of `x.untiltRoot n`, whose orbit map is continuous. -/
 lemma eventually_coeff_smul_eq (x : OFlat) (g : Gp p) (n : ℕ) :
@@ -142,8 +136,9 @@ private lemma continuous_smul_cFlat (y : CFlat) :
     refine v.restrict_lt_iff.mpr (not_le.mp fun ⟨t, ht⟩ ↦ hn ?_)
     have c_eq : t * (h • x - g • x) * e = c := by
       simpa [eq_div_iff, Algebra.smul_def, ← map_mul, ← map_sub] using ht
-    rw [← c_eq, coeff_oFlat_mul, coeff_oFlat_mul, coeff_oFlat_sub, h_coeff, sub_self, mul_zero,
-      zero_mul, map_zero]
+    rw [← c_eq, coeff_oFlat_mul, coeff_oFlat_mul]
+    erw [map_sub (Perfection.coeff (ModP OC p) p n)]
+    rw [h_coeff, sub_self, mul_zero, zero_mul, map_zero]
   obtain ⟨⟨c, e⟩, rfl⟩ := mk'_surjective OFlat⁰ y
   have h_div :
       Continuous ((fun g : Gp p ↦ g • (c : CFlat)) / fun g ↦ g • ((e : OFlat) : CFlat)) :=
