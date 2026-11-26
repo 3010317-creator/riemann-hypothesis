@@ -11,8 +11,6 @@ public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.Projecti
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MeasureTheory Filter Topology ReciprocityTheory.AnForm ReciprocityTheory.AnForm.A

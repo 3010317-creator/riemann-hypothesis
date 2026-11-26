@@ -21,8 +21,6 @@ public import Mathlib.Analysis.Calculus.FDeriv.Prod
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open MvPolynomial Topology Metric Matrix

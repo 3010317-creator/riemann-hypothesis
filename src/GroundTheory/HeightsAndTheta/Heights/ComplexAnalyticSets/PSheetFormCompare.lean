@@ -8,8 +8,6 @@ import ReciprocityTheory.AnalyticForms.PotentialTheory.LocDens
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open Matrix Filter Topology ReciprocityTheory.AnForm ComplexSets

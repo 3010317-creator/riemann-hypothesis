@@ -413,8 +413,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 alias NormalisationModelLocalization.full := _root_.GroundTheory.Heights₂.Heights.NormalisationModelLocalization.proof

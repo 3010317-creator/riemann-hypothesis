@@ -5,8 +5,6 @@ public import Mathlib.RingTheory.Localization.LocalizationLocalization
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 universe u

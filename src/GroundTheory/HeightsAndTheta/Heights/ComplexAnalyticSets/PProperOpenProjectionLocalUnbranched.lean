@@ -12,8 +12,6 @@ public import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Topology Metric Filter

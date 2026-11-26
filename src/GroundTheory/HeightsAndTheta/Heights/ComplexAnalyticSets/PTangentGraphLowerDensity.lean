@@ -7,8 +7,6 @@ import Mathlib.CategoryTheory.Countable
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MeasureTheory Filter Topology
