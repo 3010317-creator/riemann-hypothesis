@@ -138,7 +138,9 @@ lemma sum_card_boxes_le {j r : ℕ} (T : WeylIndex (D.X (j + 1)) D.columnCount) 
     split_ifs with h_one
     · simp [h_one, card_filter_add_card_filter_not]
     · simpa [h_one, mul_comm] using sum_le_card_nsmul univ _ _ fun c _ ↦ h_col c
-  have h_one_lt : 1 < D.n (j + 1) := by grind [n]
+  have h_one_lt : 1 < D.n (j + 1) := by
+    rw [D.n_succ, ← add_assoc]
+    exact Nat.succ_lt_succ ((D.n_pos j).trans_le (Nat.le_add_right _ _))
   have h_top : (if τ ∈ D.aPlaces then D.a else 0) =
       ∑ h ∈ range (D.n (j + 1)), if h = 1 then D.columnCount τ h else 0 := by
     simp [columnCount, h_one_lt]
