@@ -78,20 +78,14 @@ noncomputable def hyperbolicSpace : Space E (p ⊕ p) (hyperbolicSigns p) :=
   let ϵ : 𝔸f E := stdLattice.traceOneAdele
   { J := fromBlocks 0 1 1 0
     x := mkAdelicGL
-      (fun _ ↦
-        { val := (√2 : ℂ)⁻¹ • fromBlocks 1 (-1) 1 1
-          inv := (√2 : ℂ)⁻¹ • fromBlocks 1 1 (-1) 1
-          val_inv := by
-            simp [fromBlocks_multiply, ← ext_iff, ← mul_assoc, ← mul_inv, ← Complex.ofReal_mul,
-              Matrix.one_apply]
-            grind
-          inv_val := by
-            simp [fromBlocks_multiply, ← ext_iff, ← mul_assoc, ← mul_inv, ← Complex.ofReal_mul,
-              Matrix.one_apply]
-            grind },
-        { val := fromBlocks 1 (-c • 1) (ϵ • 1) ((c * star ϵ) • 1)
-          inv := fromBlocks (star ϵ • 1) 1 ((star c * ϵ) • 1) (-star c • 1)
-          val_inv := by
+      (fun _ ↦ Units.mkOfMulEqOne
+        ((√2 : ℂ)⁻¹ • fromBlocks 1 (-1) 1 1) ((√2 : ℂ)⁻¹ • fromBlocks 1 1 (-1) 1) (by
+          simp [fromBlocks_multiply, ← ext_iff, ← mul_assoc, ← mul_inv, ← Complex.ofReal_mul,
+            Matrix.one_apply]
+          grind),
+        Units.mkOfMulEqOne
+          (fromBlocks 1 (-c • 1) (ϵ • 1) ((c * star ϵ) • 1))
+          (fromBlocks (star ϵ • 1) 1 ((star c * ϵ) • 1) (-star c • 1)) (by
             -- Block by block the product is a scalar matrix; compare the scalars.
             have hc : star c * c = -1 := star_normNegOne_mul_self
             have hϵ : ϵ + star ϵ = 1 := traceOneAdele_add_star
@@ -100,17 +94,7 @@ noncomputable def hyperbolicSpace : Space E (p ⊕ p) (hyperbolicSigns p) :=
             · linear_combination hϵ - ϵ * hc
             · linear_combination hc
             · linear_combination ϵ * star ϵ * hc
-            · linear_combination hϵ - star ϵ * hc
-          inv_val := by
-            -- Block by block, as for `val_inv`.
-            have hc : star c * c = -1 := star_normNegOne_mul_self
-            have hϵ : ϵ + star ϵ = 1 := traceOneAdele_add_star
-            simp only [fromBlocks_multiply, Matrix.mul_one, Matrix.mul_smul, ← fromBlocks_one]
-            congr 1 <;> match_scalars
-            · linear_combination hϵ
-            · ring
-            · ring
-            · linear_combination hϵ - (ϵ + star ϵ) * hc })
+            · linear_combination hϵ - star ϵ * hc))
     gram_point := by
       refine gram_mkAdelicGL ?_ ?_
       · simp [signMatrix, fromBlocks_conjTranspose, fromBlocks_map, fromBlocks_multiply, ← ext_iff,
@@ -153,10 +137,10 @@ lemma Exchange.isOrthoIntegral_hyperbolicSpace_x_inv :
     IsOrthoIntegral (hyperbolicSpace E p).x⁻¹.val := by
   have h_half : (2⁻¹ : ℂ) + 2⁻¹ = 1 := by norm_num
   refine ⟨fun w ↦ ?_, ?_⟩
-  · simp [hyperbolicSpace, ← map_inv, ← ext_iff, Matrix.mul_apply, Matrix.one_apply, ← mul_inv,
-      ← Complex.ofReal_mul, ite_add_ite, h_half, eq_comm]
-  · simp [hyperbolicSpace, ← map_inv, ite_mem, star_mem_Ô, traceOneAdele_mem, mul_mem,
-      Matrix.one_apply]
+  · simp [hyperbolicSpace, Units.mkOfMulEqOne, ← map_inv, ← ext_iff, Matrix.mul_apply,
+      Matrix.one_apply, ← mul_inv, ← Complex.ofReal_mul, ite_add_ite, h_half, eq_comm]
+  · simp [hyperbolicSpace, Units.mkOfMulEqOne, ← map_inv, ite_mem, star_mem_Ô, traceOneAdele_mem,
+      mul_mem, Matrix.one_apply]
 
 /-- For the hyperbolic space `hyperbolicSpace E p` of rank `2 p` (Gram matrix with blocks
 `(0, 1; 1, 0)`), consider its adelic frame `x`, which carries the Gram matrix to the signed standard
