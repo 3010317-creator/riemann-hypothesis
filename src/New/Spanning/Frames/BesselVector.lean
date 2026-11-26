@@ -432,7 +432,7 @@ theorem unipotentMass_mul_inner_besselVector (y x : T.G) :
         simpa [S, mul_assoc] using Z.exists_forall_mul_inv_mem_congruenceSubgroup_iff_eq huy
       have hu_mem : u * (y * d.out.val⁻¹) ∈ F.congruenceSubgroup := (hS d).2 rfl
       have h_right : Z.besselVector y d = P.ψ (F.levelUnit⁻¹.val * simpleRootSum u⁻¹) :=
-        extendedBesselChar_eq (inv_mem hu) (by simpa using hu_mem)
+        extendedBesselChar_eq (inv_mem hu) (hu_mem)
       have h_left : Z.besselVector (y * x) d =
           P.ψ (F.levelUnit⁻¹.val * simpleRootSum u⁻¹) * extendedBesselChar F.levelUnit
             (u * y * x * (u * y)⁻¹) := by
