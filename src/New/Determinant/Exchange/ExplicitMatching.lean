@@ -554,6 +554,7 @@ lemma exists_linearMap_eq_integral_modKernel {s : b → ℤˣ} {t : n → ℤˣ}
            map_smul' c Q := by simp [integral_const_mul] },
     fun Q ↦ rfl⟩ -- by definition of `modKernelBilin`
 
+omit [DecidableEq b] in
 /-- Let `W` have `card l` negative signs and let `I_a` be the positive definite standard space
 `stdSpace E a`. Let the character `α` be tame for `(𝔪, χ)` of weight `card l - card (ι τ)`. Let `Φ`
 have a matched function `Ψ` for `χ⁻¹` (`AreMatched`): for invertible `k` modulo `𝔪` they vanish off
