@@ -364,13 +364,9 @@ lemma of_jointly_mono {W : Over (Spec R)} [h_proper : IsProper W.hom] {Z : ι �
     (h_over : ∀ w : T, φ w ≫ W.hom = b) : HasGermAt Q φ w₀ := by
   -- The Segre product of the embeddings of the `Z l` embeds `W`; its coordinates are products of
   -- coordinates of the points `φ w ≫ π l`.
-  have h_bundle (l : ι) : ∃ (ν : Type) (N : LineBundle (Z l).left ν),
-      Finite ν ∧ N.IsProjEmbedding (Z l).hom := (hasProjEmbedding_iff _).mp (h_emb l)
-  choose ν N ν_finite hN using h_bundle
-  have h_coords (l : ι) : ∃ p : T → ν l → ℂ, (∀ i : ν l, Q fun w ↦ p w i) ∧
-      ∀ᶠ w in 𝓝 w₀, (N l).IsHomogeneousCoords (φ w ≫ (π l).left) (p w) :=
+  choose ν N ν_finite hN using fun l : ι ↦ (hasProjEmbedding_iff _).mp (h_emb l)
+  choose p hp lifts using fun l : ι ↦
     (h_germ l).exists_isHomogeneousCoords (hN l).isLinearSystem
-  choose p hp lifts using h_coords
   refine of_isHomogeneousCoords (isProjEmbedding_pi π hN h_sep) (p := fun w i ↦ ∏ l, p l w (i l))
     (fun i ↦ ?_) ?_ h_over
   · -- A product is an analytic function of its factors.
