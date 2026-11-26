@@ -85,9 +85,6 @@ instance : Category (HodgeTest k) where
   id _ := ⟨𝟙 _, .id⟩
   comp f g := ⟨f.1 ≫ g.1, g.2.toAddHom.comp f.2.toAddHom, by simp⟩
 
-private lemma HodgeTest.comp_fst {P Q R : HodgeTest k} (f : P ⟶ Q) (g : Q ⟶ R) :
-    (f ≫ g).1 = f.1 ≫ g.1 := rfl
-
 /-- The semilinear map of a composite of morphisms of pairs is the composite of the semilinear
 maps. -/
 private lemma HodgeTest.comp_snd_apply {P Q R : HodgeTest k} (f : P ⟶ Q) (g : Q ⟶ R)
