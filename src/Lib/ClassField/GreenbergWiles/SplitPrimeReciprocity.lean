@@ -650,10 +650,9 @@ private lemma IsLargeLevel.SplitPlaces.sum_symbol_smul_snd_generators_eq_zero {�
   refine eq_zero_of_forall_hom_eq_zero
     ((bijective_ofZMod_comp (char_nsmul_eq_zero m)).surjective.forall.mpr fun l ↦ ?_)
   -- `l ∘ z` is additive on `U`, which acts trivially on `V`
-  obtain ⟨r, x, hx, hr⟩ : ∃ (r : DiscreteUnits Ω) (x : Additive Fˣ), m • r = ofBase Q Ω x ∧
-      ∀ q : Q, (rootPowHom Ω m).val (l (P.snd q)) = unitsRep q r - r :=
-    exists_kummer_root (fun q ↦ S.cyclotomicCharMod_eq_one q ⟨⟩) _ (by fun_prop)
-      fun g k ↦ by simp [z_mul, h_triv _]
+  obtain ⟨r, x, hx, hr⟩ :=
+    exists_kummer_root (fun q ↦ S.cyclotomicCharMod_eq_one q ⟨⟩)
+      (fun q : Q ↦ l (P.snd q)) (by fun_prop) fun g k ↦ by simp [z_mul, h_triv _]
   have r_fix (q : Q) (h : P.snd q = 0) : unitsRep q r = r := by simp [← sub_eq_zero, ← hr, h]
   -- `l ∘ z` and `κ x` have the same root of unity at each `γ' θ`
   have l_γ (θ : ι × G ⧸ Q) : l (V.ρ θ.snd.out⁻¹ (P.snd (γ θ.fst))) =
