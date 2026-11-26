@@ -2,6 +2,7 @@ module
 
 public import TauCeti.RingTheory.Perfectoid.Cyclotomic.Basic
 public import TauCeti.RingTheory.Perfectoid.Padic
+import TauCeti.RingTheory.WittVector.ArtinSchreier
 public import Mathlib.Algebra.CharP.Pi
 public import Mathlib.Algebra.Order.Star.Rat
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
@@ -423,8 +424,8 @@ end Ainf
 /-!
 ## The kernel of θ on A_inf and divisibility by ξ, μ and τ
 
-The method is successive approximation: a claim is checked modulo `p`, on the constant coefficient
-in the valuation ring `O^♭`, and then lifted.
+Witt-vector surjectivity follows from Tau Ceti. Divisibility is proved by successive approximation:
+a claim is checked modulo `p`, on the constant coefficient in `O^♭`, and then lifted.
 -/
 
 section ThetaKernel
@@ -458,19 +459,8 @@ reduction of `s ∈ W(k)` modulo `p`. If `x ↦ F x - s₀ * G x` is onto `k`, t
 `b ↦ W(F) b - s * W(G) b` is onto `W(k)`. -/
 lemma Witt.exists_map_sub_mul_map_eq (F G : k →+* k) (s : WittVector p k)
     (h_surj : Function.Surjective fun x : k ↦ F x - constantCoeff s * G x) :
-    ∃ b : WittVector p k, map F b - s * map G b = a := by
-  -- Successive approximation modulo powers of `p` for the additive map
-  -- `Φ b = map F b - s * map G b`, which commutes with multiplication by `p`: by
-  -- `mem_range_of_approx` it is enough to write each `x` as `Φ b + p * y`.
-  let Φ : WittVector p k →+ WittVector p k :=
-    (map F).toAddMonoidHom - (AddMonoidHom.mulLeft s).comp (map G).toAddMonoidHom
-  refine mem_range_of_approx (π := (p : WittVector p k)) (π' := (p : WittVector p k)) Φ
-    (map_natCast_smul Φ _ _ p) id (fun x ↦ ?_) a
-  -- modulo `p` the equation is solved by `h_surj`; lift the solution by Teichmüller
-  obtain ⟨t, ht⟩ := h_surj (constantCoeff x)
-  obtain ⟨y, hy⟩ : ↑p ∣ x - Φ (teichmuller p t) := by
-    simpa [Φ, p_dvd_iff, map_sub, map_mul, sub_eq_zero] using ht.symm
-  exact ⟨teichmuller p t, y, sub_eq_iff_eq_add'.1 hy⟩
+    ∃ b : WittVector p k, map F b - s * map G b = a :=
+  WittVector.surjective_map_sub_mul_map s F G h_surj a
 
 open Ideal Period.Witt Function RingHom PadicComplex Pi OFlat NeZero Fact SModEq IsUltrametricDist
 
