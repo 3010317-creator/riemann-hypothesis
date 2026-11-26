@@ -163,7 +163,9 @@ first, or a short tactic such as `grind`.
 Your training data is older than the Lean and Mathlib this repository uses, so check what is
 available in the versions pinned in `lean-toolchain` and `lake-manifest.json`. In new proofs,
 use `lia` for linear arithmetic over `ℕ` and `ℤ` rather than `omega`, and try `grind` before
-writing a long proof by hand. Don't open a pull request that only swaps one tactic for another.
+writing a long proof by hand. If `omega` also closes the goal and `set_option trace.profiler true`
+shows it is clearly faster there, use `omega`. Don't open a pull request that only swaps one
+tactic for another.
 
 ### Working around a slow instance search
 
