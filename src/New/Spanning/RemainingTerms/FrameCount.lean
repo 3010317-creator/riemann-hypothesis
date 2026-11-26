@@ -679,7 +679,7 @@ completed by rows of `1`. If the two frames agree outside the isotropic space an
 unipotent group `S.classUnipotent₀ c` of level `M = S.M` fixing the standard frame, carries the
 frame of `γ` to that of `γ'`. -/
 lemma exists_mem_classUnipotent₀_frameImage_mul_eq [HasPrimitiveRoot5040 E] {𝔰 : Shape}
-    {S : Filling E 𝔰} {j : Fin (𝔰.ϱ + 2)} [S.IsAdmissible] {γ γ' : S.G E} (c : S.Classes)
+    {S : Filling E 𝔰} {j : Fin (𝔰.ϱ + 2)} {γ γ' : S.G E} (c : S.Classes)
     (hZ : S.frameProducts γ' = S.frameProducts γ)
     (hZ_int : ∀ a b : Fin (𝔰.ϱ + 1), IsIntegral ℤ (S.frameProducts γ a b))
     (h_minor : leadingMinor (S.frameProducts γ) j ≠ 0)
