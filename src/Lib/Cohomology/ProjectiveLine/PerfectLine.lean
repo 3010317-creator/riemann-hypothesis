@@ -312,7 +312,7 @@ lemma hasFlatBaseChange_freeAb_tiltPointsSum (B : ULift.{1} Bool → CommAlg OFl
     (.piMap fun _ ↦ hasFlatBaseChange_of_iso_reprBy homTiltIso.symm ..)
   induction x with
   | tmul m y => simp [e, mapₗ, map_push, funext_iff]
-  | add x y hx hy => simp_all [mapₗ, funext_iff]
+  | add x y hx hy => simp_all [funext_iff]
 
 /-- The projection of a pair `(y₀, y₁)` of elements of `O^♭[ℚ≥0]` to `y₀` (for `false`) or to
 `y₁` (for `true`). -/
