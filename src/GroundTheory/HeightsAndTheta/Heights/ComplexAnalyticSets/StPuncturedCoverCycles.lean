@@ -6,8 +6,6 @@ import Mathlib.NumberTheory.Height.NumberField
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open MvPolynomial Filter Topology Matrix

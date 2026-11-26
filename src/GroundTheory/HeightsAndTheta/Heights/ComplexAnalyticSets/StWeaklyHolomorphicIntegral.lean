@@ -5,8 +5,6 @@ public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StHolomor
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open MvPolynomial Topology
