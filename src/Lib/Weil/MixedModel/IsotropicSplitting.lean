@@ -1160,20 +1160,14 @@ lemma exists_mul_mem_siegelParabolic (hg : g.val.val * D.k = D.k * a + D.l * c) 
     ∃ v ∈ D.symm.siegelParabolic, v * g ∈ D.siegelParabolic := by
   -- Take the translation `l ↦ l`, `k ↦ k - l c a⁻¹`.
   obtain ⟨a, rfl⟩ := ha
-  have h_iso : cᴴ * a = -(a.valᴴ * c) :=
-    eq_neg_of_add_eq_zero_right (conjTranspose_mul_add_eq_zero hg)
-  have h_skew : (-(c * a⁻¹.val))ᴴ = -(-(c * a⁻¹.val)) :=
-    calc (-(c * a⁻¹.val))ᴴ
-      _ = -(a⁻¹.valᴴ * (cᴴ * a) * a⁻¹.val) := by simp [Matrix.mul_assoc]
-      _ = -(-(c * a⁻¹.val)) := by simp [h_iso, ← Matrix.mul_assoc, ← conjTranspose_mul]
-  obtain ⟨v, hv, hv_l, hv_k⟩ : ∃ v ∈ D.symm.siegelParabolic,
-      v.val.val * D.l = D.l ∧ v.val.val * D.k = D.k + D.l * -(c * a⁻¹.val) :=
-    D.symm.exists_mem_siegelParabolic_mul_l_eq h_skew
+  obtain ⟨v, hv, hv_l, hv_k⟩ := D.symm.exists_mem_siegelParabolic_mul_l_eq (b := -(c * a⁻¹.val)) (by
+    rw [show (-(c * a⁻¹.val))ᴴ = -(a⁻¹.valᴴ * (cᴴ * a) * a⁻¹.val) by simp [Matrix.mul_assoc]]
+    simp [eq_neg_of_add_eq_zero_right (conjTranspose_mul_add_eq_zero hg),
+      ← Matrix.mul_assoc, ← conjTranspose_mul])
   refine ⟨v, hv, a, ?_⟩
-  calc (v * g).val.val * D.k
-    _ = v.val.val * D.k * a.val + v.val.val * D.l * c := by
-      simp [hg, Matrix.mul_assoc, Matrix.mul_add]
-    _ = D.k * a.val := by simp [hv_k, hv_l, Matrix.add_mul, Matrix.mul_assoc]
+  rw [Subgroup.coe_mul, Units.val_mul, Matrix.mul_assoc, hg, Matrix.mul_add, ← Matrix.mul_assoc,
+    ← Matrix.mul_assoc, show v.val.val * D.k = _ from hv_k, show v.val.val * D.l = _ from hv_l]
+  simp [symm, Matrix.add_mul, Matrix.mul_assoc]
 
 variable (D)
 
