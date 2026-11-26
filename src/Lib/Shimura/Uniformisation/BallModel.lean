@@ -545,9 +545,10 @@ lemma exists_form_along_ballPeriod (e : (D.Index → ℂ) ≃L[ℂ] ℂ × BallB
 /-- A nonempty set `S` is the range of a map `r` that fixes every point of `S`. -/
 lemma _root_.Set.Nonempty.exists_retraction {α : Type*} {S : Set α} (hS : S.Nonempty) :
     ∃ r : α → α, (∀ b : α, r b ∈ S) ∧ ∀ b ∈ S, r b = b := by
-  classical
-  obtain ⟨b₀, hb₀⟩ := hS
-  exact ⟨fun b ↦ if b ∈ S then b else b₀, fun b ↦ by grind, fun b hb ↦ ite_eq_left hb⟩
+  let : Nonempty S := hS.to_subtype
+  obtain ⟨r, hr⟩ := (Subtype.val_injective (p := (· ∈ S))).hasLeftInverse
+  exact ⟨fun b ↦ (r b).val, fun b ↦ (r b).property,
+    fun b hb ↦ congrArg Subtype.val (hr ⟨b, hb⟩)⟩
 
 /-- If a form `A` has Re A(w, P w) > 0 for every w ≠ 0 and the real isomorphism `Q` agrees with
 `P`, then the form B = A ∘ Q⁻¹ on the fibre has Re B(u, u) > 0 for every u ≠ 0. -/
