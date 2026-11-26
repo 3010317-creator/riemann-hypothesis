@@ -169,7 +169,7 @@ lemma idem_mul_mem_of_inv_mul_mem (x : Matrix n r (𝔸f E))
     ← Matrix.mul_assoc, hw, hπ] using mem_Ô.1 h_sum w
 
 omit [DecidableEq N] in
-/-- Let `ϖ` generate the product of the chosen places, with class `V.genResidue` modulo `ϖ²`, let
+/-- Let `ϖ` generate the product of the chosen places, with class `O.genResidue` modulo `ϖ²`, let
 `Q` be the product of the twist places, and let `ι` be the inclusion matrix of `O.incl : r ↪ n`. The
 map `liftFn` extends a function on matrices modulo `ϖ² Q` to adelic vectors `x`, by `0` where `x` is
 not integral at the places of `ϖ² Q`. Consider two functions of `T`, supported on `ϖ T ≡ ϖ ι` and on
@@ -180,8 +180,8 @@ the second at `x`. -/
 lemma liftFn_datum_point_inv_mul (x : n × r → 𝔸f E) :
     (O.levelModulus 2).liftFn
         ((fun T : Matrix n r (O.levelModulus 2).ResidueRing ↦
-          if V.genResidue • T.map reduceToChosenModulusSq =
-              V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
+          if O.genResidue • T.map reduceToChosenModulusSq =
+              O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
             ∏ i : O.TwistIndex, O.tamePart (O.placeAt (inr i))
               ((T.map (levelResidueAt (inr i))).submatrix O.incl id).det
           else 0) ∘ vecToMatrix)
@@ -189,7 +189,7 @@ lemma liftFn_datum_point_inv_mul (x : n × r → 𝔸f E) :
       (O.levelModulus 2).liftFn
         ((fun T : Matrix n r (O.levelModulus 2).ResidueRing ↦
           if L.reducedInverse * T.map reduceToChosenModulusSq =
-              V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
+              O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
             ∏ i : O.TwistIndex, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i))
               ((T.map (levelResidueAt (inr i))).submatrix O.incl id).det
           else 0) ∘ vecToMatrix) x := by
@@ -255,7 +255,7 @@ lemma liftFn_datum_point_inv_mul (x : n × r → 𝔸f E) :
     · -- If `x` is integral and satisfies the condition, multiply the condition by `genResidue`:
       -- as `genResidue ^ 2 = 0`, the entries of `genIdele ^ 2 γ⁻¹ x` vanish modulo `ϖ²`, so
       -- `γ⁻¹ x` is integral (`reduction_levelModulus_eq_zero_iff`), against `h_inv_mul`.
-      have h_gen_sq : V.genResidue * V.genResidue = 0 := by
+      have h_gen_sq : O.genResidue * O.genResidue = 0 := by
         rw [← RingHom.map_mul, reduction_levelModulus_eq_zero_iff]
         change O.genIdele⁻¹.val ^ 2 * (O.genIdele.val * O.genIdele.val) ∈ Ô E
         rw [sq, mul_mul_mul_comm, Units.inv_mul, mul_one]
@@ -293,7 +293,7 @@ lemma normalizedDescent_classForm_mul [WeilData E]
       conj (L.weilScalar * modKernelStdSpace O.W O.charW O.charV (O.levelModulus 2)
         (fun S : Matrix n r (O.levelModulus 2).ResidueRing ↦
           if L.reducedInverse * S.map reduceToChosenModulusSq =
-            V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
+            O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
           ∏ i : O.TwistIndex, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i))
             ((S.map (levelResidueAt (inr i))).submatrix O.incl id).det
           else 0)
@@ -334,13 +334,13 @@ lemma normalizedDescent_classForm_mul [WeilData E]
       (fun T : Matrix n r (O.levelModulus 2).ResidueRing ↦
         O.residueBlockDatum fun i : O.ChosenIndex ⊕ O.TwistIndex ↦ T.map (levelResidueAt i)) =
       (fun T : Matrix n r (O.levelModulus 2).ResidueRing ↦
-        if V.genResidue • T.map reduceToChosenModulusSq =
-            V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
+        if O.genResidue • T.map reduceToChosenModulusSq =
+            O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
           ∏ i : O.TwistIndex, O.tamePart (O.placeAt (inr i))
             ((T.map (levelResidueAt (inr i))).submatrix O.incl id).det
         else 0) := by
     funext T
-    simp only [DescentPair.residueBlockDatum, ← V.genResidue_smul_eq_inclMatrix_iff]
+    simp only [DescentPair.residueBlockDatum, ← O.genResidue_smul_eq_inclMatrix_iff]
   have h_lift :
       (fun x : n × r → 𝔸f E ↦
         (O.levelModulus 2).liftFn
@@ -351,13 +351,13 @@ lemma normalizedDescent_classForm_mul [WeilData E]
       (O.levelModulus 2).liftFn
         ((fun S : Matrix n r (O.levelModulus 2).ResidueRing ↦
           if L.reducedInverse * S.map reduceToChosenModulusSq =
-              V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
+              O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then
             ∏ i : O.TwistIndex, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i))
               ((S.map (levelResidueAt (inr i))).submatrix O.incl id).det
           else 0) ∘ vecToMatrix) := by
     funext x
     rw [OneMemClass.coe_one, Units.val_one, Matrix.mul_one, h_fn]
-    exact V.liftFn_datum_point_inv_mul x
+    exact liftFn_datum_point_inv_mul x
   rw [modKernel, modDatum, h_pt, pairTheta_mul, pairWeil_integrated_fin,
     pairWeil_schrodingerOp_of_mem_supportedOn (isConjDisjoint_places _) (one_mem _) h_supp_level,
     h_scalar, h_lift, map_smul, pairTheta, map_smul, map_smul, smul_eq_mul]
@@ -367,16 +367,16 @@ omit [DecidableEq n] in
 /-- Let `Y` be invertible modulo `ϖ²` and `1` modulo `ϖ`, let `k = liftMod Y` be its chosen lift to
 an integral unitary point, reduced at a place by `stdLevel.reduceAt`, and let `x` be a matrix modulo
 `ϖ² Q`. Suppose that the rows `S` of `x Y` in `N` satisfy `w S = w ι` modulo `ϖ²`, where
-`w = V.stackOverGenScalar s` is `s` stacked above `ϖ • 1` and `ι` is the inclusion matrix of
+`w = O.stackOverGenScalar s` is `s` stacked above `ϖ • 1` and `ι` is the inclusion matrix of
 `V.fixedEmb`. Then the product over the twist places of the residue characters `O.tamePart` at the
 determinant of the rows `O.incl` of `x` is `χ` of the determinant of the same rows of `x k`, divided
 by the product of `O.tamePart (det k)` over the twist places. Here `χ = charOfTamePart` is the
 product of the `O.tamePart` over all places dividing `ϖ² Q`. -/
 lemma prod_twist_det_eq_inv_mul_charOfTamePart {s : Matrix a N O.chosenModulusSq.ResidueRing}
-    (x : Matrix n r (O.levelModulus 2).ResidueRing) (Y : V.congruenceGroup)
-    (h_stack_mul_eq : V.stackOverGenScalar s *
+    (x : Matrix n r (O.levelModulus 2).ResidueRing) (Y : O.congruenceGroup)
+    (h_stack_mul_eq : O.stackOverGenScalar s *
         (x.map reduceToChosenModulusSq * Y.val.val).submatrix (V.ε ∘ inl) id =
-      V.stackOverGenScalar s * inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb) :
+      O.stackOverGenScalar s * inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb) :
     ∏ i : O.TwistIndex, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i))
         ((x.map (levelResidueAt (inr i))).submatrix O.incl id).det =
       (∏ i : O.TwistIndex, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i))
@@ -390,23 +390,23 @@ lemma prod_twist_det_eq_inv_mul_charOfTamePart {s : Matrix a N O.chosenModulusSq
         ∏ᶠ j, O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) j) (levelResidueAt j t) :=
     (finprod_comp_equiv (.trans (.ofInjective _ O.apart.injective)
       (.subtypeEquivRight fun _ ↦ by rw [places_levelModulus]))).symm
-  -- The rows `V.genResidue • 1` in `V.stackOverGenScalar s` give `S ≡ inclMatrix V.fixedEmb`
+  -- The rows `O.genResidue • 1` in `O.stackOverGenScalar s` give `S ≡ inclMatrix V.fixedEmb`
   -- modulo `ϖ` for the rows `S` of `x Y` in `N`.
   let S : Matrix N r (O.levelModulus 2).ResidueRing :=
     (x * ((O.levelModulus 2).reductionGL (liftMod Y.val)).val).submatrix (V.ε ∘ inl) id
-  have hS : V.genResidue • S.map reduceToChosenModulusSq =
-      V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb := by
+  have hS : O.genResidue • S.map reduceToChosenModulusSq =
+      O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb := by
     have h_eq : S.map reduceToChosenModulusSq =
         (x.map reduceToChosenModulusSq * Y.val.val).submatrix (V.ε ∘ inl) id := by
       simp only [S, ← submatrix_map, Matrix.map_mul, factor_reductionGL, reductionGL_liftMod]
     rw [h_eq]
-    simpa only [stackOverGenScalar, fromRows_mul, toRows₂_fromRows, Matrix.smul_mul, Matrix.one_mul]
+    simpa only [DescentPair.stackOverGenScalar, fromRows_mul, toRows₂_fromRows, Matrix.smul_mul, Matrix.one_mul]
       using congrArg toRows₂ h_stack_mul_eq
   -- So at the chosen places the rows `V.fixedEmb` of `S` have determinant `1`.
   have h_tame (i : O.ChosenIndex) :
       O.tamePart ((O.chosenPlace ⊕ᵥ O.twistPlace) (inl i))
         (levelResidueAt (inl i) (S.submatrix V.fixedEmb id).det) = 1 := by
-    simp [RingHom.map_det, ← submatrix_map, (V.genResidue_smul_eq_inclMatrix_iff S V.fixedEmb).1 hS,
+    simp [RingHom.map_det, ← submatrix_map, (O.genResidue_smul_eq_inclMatrix_iff S V.fixedEmb).1 hS,
       inclMatrix, -elim_inl]
   -- At the places of `Q` the lift of `Y` reduces to `1`.
   have h_lift (i : O.TwistIndex) :
@@ -427,12 +427,12 @@ glued for `s` (`IsGlued`), and let the characters `b`, `b'` have product `O.char
 is the form supported on the class of `diag(h, h') γ` built from the Cartan product of `y` and `η`.
 Its descent to `O.W` is, at `g`, the complex conjugate of `L.weilScalar = χ(δ) / √|δ| ^ #r` (`δ` the
 determinant of `γ` at the chosen places, `χ` attached to `O.charW`) times a sum over `Y` in
-`V.congruenceGroup`, the invertible matrices modulo `ϖ²` that are `1` modulo `ϖ`. The term of `Y` is
+`O.congruenceGroup`, the invertible matrices modulo `ϖ²` that are `1` modulo `ϖ`. The term of `Y` is
 a product of two theta kernels `modKernelStdSpace` of `O.W` with a standard space, at `g` times the
 integral lift `liftMod Y`.
 * On `V″`, at `h`: the finite datum `columnDatum` at `σ` is the character `charOfTamePart` of the
 determinant of the rows `e = V.fixedEmb` of `σ` if `w σ ≡ w * inclMatrix _ e` modulo `ϖ²`, where
-`w = V.stackOverGenScalar s` is `s` above `ϖ • 1`, and `0` otherwise. The polynomial is that of
+`w = O.stackOverGenScalar s` is `s` above `ϖ • 1`, and `0` otherwise. The polynomial is that of
 `star y` in the basis vectors of `O.W` of sign `1`.
 * On `V°`, at `h'`: the datum is the indicator of the inclusion matrix of `z : r ↪ m`, and the
 polynomial is that of `star η` in the basis vectors of sign `-1`. -/
@@ -441,10 +441,10 @@ lemma normalizedDescent_productForm [DecidableEq m] [Fintype a] [WeilData E]
     (h' : Gf E m) (y : WeylIndex N O.colsPlus → ℂ) (η : WeylIndex m O.colsMinus → ℂ)
     (g : G E O.signs) :
     O.normalizedDescent (V.productForm L (h, h') y η) g =
-      conj (L.weilScalar * ∑ Y : V.congruenceGroup,
+      conj (L.weilScalar * ∑ Y : O.congruenceGroup,
         modKernelStdSpace O.W O.charW b (O.levelModulus 2)
             (columnDatum (charOfTamePart (O.levelModulus 2) O.tamePart) reduceToChosenModulusSq
-              (V.stackOverGenScalar s) V.fixedEmb)
+              (O.stackOverGenScalar s) V.fixedEmb)
             (letterPoly O.signs O.numbering 1 O.colsPlus (star y)) (g * (liftMod Y.val).val) h *
           modKernelStdSpace O.W O.charW b' O.chosenModulusSq
             (Pi.single (inclMatrix O.chosenModulusSq.ResidueRing z) 1)
@@ -457,7 +457,7 @@ lemma normalizedDescent_productForm [DecidableEq m] [Fintype a] [WeilData E]
   change O.normalizedDescent (classForm O (U.block V.ε (h, h') * L.point) (cartanProduct V.ε 1 y η))
     g =
     _
-  rw [V.normalizedDescent_classForm_mul]
+  rw [normalizedDescent_classForm_mul]
   simp_rw [← modKernel_factor levelModulus_ideal_le, ← modKernelStdSpace_block V.ε, hb,
     modKernel_mul_stdLevel_left, ← modKernelBilin_apply, ← LinearMap.sum_apply, ← map_sum]
   refine congrArg conj (congrArg (L.weilScalar * ·)
@@ -491,10 +491,10 @@ lemma normalizedDescent_stdClassSum_productForm [DecidableEq m] [Fintype a] [Wei
     (h' : Gf E m) (φ : Gf E N → WeylIndex N O.colsPlus → ℂ) (η : WeylIndex m O.colsMinus → ℂ)
     (g : G E O.signs) :
     O.normalizedDescent
-        (stdClassSum (rowFixingLevel O.toLevelPlaces (V.stackOverGenScalar s) V.fixedEmb)
+        (stdClassSum (rowFixingLevel O.toLevelPlaces (O.stackOverGenScalar s) V.fixedEmb)
           fun h : Gf E N ↦ V.productForm L (h, h') (φ h) η) g =
-      conj (L.weilScalar * ∑ Y : V.congruenceGroup,
-        kernelClassSum O b (V.stackOverGenScalar s) V.fixedEmb (fun h : Gf E N ↦ star (φ h))
+      conj (L.weilScalar * ∑ Y : O.congruenceGroup,
+        kernelClassSum O b (O.stackOverGenScalar s) V.fixedEmb (fun h : Gf E N ↦ star (φ h))
             (g * (liftMod Y.val).val) *
           modKernelStdSpace O.W O.charW b' O.chosenModulusSq
             (Pi.single (inclMatrix O.chosenModulusSq.ResidueRing z) 1)
@@ -584,7 +584,7 @@ omit [Fintype a] in
 the chosen places of `O`. Let `κ` have no column of height in `[card l, card n)`. Let `γ = L.point`
 be a point of the finite adelic unitary group `Gf E n` at the chosen places with `ϖ γ⁻¹` integral,
 and `L.reducedInverse` the matrix `ϖ γ⁻¹` modulo `ϖ²`. After an invertible change of its
-`f`-columns, let those with index `j ∉ S` be killed by `V.genResidue`, the class of `ϖ`. Let the
+`f`-columns, let those with index `j ∉ S` be killed by `O.genResidue`, the class of `ϖ`. Let the
 `f`-columns of `g⁻¹` be those of `h⁻¹` placed along `f`. Read the `f`-columns of `(g γ)⁻¹` in
 `ℂ_[p]` at each `τ` by the extension (`adeleExtension`) of the embedding `weightEmbedding ιₚ τ` of
 `E` to the finite adeles. Then their Schur matrix sends `ιₚ ∘ v` to a vector of norm at most
@@ -597,7 +597,7 @@ lemma norm_schur_inv_cols_le_weylGauge [DecidableEq l]
     {v : WeylIndex l κ → ℂ} {g : Gf E n} {S : Finset l} {f : l → n}
     (hκ_cols : HasColumnsBelow n l κ)
     (hS : ∃ K : GL l O.chosenModulusSq.ResidueRing, ∀ i : n, ∀ j : l, j ∉ S →
-      V.genResidue * (L.reducedInverse.submatrix id f * K.val) i j = 0)
+      O.genResidue * (L.reducedInverse.submatrix id f * K.val) i j = 0)
     (h_cols : g⁻¹.val.val.submatrix id f = inclMatrix (𝔸f E) f * h⁻¹.val.val) :
     ‖schur κ (fun τ : NumberField.InfinitePlace E ↦
         ((g * L.point)⁻¹.val.val.submatrix id f).map
@@ -610,7 +610,7 @@ lemma norm_schur_inv_cols_le_weylGauge [DecidableEq l]
   -- at all places and `Δ` diagonal (`M⁻¹` on `S`, `1` elsewhere). The Schur matrix of `A` does not
   -- increase norms; that of `Δ` is diagonal.
   obtain ⟨k, hk⟩ : ∃ k : stdLevel E l, ∀ i : n, ∀ j : l, j ∉ S →
-      V.genResidue *
+      O.genResidue *
         (L.reducedInverse.submatrix id f * (O.chosenModulusSq.reductionGL k).val) i j = 0 :=
     reductionGL_surjective.exists.1 hS
   obtain ⟨h, rfl⟩ := mul_right_surjective k⁻¹.val h
@@ -722,7 +722,7 @@ lemma weylGauge_cartanProduct_le [DecidableEq m] [DecidableEq N]
       ‖(M : ℂ_[p])‖⁻¹ ^ (∑ τ : NumberField.InfinitePlace E,
           #(univ.map V.dividedEmb) * (range (card N)).sum (O.colsPlus τ)) *
         weylGauge (ι := ι) O.colsPlus 0 h y :=
-    V.norm_schur_inv_cols_le_weylGauge hM L V.hasColumnsBelow.1 hL.exists_cols_eq_zero <| by
+    norm_schur_inv_cols_le_weylGauge hM L V.hasColumnsBelow.1 hL.exists_cols_eq_zero <| by
       rw [← map_inv, Prod.inv_mk, U.block_val]
       refine Matrix.ext fun i j ↦ ?_
       obtain ⟨i' | i', rfl⟩ := V.ε.surjective i
@@ -740,7 +740,7 @@ lemma weylGauge_cartanProduct_le [DecidableEq m] [DecidableEq N]
       ‖(M : ℂ_[p])‖⁻¹ ^ (∑ τ : NumberField.InfinitePlace E,
           card m * (range (card m)).sum (O.colsMinus τ)) *
         weylGauge (ι := ⟨ιₚ.comp conj⟩) O.colsMinus 0 h' (star η) :=
-    V.norm_schur_inv_cols_le_weylGauge (ι := ⟨ιₚ.comp conj⟩) (S := univ) hM L V.hasColumnsBelow.2
+    norm_schur_inv_cols_le_weylGauge (ι := ⟨ιₚ.comp conj⟩) (S := univ) hM L V.hasColumnsBelow.2
       ⟨1, fun _ _ h ↦ (h (mem_univ _)).elim⟩ <| by
       rw [← map_inv, Prod.inv_mk, U.block_val]
       refine Matrix.ext fun i j ↦ ?_
