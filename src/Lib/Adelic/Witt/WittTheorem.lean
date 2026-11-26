@@ -61,13 +61,6 @@ namespace New
 
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n] [StarRing R] {J : Matrix n n R}
 
-/-- The involution of a local ring induces an involution of its residue field. -/
-noncomputable instance [IsLocalRing R] : StarRing (ResidueField R) where
-  star := ResidueField.mapEquiv starRingAut
-  star_involutive := by simp [Function.Involutive, residue_surjective.forall]
-  star_mul := by simp [mul_comm]
-  star_add := by simp
-
 omit [DecidableEq n] in
 /-- The form h(u, v) = uᴴ J v of a hermitian matrix `J` is hermitian: the conjugate of h(u, v) is
 h(v, u). -/
