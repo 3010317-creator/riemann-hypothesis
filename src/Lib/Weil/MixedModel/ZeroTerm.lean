@@ -418,7 +418,7 @@ lemma IsMixedLaw.apply_omega_rho_finFrameVector
     ext1 ((i | i) | i) <;> rfl
   obtain ⟨h_l, h_k, h_i⟩ : D.lCoord *ᵥ v = t.val⁻¹ᴴ *ᵥ finVec a ∧
       D.kCoord *ᵥ v = t.val *ᵥ finVec b ∧ D.iCoord *ᵥ v = finVec w := by
-    simp [hv, h_split, frameAt, G.adeleMatrix, mulVec_add, ← Matrix.mul_assoc]
+    simp [hv, h_split, frameAt, G.adeleMatrix, mulVec_add]
   have h_add : finVec (x + a) = finVec x + finVec a := by simp [finVec, funext_iff, mul_add]
   -- `finVec` scales by `α`, so `stdAddChar` with the factor `j / 2` becomes `selfDualAddChar` with
   -- `half`.

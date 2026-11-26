@@ -546,7 +546,7 @@ lemma jump_twist_of_period (a : Γ → R) {v : ℤ} {y : ℂ_[p]} (hy : y ≠ 0)
     have h_rhs : (χ g ^ (-(u + v))).val • toGp g • (y • F) x =
         c * ((χ g ^ (-u)).val • toGp g • F x) :=
       calc _ = ((χ g ^ (-v)).val * (χ g ^ (-u)).val) • (toGp g • y * toGp g • F x) := by
-            simp [_root_.zpow_add, smul_mul', mul_comm]
+            simp [_root_.zpow_add, smul_mul']
         _ = _ := (smul_mul_smul_comm _ _ _ _).symm
     rw [h_lhs, h_rhs, mul_right_inj' hc_ne]
   have h_comap : (hodgeTateMaps ρ' γ (u + v)).comap mul_y.toLinearMap = hodgeTateMaps ρ γ u :=

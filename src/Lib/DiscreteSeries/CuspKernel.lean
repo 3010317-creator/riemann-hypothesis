@@ -175,7 +175,7 @@ lemma norm_one_sub_left_translation_le {G : Type*} [Group G] [TopologicalSpace G
   calc ‖((1 - U) ⟨φ, hφ⟩).val y‖
     _ = ‖T φ y - T φ (y * b y)‖ := by
       -- `φ (a * y) = φ (y * b y)`, as `φ` is invariant under `y * b y * y⁻¹ * a⁻¹`.
-      simp [hU, h_fix, ← h_inv _ h_rad (a * y), mul_assoc]
+      simp [hU, h_fix, ← h_inv _ h_rad (a * y)]
     _ ≤ 1 / 2 * ‖φ‖ := by grw [hT, hT, norm_integral_mul_translate_sub_le he φ y (b y), hb_dist y]
 
 /-- Let `T φ y = ∫ g, e g * φ (y * g)` and `χ = exp (i H θ)`, where `|H (y * g) - H y| ≤ ℓ g` and
