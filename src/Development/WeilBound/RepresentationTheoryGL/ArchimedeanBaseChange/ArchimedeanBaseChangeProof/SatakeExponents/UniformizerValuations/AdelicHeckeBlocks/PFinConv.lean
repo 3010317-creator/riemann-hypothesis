@@ -287,8 +287,7 @@ theorem finFn_hcs {S : Set (Pl E)} (hev : ∀ x : Gf E a b, ∀ᶠ i : Slot S in
     · rw [ite_eq_right h]; exact (hL i).2.2.1
   have hCe : ∀ᶠ i in cofinite, cset φ₁ φ₂ i = K2 a b i.pl := hLe.mono fun i hi => ite_eq_left hi.2
   change IsCompact (closure (Function.support (finFn S φ₁ φ₂)))
-  set_option synthInstance.maxHeartbeats 200000 in
-    refine IsCompact.closure_of_subset (hcpt _ hC hCe) fun x hx i => ?_
+  refine IsCompact.closure_of_subset (hcpt _ hC hCe) fun x hx i => ?_
   rw [Function.mem_support, finFn_eq hev hind] at hx
   have hne : sf φ₁ φ₂ i (i.cp a b x) ≠ 0 := fun h0 => hx (finprod_eq_zero _ i h0 (fin_one hev hind x))
   unfold cset

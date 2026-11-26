@@ -674,15 +674,13 @@ theorem actVal (hMA : MultAlg) (hCF : CompatFub) (hTT : TensTest) : ActVal := by
   have hQs : HasCompactSupport Q :=
     hFs.comp_homeomorph ((Homeomorph.prodAssoc _ _ _).trans (splitH a b).toHomeomorph)
   have hQi : Integrable Q ((A.prod B).prod ν') := by
-    set_option synthInstance.maxHeartbeats 200000 in
-      exact hQc.integrable_of_hasCompactSupport hQs
+    exact hQc.integrable_of_hasCompactSupport hQs
   have hQh : ∀ h, Integrable (fun p => Q (p, h)) (A.prod B) := fun h =>
     (hQc.comp (continuous_id.prodMk continuous_const)).integrable_of_hasCompactSupport (actHcsSlice hQs h)
   have step1 : ∫ ya, ∫ yb, ∫ h, F (splitH a b (ya, yb, h)) ∂ν' ∂B ∂A =
       ∫ h, ∫ ya, ∫ yb, Q ((ya, yb), h) ∂B ∂A ∂ν' := by
-    set_option synthInstance.maxHeartbeats 200000 in
-      rw [← integral_prod (fun p => ∫ h, Q (p, h) ∂ν') hQi.integral_prod_left,
-        integral_integral_swap (f := fun p h => Q (p, h)) hQi]
+    rw [← integral_prod (fun p => ∫ h, Q (p, h) ∂ν') hQi.integral_prod_left,
+      integral_integral_swap (f := fun p h => Q (p, h)) hQi]
     exact integral_congr_ae (Filter.Eventually.of_forall fun h => integral_prod _ (hQh h))
   rw [step1]
   have hpt : ∀ (h : Hf E a b) ya yb, x * splitH a b (ya, yb, h) = x * finH h * (infP a ya, 1) * (1, infP b yb) := by
@@ -1723,57 +1721,56 @@ end SmoothIntegrals
 
 open SmoothIntegrals in
 theorem smoothOf (hTT : TensTest) : SmoothOf := by
-  set_option synthInstance.maxHeartbeats 200000 in
-    intro E _ _ _ a b _ _ _ _ μa _ μb _ Ma Mb ι _ D ka kb va vb T ψ U f hka hkb hψ _ _ hR
-    have : BorelSpace (H E a b) := ⟨rfl⟩
-    have : D.μ.IsMulLeftInvariant := D.haar.1
-    have : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
-    have : IsFiniteMeasureOnCompacts D.μ := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
-    obtain ⟨hfc, c, hc, hconv⟩ := hR
-    have hTest := (hTT E a b μa μb Ma Mb ι ka kb va vb T ψ hka hkb hψ).1
-    have hψc : ∀ x y, Continuous fun w : H E a b => ψ x y (hFin w) := fun x y => (hψ x y).1.comp continuous_hFin₀
+  intro E _ _ _ a b _ _ _ _ μa _ μb _ Ma Mb ι _ D ka kb va vb T ψ U f hka hkb hψ _ _ hR
+  have : BorelSpace (H E a b) := ⟨rfl⟩
+  have : D.μ.IsMulLeftInvariant := D.haar.1
+  have : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
+  have : IsFiniteMeasureOnCompacts D.μ := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
+  obtain ⟨hfc, c, hc, hconv⟩ := hR
+  have hTest := (hTT E a b μa μb Ma Mb ι ka kb va vb T ψ hka hkb hψ).1
+  have hψc : ∀ x y, Continuous fun w : H E a b => ψ x y (hFin w) := fun x y => (hψ x y).1.comp continuous_hFin₀
 
-    have hrep : ∀ i z, f i z = c⁻¹ * ∑ j, ∫ y, tens ka kb ψ i j y * f j (z * y) ∂D.μ := by
-      intro i z
-      have h1 := congrFun (congrFun hconv i) z
-      have h2 : c * f i z = ∑ j, ∫ y, tens ka kb ψ i j y * f j (z * y) ∂D.μ := h1.symm
-      rw [← h2, inv_mul_cancel_left₀ hc]
-    refine ⟨fun i m₂ => ?_, fun i m₁ => ?_⟩
-    · have hj : ∀ j, (fun x => ∫ y, tens ka kb ψ i j y * f j ((x, m₂) * y) ∂D.μ) ∈ Sm E a := by
-        intro j
-        have h := mem_Sm_conv D.μ (MonoidHom.inl (GA E a) (GA E b)) (continuous_id.prodMk continuous_const) Prod.fst
-          continuous_fst (fun h w => by simp) (fun v A => ent (Ma v) (ka v A) (i.1.1 v) (j.1.1 v))
-          (fun v => ent_contDiffOn (hka v) _ _) (fun w => entA kb i.1.2 j.1.2 w.2 * ψ i.2 j.2 (hFin w))
-          (((continuous_entA hkb _ _).comp continuous_snd).mul (hψc _ _))
-          (fun _ w => by simp [hFin, gFin_infGL₀]) (f j) (hfc j) (tens ka kb ψ i j) (fun w => mul_assoc _ _ _)
-          (hTest i j).2 ((1 : GA E a), m₂)
-        have e : ∀ x : GA E a, ((1 : GA E a), m₂) * MonoidHom.inl (GA E a) (GA E b) x = (x, m₂) := fun x =>
-          Prod.ext (one_mul x) (mul_one m₂)
-        simpa only [e] using h
-      refine ⟨⟨c⁻¹ • ∑ j, fun x => ∫ y, tens ka kb ψ i j y * f j ((x, m₂) * y) ∂D.μ,
-        (Sm E a).smul_mem c⁻¹ ((Sm E a).sum_mem fun j _ => hj j)⟩, ?_⟩
-      funext x
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-      exact (hrep i (x, m₂)).symm
-    · have hj : ∀ j, (fun x => ∫ y, tens ka kb ψ i j y * f j ((m₁, x) * y) ∂D.μ) ∈ Sm E b := by
-        intro j
-        have h := mem_Sm_conv D.μ (MonoidHom.inr (GA E a) (GA E b)) (continuous_const.prodMk continuous_id) Prod.snd
-          continuous_snd (fun h w => by simp) (fun v A => ent (Mb v) (kb v A) (i.1.2 v) (j.1.2 v))
-          (fun v => ent_contDiffOn (hkb v) _ _) (fun w => entA ka i.1.1 j.1.1 w.1 * ψ i.2 j.2 (hFin w))
-          (((continuous_entA hka _ _).comp continuous_fst).mul (hψc _ _))
-          (fun _ w => by simp [hFin, gFin_infGL₀]) (f j) (hfc j) (tens ka kb ψ i j)
-          (fun w => by
-            show entA ka _ _ w.1 * entA kb _ _ w.2 * ψ _ _ (hFin w) = entA kb _ _ w.2 * (entA ka _ _ w.1 * ψ _ _ (hFin w))
-            ring)
-          (hTest i j).2 (m₁, (1 : GA E b))
-        have e : ∀ x : GA E b, (m₁, (1 : GA E b)) * MonoidHom.inr (GA E a) (GA E b) x = (m₁, x) := fun x =>
-          Prod.ext (mul_one m₁) (one_mul x)
-        simpa only [e] using h
-      refine ⟨⟨c⁻¹ • ∑ j, fun x => ∫ y, tens ka kb ψ i j y * f j ((m₁, x) * y) ∂D.μ,
-        (Sm E b).smul_mem c⁻¹ ((Sm E b).sum_mem fun j _ => hj j)⟩, ?_⟩
-      funext x
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-      exact (hrep i (m₁, x)).symm
+  have hrep : ∀ i z, f i z = c⁻¹ * ∑ j, ∫ y, tens ka kb ψ i j y * f j (z * y) ∂D.μ := by
+    intro i z
+    have h1 := congrFun (congrFun hconv i) z
+    have h2 : c * f i z = ∑ j, ∫ y, tens ka kb ψ i j y * f j (z * y) ∂D.μ := h1.symm
+    rw [← h2, inv_mul_cancel_left₀ hc]
+  refine ⟨fun i m₂ => ?_, fun i m₁ => ?_⟩
+  · have hj : ∀ j, (fun x => ∫ y, tens ka kb ψ i j y * f j ((x, m₂) * y) ∂D.μ) ∈ Sm E a := by
+      intro j
+      have h := mem_Sm_conv D.μ (MonoidHom.inl (GA E a) (GA E b)) (continuous_id.prodMk continuous_const) Prod.fst
+        continuous_fst (fun h w => by simp) (fun v A => ent (Ma v) (ka v A) (i.1.1 v) (j.1.1 v))
+        (fun v => ent_contDiffOn (hka v) _ _) (fun w => entA kb i.1.2 j.1.2 w.2 * ψ i.2 j.2 (hFin w))
+        (((continuous_entA hkb _ _).comp continuous_snd).mul (hψc _ _))
+        (fun _ w => by simp [hFin, gFin_infGL₀]) (f j) (hfc j) (tens ka kb ψ i j) (fun w => mul_assoc _ _ _)
+        (hTest i j).2 ((1 : GA E a), m₂)
+      have e : ∀ x : GA E a, ((1 : GA E a), m₂) * MonoidHom.inl (GA E a) (GA E b) x = (x, m₂) := fun x =>
+        Prod.ext (one_mul x) (mul_one m₂)
+      simpa only [e] using h
+    refine ⟨⟨c⁻¹ • ∑ j, fun x => ∫ y, tens ka kb ψ i j y * f j ((x, m₂) * y) ∂D.μ,
+      (Sm E a).smul_mem c⁻¹ ((Sm E a).sum_mem fun j _ => hj j)⟩, ?_⟩
+    funext x
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    exact (hrep i (x, m₂)).symm
+  · have hj : ∀ j, (fun x => ∫ y, tens ka kb ψ i j y * f j ((m₁, x) * y) ∂D.μ) ∈ Sm E b := by
+      intro j
+      have h := mem_Sm_conv D.μ (MonoidHom.inr (GA E a) (GA E b)) (continuous_const.prodMk continuous_id) Prod.snd
+        continuous_snd (fun h w => by simp) (fun v A => ent (Mb v) (kb v A) (i.1.2 v) (j.1.2 v))
+        (fun v => ent_contDiffOn (hkb v) _ _) (fun w => entA ka i.1.1 j.1.1 w.1 * ψ i.2 j.2 (hFin w))
+        (((continuous_entA hka _ _).comp continuous_fst).mul (hψc _ _))
+        (fun _ w => by simp [hFin, gFin_infGL₀]) (f j) (hfc j) (tens ka kb ψ i j)
+        (fun w => by
+          show entA ka _ _ w.1 * entA kb _ _ w.2 * ψ _ _ (hFin w) = entA kb _ _ w.2 * (entA ka _ _ w.1 * ψ _ _ (hFin w))
+          ring)
+        (hTest i j).2 (m₁, (1 : GA E b))
+      have e : ∀ x : GA E b, (m₁, (1 : GA E b)) * MonoidHom.inr (GA E a) (GA E b) x = (m₁, x) := fun x =>
+        Prod.ext (mul_one m₁) (one_mul x)
+      simpa only [e] using h
+    refine ⟨⟨c⁻¹ • ∑ j, fun x => ∫ y, tens ka kb ψ i j y * f j ((m₁, x) * y) ∂D.μ,
+      (Sm E b).smul_mem c⁻¹ ((Sm E b).sum_mem fun j _ => hj j)⟩, ?_⟩
+    funext x
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    exact (hrep i (m₁, x)).symm
 
 end PositivityTheory.Rg.BcB.CG
 

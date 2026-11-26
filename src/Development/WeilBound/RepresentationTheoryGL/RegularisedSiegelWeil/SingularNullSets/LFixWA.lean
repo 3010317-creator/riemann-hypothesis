@@ -19,8 +19,6 @@ section -- clump:auto
 
 noncomputable section
 
-set_option synthInstance.maxHeartbeats 200000
-
 open scoped Matrix TensorProduct
 open IsDedekindDomain NumberField Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.IndefR.Datum GlobalTheory.AdelicU
   GlobalTheory.MixModel GlobalTheory.StdUnn Filter
@@ -287,7 +285,6 @@ theorem offS_plc {v : Pl D} (hv : v ∉ S) {t : Fv D.host.F v ⊗[D.host.F] D.ho
   · show compFin _ _ w _ ∈ _; rw [compFin_plc_ne h]; exact zero_mem _
 
 
-set_option maxHeartbeats 800000 in
 theorem kap_supp (Q : Matrix (Fin r) (Fin r) D.host.E) (hQ : Q.det ≠ 0) (hψ : IsCharAF D.host.F ψ) :
     ∃ S₀ : Finset (Pl D), ∀ S, S₀ ⊆ S → ∀ (n : ℕ) (x : Mx D r n), ¬ IntOff S x →
       ∃ z : Mx D r n, OffM S z ∧ kap ψ Q x z ≠ 1 := by
@@ -307,8 +304,7 @@ theorem kap_supp (Q : Matrix (Fin r) (Fin r) D.host.E) (hQ : Q.det ≠ 0) (hψ :
     have e1 : adj x = C * rat Q⁻¹ := by
       rw [hCdef, Matrix.mul_assoc, ← rat_mul, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 hQ), rat_one, Matrix.mul_one]
     have h2 : cv D v (adj x j i) ∈ intLoc D.host.F D.host.E v := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [e1, Matrix.mul_apply, map_sum (cv D v)]
+      rw [e1, Matrix.mul_apply, map_sum (cv D v)]
       exact sum_mem fun k _ => by rw [RingHom.map_mul]; exact mul_mem (hno j k) (hQi k i v hv)
     have h3 : x i j = cA D (adj x j i) := by
       conv_lhs => rw [← adj_adj x]

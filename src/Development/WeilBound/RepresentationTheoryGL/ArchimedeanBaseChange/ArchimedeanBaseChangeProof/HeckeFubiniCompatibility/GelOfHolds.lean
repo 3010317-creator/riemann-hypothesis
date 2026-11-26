@@ -127,7 +127,6 @@ theorem continuous_St (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} {ψ : 
     ((continuous_const.mul ((continuous_ιA v).comp continuous_fst)).mul ((continuous_σA v).comp continuous_snd)))
 
 
-set_option synthInstance.maxHeartbeats 200000 in
 theorem Rv_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : InfinitePlace E) (ka : Kers Ma)
     (kb : Kers Mb) (ψ : Matrix κ κ (Hf E a b → ℂ)) (f : Io Ma Mb κ → H E a b → ℂ) (hT : IsTestM (tens ka kb ψ))
     (hf : ∀ i, Continuous (f i))
@@ -200,8 +199,7 @@ theorem Rv_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : I
     refine integral_congr_ae (ae_of_all _ fun t => ?_)
     beta_reduce
     rw [St_indep v ka kb ψ f i q0 q]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [St, map_sum, inner_sum]
+    simp only [St, map_sum, inner_sum]
     refine Finset.sum_congr rfl fun j hj => ?_
     have hjq : j.1.1 v = q := (Finset.mem_filter.1 hj).2
     obtain ⟨hc1, hcs1⟩ := cA_props v hka hkb hψ i j
@@ -516,40 +514,38 @@ theorem conv_sliceB (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) 
     (hf : ∀ i, Continuous (f i)) (i : Io Ma Mb κ) (p : H E a b) :
     conv D.μ (tens ka kb ψ) f i p =
       ∫ t, ⟪ebB Mb v (i.1.2 v), kb v t.val (RvB v μa μb ν ka kb ψ f i (p * ιB v t))⟫_ℂ ∂μb := by
-  set_option synthInstance.maxHeartbeats 400000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
-    haveI : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
-    have hQ : ∀ j, Continuous (fun g => tens ka kb ψ i j g * f j (p * g)) ∧
-        HasCompactSupport (fun g => tens ka kb ψ i j g * f j (p * g)) := fun j =>
-      ⟨(hT i j).1.mul ((hf j).comp (continuous_const.mul continuous_id)), (hT i j).2.mul_right⟩
-    have hs := fun j => integral_splitB hF D hC v _ (hQ j).1 (hQ j).2
-    have hpt : ∀ j t, ∫ r, tens ka kb ψ i j (ιB v t * σB v r) * f j (p * (ιB v t * σB v r)) ∂restB μa μb ν v =
-        ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
-          ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v := by
-      intro j t
-      rw [← integral_const_mul]
-      refine integral_congr_ae (ae_of_all _ fun r => ?_)
-      simp only [tens_ισB, mul_assoc]
-    have hsplit : ∀ j, ∫ g, tens ka kb ψ i j g * f j (p * g) ∂D.μ = ∫ t, ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
-        ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v ∂μb := fun j =>
-      (hs j).2.trans (integral_congr_ae (ae_of_all _ fun t => hpt j t))
-    have hint : ∀ j, Integrable (fun t => ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
-        ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v) μb := fun j =>
-      ((hs j).1.integral_prod_left).congr (ae_of_all _ fun t => hpt j t)
-    show ∑ j, ∫ g, tens ka kb ψ i j g * f j (p * g) ∂D.μ = _
-    rw [Finset.sum_congr rfl fun j _ => hsplit j, ← integral_finsetSum _ fun j _ => hint j]
-    refine integral_congr_ae (ae_of_all _ fun t => ?_)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [RvB, map_sum, map_smul, inner_sum, inner_smul_right]
-    rw [← Finset.sum_fiberwise Finset.univ (fun j : Io Ma Mb κ => j.1.2 v)]
-    refine Finset.sum_congr rfl fun q _ => ?_
-    rw [Finset.sum_mul]
-    refine Finset.sum_congr rfl fun j hj => ?_
-    rw [(Finset.mem_filter.1 hj).2]
-    simp only [ent, ebB]
-    ring
+  haveI : SigmaFinite μa := inferInstance
+  haveI : SigmaFinite μb := inferInstance
+  haveI : SigmaFinite ν := inferInstance
+  haveI : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
+  have hQ : ∀ j, Continuous (fun g => tens ka kb ψ i j g * f j (p * g)) ∧
+      HasCompactSupport (fun g => tens ka kb ψ i j g * f j (p * g)) := fun j =>
+    ⟨(hT i j).1.mul ((hf j).comp (continuous_const.mul continuous_id)), (hT i j).2.mul_right⟩
+  have hs := fun j => integral_splitB hF D hC v _ (hQ j).1 (hQ j).2
+  have hpt : ∀ j t, ∫ r, tens ka kb ψ i j (ιB v t * σB v r) * f j (p * (ιB v t * σB v r)) ∂restB μa μb ν v =
+      ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
+        ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v := by
+    intro j t
+    rw [← integral_const_mul]
+    refine integral_congr_ae (ae_of_all _ fun r => ?_)
+    simp only [tens_ισB, mul_assoc]
+  have hsplit : ∀ j, ∫ g, tens ka kb ψ i j g * f j (p * g) ∂D.μ = ∫ t, ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
+      ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v ∂μb := fun j =>
+    (hs j).2.trans (integral_congr_ae (ae_of_all _ fun t => hpt j t))
+  have hint : ∀ j, Integrable (fun t => ent (Mb v) (kb v t.val) (i.1.2 v) (j.1.2 v) *
+      ∫ r, cB v ka kb ψ i j r * f j (p * ιB v t * σB v r) ∂restB μa μb ν v) μb := fun j =>
+    ((hs j).1.integral_prod_left).congr (ae_of_all _ fun t => hpt j t)
+  show ∑ j, ∫ g, tens ka kb ψ i j g * f j (p * g) ∂D.μ = _
+  rw [Finset.sum_congr rfl fun j _ => hsplit j, ← integral_finsetSum _ fun j _ => hint j]
+  refine integral_congr_ae (ae_of_all _ fun t => ?_)
+  simp only [RvB, map_sum, map_smul, inner_sum, inner_smul_right]
+  rw [← Finset.sum_fiberwise Finset.univ (fun j : Io Ma Mb κ => j.1.2 v)]
+  refine Finset.sum_congr rfl fun q _ => ?_
+  rw [Finset.sum_mul]
+  refine Finset.sum_congr rfl fun j hj => ?_
+  rw [(Finset.mem_filter.1 hj).2]
+  simp only [ent, ebB]
+  ring
 
 theorem along_eqB (v : InfinitePlace E) (m₁ : GA E a) (y : GA E b) (φ : H E a b → ℂ) {x : Mat b} (hx : x ∈ GLs b) :
     along v y (fun z => φ (m₁, z)) x = φ ((m₁, y) * ιB v (GeneralLinearGroup.mkOfDetNeZero x hx)) := by
@@ -823,7 +819,6 @@ theorem continuous_StB (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} {ψ :
     ((continuous_const.mul ((continuous_ιB v).comp continuous_fst)).mul ((continuous_σB v).comp continuous_snd)))
 
 
-set_option synthInstance.maxHeartbeats 200000 in
 theorem RvB_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : InfinitePlace E) (ka : Kers Ma)
     (kb : Kers Mb) (ψ : Matrix κ κ (Hf E a b → ℂ)) (f : Io Ma Mb κ → H E a b → ℂ) (hT : IsTestM (tens ka kb ψ))
     (hf : ∀ i, Continuous (f i))
@@ -896,8 +891,7 @@ theorem RvB_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : 
     refine integral_congr_ae (ae_of_all _ fun t => ?_)
     beta_reduce
     rw [StB_indep v ka kb ψ f i q0 q]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [StB, map_sum, inner_sum]
+    simp only [StB, map_sum, inner_sum]
     refine Finset.sum_congr rfl fun j hj => ?_
     have hjq : j.1.2 v = q := (Finset.mem_filter.1 hj).2
     obtain ⟨hc1, hcs1⟩ := cB_props v hka hkb hψ i j

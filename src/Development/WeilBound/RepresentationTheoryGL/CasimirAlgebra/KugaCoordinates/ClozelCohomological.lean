@@ -678,8 +678,6 @@ namespace PositivityTheory.Rg.Cz
 section
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
 
-set_option synthInstance.maxHeartbeats 200000
-
 def kgA (π : CuspSub E a) (Ξ : AlgRep E a) (σ : ℝ) : Lie E a →ₗ[ℝ] Module.End ℂ (π.V ⊗[ℂ] (Fin Ξ.d → ℂ)) where
   toFun X := (lieOp π X).rTensor _ + (-(σ / 2 : ℂ) * kgT X) • 1
   map_add' X Y := by rw [map_add (f := _), LinearMap.rTensor_add, map_add (f := _), mul_add, add_smul]; abel
@@ -798,10 +796,8 @@ theorem kg_casR (τ : E →+* ℂ) (t : ℝ) (htrX : ∑ i, cx τ Ξ.dmat i i = 
   have hΦR : ∀ A : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ, (Matrix.toLin' A).lTensor π.V = ΦR A := fun A => rfl
   simp only [cx_kgR, hΦR]
   refine (kg_cas_shift (fun i j => ΦR (cx τ Ξ.dmat i j)) (σ / 2 : ℂ)).trans ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← map_mul, ← map_sum, htrX, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    module
+  simp only [← map_mul, ← map_sum, htrX, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
+  module
 
 theorem kg_casA (τ : E →+* ℂ) (c t : ℝ)
     (hcas : ∑ i, ∑ j, cx τ (lieOp π) i j * cx τ (lieOp π) j i = algebraMap ℂ _ (c : ℂ))
@@ -812,10 +808,8 @@ theorem kg_casA (τ : E →+* ℂ) (c t : ℝ)
   have hΦA : ∀ f : Module.End ℂ π.V, f.rTensor (Fin Ξ.d → ℂ) = ΦA f := fun f => rfl
   simp only [cx_kgA, hΦA]
   refine (kg_cas_shift (fun i j => ΦA (cx τ (lieOp π) i j)) (-(σ / 2) : ℂ)).trans ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← map_mul, ← map_sum, hcas, htr, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    module
+  simp only [← map_mul, ← map_sum, hcas, htr, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
+  module
 
 theorem kg_casDiff (hC : FrameCas) (cc tt : (E →+* ℂ) → ℝ)
     (hcas : ∀ τ, ∑ i, ∑ j, cx τ (lieOp π) i j * cx τ (lieOp π) j i = algebraMap ℂ _ (cc τ : ℂ))
@@ -832,8 +826,7 @@ theorem kg_casDiff (hC : FrameCas) (cc tt : (E →+* ℂ) → ℝ)
   refine (Finset.sum_sub_distrib (G := Module.End ℂ (π.V ⊗[ℂ] (Fin Ξ.d → ℂ))) _ _).symm.trans
     (Finset.sum_congr rfl fun τ _ => ?_)
   rw [kg_casR π Ξ σ τ (tt τ) (htrX τ), kg_casA π Ξ σ τ (cc τ) (tt τ) (hcas τ) (htr τ)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    module
+  module
 
 end
 end PositivityTheory.Rg.Cz
@@ -933,7 +926,6 @@ open scoped TensorProduct
 
 namespace PositivityTheory.Rg.Cz
 
-set_option maxHeartbeats 800000 in
 theorem kugaGlue_holds : KugaGlue := by
   intro hK hF hC _ hT hH E _ _ _ a π Ξ hU hS q₀ ω₀ hω₀ h0
   refine hH E a _ (tensorK π Ξ) (tensorLie π Ξ) (fun q ω hω => ?_) q₀ ω₀ hω₀ h0
@@ -970,24 +962,20 @@ theorem kugaGlue_holds : KugaGlue := by
       ∑ k, (c i j k : ℂ) • kgA π Ξ σ (toL (iM (fr k).1)) := by
     intro i j
     show kgA π Ξ σ (toL (fr i).1) * kgA π Ξ σ (toL (fr j).1) - kgA π Ξ σ (toL (fr j).1) * kgA π Ξ σ (toL (fr i).1) = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [kgA_comm, hbr i j, show toL (∑ k, c i j k • iM (fr k).1) = kgL (∑ k, c i j k • iM (fr k).1) from rfl,
-      map_sum, map_sum]
+    rw [kgA_comm, hbr i j, show toL (∑ k, c i j k • iM (fr k).1) = kgL (∑ k, c i j k • iM (fr k).1) from rfl,
+    map_sum, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, map_smul, ← algebraMap_smul ℂ (c i j k)]
+    rw [map_smul, map_smul, ← algebraMap_smul ℂ (c i j k)]
     rfl
   have hbrR : ∀ i j, (kgR π Ξ σ).comp kgH (fr i) * (kgR π Ξ σ).comp kgH (fr j) -
       (kgR π Ξ σ).comp kgH (fr j) * (kgR π Ξ σ).comp kgH (fr i) =
       ∑ k, (c i j k : ℂ) • kgR π Ξ σ (toL (iM (fr k).1)) := by
     intro i j
     show kgR π Ξ σ (toL (fr i).1) * kgR π Ξ σ (toL (fr j).1) - kgR π Ξ σ (toL (fr j).1) * kgR π Ξ σ (toL (fr i).1) = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [kgR_comm, hbr i j, show toL (∑ k, c i j k • iM (fr k).1) = kgL (∑ k, c i j k • iM (fr k).1) from rfl,
-      map_sum, map_sum]
+    rw [kgR_comm, hbr i j, show toL (∑ k, c i j k • iM (fr k).1) = kgL (∑ k, c i j k • iM (fr k).1) from rfl,
+    map_sum, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, map_smul, ← algebraMap_smul ℂ (c i j k)]
+    rw [map_smul, map_smul, ← algebraMap_smul ℂ (c i j k)]
     rfl
   have hDk : ∀ k j, kgD _ (hZ k) (fr j) = ∑ i, c i j k • fr i := fun k j => Subtype.ext (by
     rw [kgD_val, Submodule.coe_sum]

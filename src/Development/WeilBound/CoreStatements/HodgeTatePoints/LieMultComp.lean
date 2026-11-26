@@ -156,8 +156,7 @@ theorem exists_countable_algClosed {Ω : Type} [Field Ω] [IsAlgClosed Ω] (s : 
   · exact (algebraicClosure F Ω).algebraMap_mem (⟨x, Subfield.subset_closure hx⟩ : F)
   · show Countable (algebraicClosure F Ω)
     rw [← Cardinal.mk_le_aleph0_iff]
-    set_option synthInstance.maxHeartbeats 200000 in
-      exact (Algebra.IsAlgebraic.cardinalMk_le_max F _).trans (max_le Cardinal.mk_le_aleph0 le_rfl)
+    exact (Algebra.IsAlgebraic.cardinalMk_le_max F _).trans (max_le Cardinal.mk_le_aleph0 le_rfl)
   · show IsAlgClosed (algebraicClosure F Ω)
     exact IsAlgClosure.isAlgClosed F
 
@@ -1261,8 +1260,7 @@ theorem exists_point {D : Datum H} {l : Level H} (hA : l.A = 1) (Xo : Moduli D l
   have hfd : FiniteDimensional K K' :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hβm : ∀ z, β z ∈ K' := fun z => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← b.sum_repr z, map_sum]
+    rw [← b.sum_repr z, map_sum]
     refine sum_mem fun i _ => ?_
     rw [Rat.smul_def, map_mul, map_ratCast]
     exact mul_mem (SubfieldClass.ratCast_mem _ _) (IntermediateField.subset_adjoin K U (Or.inr ⟨i, rfl⟩))

@@ -120,8 +120,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.I
 section -- clump:auto
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GlobalTheory.CompanionTheory.Ar.Giv
 
 open GroundTheory.Heights₂.Heights ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.AI.I4 MvPolynomial NumberField Matrix
@@ -422,8 +420,7 @@ theorem graphMap_secondForm {F' : HermLattice K i} (b' : Module.Basis T ℤ (dua
       C (Ideal.Quotient.mk (dualIdeal b') (C (a t) * X ⟨(), t⟩)) * X () := by
     intro t
     simp only [graphMap, graphSecond, coe_eval₂Hom, eval₂_X, h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [graphSecondForm, linD, map_sum, Finset.sum_mul]
+  simp only [graphSecondForm, linD, map_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun t _ => ?_
   have h3 : Ideal.Quotient.mk (dualIdeal b') (C (d t * a t) * X ⟨(), t⟩) =
       ((d t : ℤ) : MRing (dualBlocks T) ⧸ dualIdeal b') * Ideal.Quotient.mk (dualIdeal b') (C (a t) * X ⟨(), t⟩) := by

@@ -966,8 +966,7 @@ theorem away_relation {K : Type} [Field K] {N : ℕ} {g : MvPolynomial (Fin (N +
   simp only [HomogeneousLocalization.val_add, HomogeneousLocalization.val_pow,
     HomogeneousLocalization.val_mul, val_sum, away_val_mk]
   rw [hFe]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_add (f := _), map_sum, map_mul, map_pow, add_mul, Finset.sum_mul]
+  simp only [map_add (f := _), map_sum, map_mul, map_pow, add_mul, Finset.sum_mul]
   congr 1
   · rw [mul_pow, ← pow_mul, mul_comm s r]
   · refine Finset.sum_congr rfl fun l hl => ?_

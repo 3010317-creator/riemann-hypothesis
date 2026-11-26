@@ -767,7 +767,6 @@ namespace PositivityTheory.Lit1.GEN.W_split
 
 local notation "ℚ̄" => AlgebraicClosure ℚ
 
-set_option maxHeartbeats 800000 in
 theorem exists_split (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set (HeightOneSpectrum (𝓞 K.1)))
     (hS : S.Finite) (hSℓ : ∀ v : HeightOneSpectrum (𝓞 K.1), ((ℓ : ℕ) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S)
     (M : Rep.{0} (ULift.{0} ℤ) (galUnramifiedOutside K.1 ℚ̄ S)) [IsDiscreteRep M] [Finite M] :
@@ -859,8 +858,7 @@ theorem exists_split (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set 
         have := congrArg (fun e : E => (e : maxUnramifiedOutside K.1 ℚ̄ S)) (bE.sum_repr ⟨x, hx⟩)
         simp only [IntermediateField.coe_sum, IntermediateField.coe_smul] at this
         exact this.symm
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hsum, map_sum]
+      rw [hsum, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [show ∀ (r : K.1) (y : maxUnramifiedOutside K.1 ℚ̄ S), g (r • y) = r • g y from
         fun r y => g.toLinearEquiv.map_smul r y, hb i]
@@ -1565,9 +1563,8 @@ theorem transport_data {l : ℕ} [Fact l.Prime] (S : Finset (HeightOneSpectrum (
   obtain ⟨K, τ, σ, hτ⟩ := exists_fieldTransport (F := F) (Ω := Ω)
   obtain ⟨S', hS', θ, hn, hθ⟩ := gsTransport_compat K τ σ hτ S
   obtain ⟨e, hcard, hcc⟩ := _root_.PositivityTheory.Lit1.GEN.W_dictfwd_b.realPlaces_transport K τ σ hτ
-  set_option synthInstance.maxHeartbeats 200000 in
-    let ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal},
-        AlgebraicClosure ℚ →ₐ[K.1] AlgebraicClosure v.1.Completion := fun v => IsAlgClosed.lift
+  let ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal},
+      AlgebraicClosure ℚ →ₐ[K.1] AlgebraicClosure v.1.Completion := fun v => IsAlgClosed.lift
   choose cc hccv hfixv using fun v => real_H0_card_eq_fixed K S' ιr v
   choose g hg using fun v => exists_transport_elem K τ σ hτ (cc v)
   refine ⟨K, S', hS', θ, ιr, fun w => if hw : w.IsReal then g (e ⟨w, hw⟩) else 1, e,

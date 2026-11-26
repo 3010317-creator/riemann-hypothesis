@@ -911,8 +911,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 open NumberField IsDedekindDomain GroundTheory.Global GroundTheory.Global.IdeleGroup
 open scoped nonZeroDivisors NNReal
 

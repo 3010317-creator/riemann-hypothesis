@@ -127,17 +127,14 @@ theorem Kl_sum {V : Type} [AddCommGroup V] [Module ℂ V] (A B : Module.End ℂ 
   have hA' : (La.map fun a : ℕ => a' - algebraMap ℂ _ (α + a)).prod = 0 := by
     apply hinj
     rw [map_list_prod, map_zero, List.map_map]
-    set_option synthInstance.maxHeartbeats 200000 in
-      simpa [Function.comp_def, a'] using hLa
+    simpa [Function.comp_def, a'] using hLa
   have hB' : (Lb.map fun b : ℕ => b' - algebraMap ℂ _ (β + b)).prod = 0 := by
     apply hinj
     rw [map_list_prod, map_zero, List.map_map]
-    set_option synthInstance.maxHeartbeats 200000 in
-      simpa [Function.comp_def, b'] using hLb
+    simpa [Function.comp_def, b'] using hLb
   have hs := congrArg (Algebra.adjoin ℂ ({A, B} : Set (Module.End ℂ V))).val (sum_comm a' b' α β La Lb hA' hB')
   rw [map_list_prod, map_zero, List.map_map] at hs
-  set_option synthInstance.maxHeartbeats 200000 in
-    simpa [Function.comp_def, a', b'] using hs
+  simpa [Function.comp_def, a', b'] using hs
 
 theorem xJ_apply {m : ℕ} {M : Type} [AddCommGroup M] [Module ℂ M] (E : Fin n → Fin n → Module.End ℂ M) (j : Fin m)
     (f : TV n M (Fin m)) (I : Fin m → Fin n) :

@@ -61,8 +61,7 @@ private theorem exists_trace_dual_integral_projector {E : Type} [Field E] [Numbe
     Finsupp.smul_apply, smul_eq_mul]
     refine Finset.sum_congr rfl fun k _ => ?_
     ring
-  · set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_mul, map_sum]
+  · rw [Finset.sum_mul, map_sum]
     simp only [_root_.mul_assoc, hF]
     rw [← zsmul_eq_mul, map_zsmul, smul_eq_mul, Algebra.trace_eq_matrix_trace B, Matrix.trace, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_

@@ -835,8 +835,7 @@ theorem coef_at_test (p : ℕ) (hp : 1 ≤ p) (z : overAt x B ⟶ G) (W : (pullb
   have key : ∑ i : Fin (p + 1), algebraMap B (Jet B Unit p) (b i) * dQ B p ^ (i : ℕ) =
       1 + dQ B p ^ p * algebraMap B (Jet B Unit p) v := by
     apply toΓ_inj
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hv, hf, map_sum, map_sum]
+    rw [← hv, hf, map_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_mul, map_mul, map_pow, map_pow, rQ_appLE_prZ G x p z W hW hr, rQ_appLE_dltOn, ← hb, spMap_toΓ]
     rfl
