@@ -1,6 +1,6 @@
 module
 
-public import Lib.CM.Sigma.Basic
+public import Lib.General.NumberTheory.ImaginaryQuadraticField
 public import Lib.ClassField.Places.Ideles
 import TauCeti.NumberTheory.EffectiveBounds.ClassNumber.Basic
 import TauCeti.NumberTheory.NumberField.Units.SUnit.Basic
