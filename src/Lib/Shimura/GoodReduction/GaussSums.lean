@@ -40,9 +40,9 @@ Notions from other files:
   f ↦ (z ↦ exp(−B(x, z) − B(x, x)/2) f(z + x)), divided by the canonical multiplier at x.
 * `New.IsAppellHumbert`: Appell–Humbert data: Re B is symmetric, and on L one has |χ| = 1 and
   χ(l + m) = χ(l)χ(m)·exp(πi E(m, l)), E the Riemann form of B.
-* `New.IsAppellHumbert.poincareSeries`:
+* `New.ThetaTori.LatticeForm.poincareSeries`:
   K(x, y) = ∑_{l ∈ L} exp(B(x, y − x + l) − B(l,y) − B(l,l)/2)/χ(l), the sum of the terms
-  `New.IsAppellHumbert.poincareTerm`.
+  `New.ThetaTori.LatticeForm.poincareTerm`.
 
 ## Relation to the literature
 
@@ -261,7 +261,7 @@ end HermitianAction
 /-!
 ## Gauss sums and the mean of the Poincaré kernel
 
-Here `K = h.isAppellHumbert.poincareSeries` is the Poincaré kernel for the multiplier
+Here `K = B.poincareSeries h.multiplier` is the Poincaré kernel for the multiplier
 `h.multiplier`, and `New.quotMean` is the mean over `V / L` (total mass one).
 -/
 
@@ -323,20 +323,20 @@ lemma exp_eq_of_mem_lattice {s t : ℂ} (hx : x ∈ L) (hy : y ∈ L) (hst : s =
   grind [exp_eq_exp_iff_exists_int, h.riemannForm_integral, h.isAppellHumbert.sub_eq_riemannForm,
     ofReal_intCast]
 
-/-- For hermitian data `h`, the Poincaré kernel `K` (`h.isAppellHumbert.poincareSeries`) under
+/-- For hermitian data `h`, the Poincaré kernel `K` (`B.poincareSeries h.multiplier`) under
 translation of its first argument by a lattice vector `l`:
 `K(x + l, y) = χ(l)⁻¹ exp (-(B l x + B l l / 2)) K(x, y)`, with `χ = h.multiplier`. -/
 lemma poincareSeries_add (l : V) (hl : l ∈ L) :
-    h.isAppellHumbert.poincareSeries (x + l) y =
-      (h.multiplier l)⁻¹ * exp (-(B l x + B l l / 2)) * h.isAppellHumbert.poincareSeries x y := by
+    B.poincareSeries h.multiplier (x + l) y =
+      (h.multiplier l)⁻¹ * exp (-(B l x + B l l / 2)) * B.poincareSeries h.multiplier x y := by
   -- Shift the summation index by `l`; each term then changes by the same factor.
   calc
-    _ = ∑' m : L, h.isAppellHumbert.poincareTerm (x + l) y (m + ⟨l, hl⟩) :=
+    _ = ∑' m : L, B.poincareTerm h.multiplier (x + l) y (m + ⟨l, hl⟩) :=
       ((Equiv.addRight (⟨l, hl⟩ : L)).tsum_eq _).symm
     _ = ∑' m : L,
-        (h.multiplier l)⁻¹ * exp (-(B l x + B l l / 2)) * h.isAppellHumbert.poincareTerm x y m := by
+        (h.multiplier l)⁻¹ * exp (-(B l x + B l l / 2)) * B.poincareTerm h.multiplier x y m := by
       refine tsum_congr fun m ↦ ?_
-      simp [IsAppellHumbert.poincareTerm, h.isAppellHumbert.semicharacter, hl, ← exp_add, field]
+      simp [ThetaTori.LatticeForm.poincareTerm, h.isAppellHumbert.semicharacter, hl, ← exp_add, field]
       -- what remains is an identity of exponents, with `B u v - B v u` written by the Riemann form
       grind [h.isAppellHumbert.sub_eq_riemannForm]
     _ = _ := tsum_mul_left
@@ -345,7 +345,7 @@ lemma poincareSeries_add (l : V) (hl : l ∈ L) :
 `L`-periodic, where `K` is the Poincaré kernel and `ā = star a`. -/
 lemma isContPeriodic_poincareSeries [IsFullRankLattice L] (a : R) (w : V) :
     IsContPeriodic L.toAddSubgroup fun x : V ↦
-      h.isAppellHumbert.poincareSeries (F (star a) (x + w)) (F a (x + w)) := by
+      B.poincareSeries h.multiplier (F (star a) (x + w)) (F a (x + w)) := by
   obtain ⟨-, h_cont, h_theta, -⟩ := h.isAppellHumbert.poincareSeries_mem_thetaSpace_and_quotMean
     h.pos
   refine ⟨by fun_prop, fun l hl x ↦ ?_⟩
@@ -378,7 +378,7 @@ private lemma hasSum_poincareSeries_mulKernel {c κ : R} [NeZero κ] (hκ : κ =
     HasSum (fun l : L ↦ ∑ z : h.MulKernel κ,
         exp (B z.out (F (κ * (star β * κ - c)) z.out)) *
           exp (B ((l : V) + x + z.out) (F (κ * c) ((l : V) + x + z.out))))
-      (h.isAppellHumbert.poincareSeries (F (star c) x) (F c x)) := by
+      (B.poincareSeries h.multiplier (F (star c) x) (F c x)) := by
   obtain ⟨h_summable, -, -, -, -⟩ := h.isAppellHumbert.poincareSeries_mem_thetaSpace_and_quotMean
     h.pos
   -- `(l, z) ↦ z.out + l` identifies `L × κ⁻¹ L / L` with `κ⁻¹ L` (representatives of the classes)
@@ -392,16 +392,16 @@ private lemma hasSum_poincareSeries_mulKernel {c κ : R} [NeZero κ] (hκ : κ =
     (LinearEquiv.ofInjectiveEndo _ (action_injective κ)).subtypeEquivOfSubtype
   -- the series of `K(c̄ x, c x)`, reindexed by `(l, z) ↦ κ (z.out + l)`, summed over the fibres
   have h_reindexed : HasSum (fun p : L × h.MulKernel κ ↦
-      h.isAppellHumbert.poincareTerm (F (star c) x) (F c x) (e_mul (e_rep p)))
-      (h.isAppellHumbert.poincareSeries (F (star c) x) (F c x)) :=
+      B.poincareTerm h.multiplier (F (star c) x) (F c x) (e_mul (e_rep p)))
+      (B.poincareSeries h.multiplier (F (star c) x) (F c x)) :=
     (e_rep.trans e_mul).hasSum_iff.mpr (h_summable _ _).hasSum
   refine h_reindexed.prod_fiberwise fun l ↦ (hasSum_fintype _).congr_fun fun z ↦ ?_
   -- The term of index `κ w`, `w = z.out + l`, is `exp (B w (F (κ α) w)) * exp (B v (F (κ c) v))`,
   -- `v = w + x`: compare the exponents.
-  change h.isAppellHumbert.poincareTerm _ _ ⟨F κ (z.out + l), _⟩ = _
+  change B.poincareTerm h.multiplier _ _ ⟨F κ (z.out + l), _⟩ = _
   -- `↓`: apply the class invariance of the Gauss factor before simp unfolds the exponentials
   simp [↓h.exp_mul_sub_eq_of_sub_mem hκ _ (z.out + l), ← exp_add, h.multiplier_eq_exp, ← exp_sub,
-    hκ, h.adjoint, action_comm, IsAppellHumbert.poincareTerm]
+    hκ, h.adjoint, action_comm, ThetaTori.LatticeForm.poincareTerm]
   grind
 
 /-- Let `h` say that `B` is a positive definite hermitian form whose Riemann form is integral on the
@@ -413,7 +413,7 @@ times the complex conjugate of the determinant of `F c̄` on `V`, has a real fou
 lemma isSelfAdjoint_quotMean_pow (c : R) {κ : R} [NeZero κ] (hκ : κ = c - star c) :
     IsSelfAdjoint
       ((quotMean L.toAddSubgroup
-          (fun x : V ↦ h.isAppellHumbert.poincareSeries (F (star c) x) (F c x)) *
+          (fun x : V ↦ B.poincareSeries h.multiplier (F (star c) x) (F c x)) *
         conj (F (star c)).det) ^ 4) := by
   -- Write the terms of the series as `l = κ z`, `z ∈ κ⁻¹ L`. Unfolding turns the mean into a Gauss
   -- sum over `h.MulKernel κ` times a Gaussian integral over `V`, divided by the covolume of `L`.
@@ -464,7 +464,7 @@ lemma isSelfAdjoint_quotMean_pow (c : R) {κ : R} [NeZero κ] (hκ : κ = c - st
     ((Integrable.of_integral_ne_zero h_gauss_ne).comp_add_right z).const_mul c'
   let α : R := star β * κ - c
   have h_sum (x : V) : HasSum (fun l : L ↦ ∑ z : h.MulKernel κ, g α z.out * g c (l + x + z.out))
-      (h.isAppellHumbert.poincareSeries (F (star c) x) (F c x)) :=
+      (B.poincareSeries h.multiplier (F (star c) x) (F c x)) :=
     h.hasSum_poincareSeries_mulKernel hκ x
   -- Unfold: the mean of a sum over `L` is the integral over `V` divided by the covolume.
   rw [quotMean_tsum_eq_integral _ μ (integrable_finsetSum _ fun _ _ ↦ h_intg ..)

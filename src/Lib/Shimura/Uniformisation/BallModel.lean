@@ -148,7 +148,7 @@ A theta torus (`New.ThetaTori.ThetaTorus`) has a period map Q onto V, a form B a
 `New.ThetaTori.PeriodMap.latticeOver` S. Its theta functions for the lattice over S = `D.lagrangian`
 are the multiples of one function, chosen for each b with no regularity in b, and
 `New.ThetaTori.PeriodMap.thetaCoord` lists its normalised translates by t ∈ T. The factor c(b)
-replaces the chosen function by a Poincaré series (`New.IsAppellHumbert.poincareSeries`), which does
+replaces the chosen function by a Poincaré series (`New.ThetaTori.LatticeForm.poincareSeries`), which does
 depend analytically on b.
 -/
 
@@ -228,13 +228,15 @@ lemma AnalyticFamily.exists_analytic_thetaCoord (f : AnalyticFamily D) {b₀ : B
   let φ (b : BallBase D.Index) : BallFibre E D.Index → ℂ := (f.torus b).lagrangianTheta
   -- A point `w` where the Poincaré series of `b₀` does not vanish.
   obtain ⟨w, hw⟩ : ∃ w : BallFibre E D.Index,
-      (f.torus b₀).isAppellHumbert_latticeOver_lagrangian.poincareSeries w w ≠ 0 := by
+      (f.torus b₀).automorphyForm.poincareSeries
+          (L := (f.torus b₀).latticeOver D.lagrangian) (f.torus b₀).multiplier w w ≠ 0 := by
     obtain ⟨-, -, -, -, h_nonzero⟩ :=
       (f.torus b₀).isAppellHumbert_latticeOver_lagrangian.poincareSeries_mem_thetaSpace_and_quotMean
         (f.re_pos b₀)
     exact h_nonzero
   have h_mult (b : BallBase D.Index) : ∃ c : ℂ,
-      c • φ b = (f.torus b).isAppellHumbert_latticeOver_lagrangian.poincareSeries (Q b w) := by
+      c • φ b = (f.torus b).automorphyForm.poincareSeries
+          (L := (f.torus b).latticeOver D.lagrangian) (f.torus b).multiplier (Q b w) := by
     obtain ⟨-, -, h_theta, -⟩ :=
       (f.torus b).isAppellHumbert_latticeOver_lagrangian.poincareSeries_mem_thetaSpace_and_quotMean
         (f.re_pos b)
@@ -277,19 +279,21 @@ lemma AnalyticFamily.exists_analytic_thetaCoord (f : AnalyticFamily D) {b₀ : B
   have h_series_eq (p : BallBase D.Index × BallFibre E D.Index) :
       ∑' l, term p l = (c p.1 • φ p.1) p.2 := by
     have h_term : ∀ l : (f.torus b₀).latticeOver D.lagrangian, term p l =
-        (f.torus p.1).isAppellHumbert_latticeOver_lagrangian.poincareTerm (Q p.1 w) p.2
+        (f.torus p.1).automorphyForm.poincareTerm
+          (L := (f.torus p.1).latticeOver D.lagrangian) (f.torus p.1).multiplier (Q p.1 w) p.2
           ((Q p.1).toEquiv.subtypeEquiv (h_latt p.1) l) := by
       simp only [ne_eq, ContinuousLinearEquiv.trans_apply, map_add, map_sub, canonicalMultiplier,
         intAction, RingHom.coe_comp, Function.comp_apply, IsPeriodMap.complexMul_apply_apply,
-        poincareTerm, f.form_const b₀, ContinuousLinearEquiv.apply_symm_apply,
+        ThetaTori.LatticeForm.poincareTerm, f.form_const b₀, ContinuousLinearEquiv.apply_symm_apply,
         ContinuousLinearEquiv.trans_toLinearEquiv, ContinuousLinearEquiv.toLinearEquiv_symm,
         Equiv.subtypeEquiv_apply, LinearEquiv.coe_toEquiv, LinearEquiv.trans_apply,
         ContinuousLinearEquiv.coe_symm_toLinearEquiv, ContinuousLinearEquiv.coe_toLinearEquiv,
         ContinuousLinearEquiv.symm_apply_apply, riemannForm_eq, Subtype.forall, mem_classLattice,
         forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, implies_true, term, Q]
     calc
-      _ = (f.torus p.1).isAppellHumbert_latticeOver_lagrangian.poincareSeries (Q p.1 w) p.2 := by
-        rw [tsum_congr h_term, Equiv.tsum_eq, poincareSeries]
+      _ = (f.torus p.1).automorphyForm.poincareSeries
+          (L := (f.torus p.1).latticeOver D.lagrangian) (f.torus p.1).multiplier (Q p.1 w) p.2 := by
+        rw [tsum_congr h_term, Equiv.tsum_eq, ThetaTori.LatticeForm.poincareSeries]
       _ = _ := by rw [hc]
   have h_lift_an (z : BallFibre E D.Index) : AnalyticAt ℂ (fun p ↦ (c p.1 • φ p.1) p.2) (b₀, z) :=
     (h_series_an z).congr (.of_forall h_series_eq)
