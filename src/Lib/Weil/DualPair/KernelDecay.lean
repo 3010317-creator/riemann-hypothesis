@@ -333,7 +333,6 @@ lemma exists_norm_pairWeil_schrodingerOp_mul_pow_le {S : Space E n s} {T : Space
   refine ⟨C' * |Y| * 2 ^ (N + A), fun v g h ℓ ρ H hv hρ hH h_growth h_short ↦ ?_⟩
   let L : 𝒮 (S.hom T) →L[ℂ] ℂ := ℓ ∘L pairWeil S T a b (g, h)
   let m : ℝ := (fockMoment (N + A) v).toReal
-  have hm : 0 ≤ m := toReal_nonneg
   have hL : ‖L‖ ≤ |Y| * (ρ * H) ^ A :=
     L.opNorm_le_bound (by positivity) fun f ↦
       (h_growth f).trans (by grw [le_abs_self Y, mul_right_comm])
