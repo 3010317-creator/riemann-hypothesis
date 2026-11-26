@@ -102,7 +102,7 @@ def thickeningOver.oneSubMu :
           rw [map_add, mul_sub, sub_mul, sub_mul, mul_one, one_mul, h_zero, sub_zero, sub_sub, mul_one] }
   naturality c d f := by
     refine ext fun t ↦ Gm.ext.2 (.symm ?_)
-    change thickeningOver.map f (1 - mulMu c t.1) = 1 - mulMu d (genericOver.map f t.1)
+    change thickeningOver.map f (1 - mulMu c t.down) = 1 - mulMu d (genericOver.map f t.down)
     erw [map_sub, map_one, map_mulMu]
 
 /-- On `p`-adic tests the sequence `0 → T → Bˣ → Tˣ → 0` is short exact: its first map is
@@ -225,7 +225,7 @@ private lemma pull_mk₀_comp_contractionPow_one_eq_pull_extClass_oneSubMu
     let w' : Fin X.rank → X.GenericRing := w
     change a • w' = m at hw_smul
     erw [freeAb.desc_of]
-    erw [mul_one_sub, ← mulMu_proj_mul, proj.naturality_apply, (v 0).2]
+    erw [mul_one_sub, ← mulMu_proj_mul, proj.naturality_apply, (v 0).property]
     let b : thickeningOver.obj X.test := (v 0).val.1
     let b' := thickeningOver.map f.fst b
     let a' : Y.GenericRing := genericOver.map f.fst a
@@ -618,7 +618,7 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
     hA_twist c i t
   -- `φ` maps the disc `true` to the chart `0` and the disc `false` to the chart `1`.
   let T : affineSpace k 1 ⟶ reprBy (stdChart k 1 0).coordRing :=
-    ⟨fun _ ↦ ↾fun v ↦ ⟨ofHom (aeval v.1)⟩,
+    ⟨fun _ ↦ ↾fun v ↦ ⟨ofHom (aeval v.down)⟩,
       fun _ _ _ ↦ by ext; congrm ⟨ofHom $((comp_aeval ..).symm)⟩⟩
   let φ : twoDiscs ⟶ genericOver ⋙ projSpace k 1 :=
     sigma.desc fun i ↦ a ≫ whiskerLeft _ (T ≫ pointMap (stdChart k 1 (cond i.down 0 1)).point)
@@ -873,7 +873,7 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
   -- `one` sends every point to the unit of `genericAlg`.
   let one {X : PadicTest ⥤ Type 1} : freeAb X ⟶ genericCoeff :=
     desc (fun c _ ↦ ⟨(1 : genericAlg c)⟩) fun _ _ _ _ ↦
-      congrArg _ (map_one (genericAlg.map _).1).symm
+      congrArg _ (map_one (genericAlg.map _).hom').symm
   let f : freeAb twoDiscs ⟶ genericOver ⋙ freeAb.obj (affineSpace k 1) :=
     projFirst ≫ freeAb.map a
   have h_f_false (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ≥0)).obj c) :
@@ -1301,7 +1301,7 @@ lemma New.Variety.projSpace.hodgeTateMap_pointClass_ne_zero {p : ℕ} {k : Type}
     have id_zero : 𝟙 genericCoeff = 0 := by simpa [cup, η_zero] using η_reg (.mk₀ (𝟙 genericCoeff))
     let T : PadicTest := ⟨Unit, _, Pi.constRingHom ..⟩
     have h_one_eq_zero : algebraMap T.ProdRing T.GenericRing 1 = 0 :=
-      congr(($(id_zero).1 T ⟨algebraMap T.ProdRing T.GenericRing 1⟩).1)
+      congr(($(id_zero).app T ⟨algebraMap T.ProdRing T.GenericRing 1⟩).down)
     simpa using T.eq_zero_of_algebraMap_genericRing 1 h_one_eq_zero
 
 end ProjectivePointClass
