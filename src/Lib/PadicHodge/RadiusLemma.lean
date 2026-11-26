@@ -326,7 +326,7 @@ lemma exists_ev_eq_frobEnd_pow (ht_fixes : c.FixesThetaZ t)
   -- Successive approximation in powers of `ev X`, for which `BPlus` is separated as `z ∣ ev X`.
   have h_hausdorff : IsHausdorff (span {ev X}) BPlus := by
     refine ⟨fun x hx ↦ c.eq_zero_of_z_pow_dvd fun n ↦ ?_⟩
-    grw [hz, smodEq_span_pow_iff_dvd.mp (hx n), sub_zero]
+    grw [hz, (TauCeti.sModEq_span_singleton_pow_iff ..).mp (hx n), sub_zero]
   -- The family: `p ^ (n - v_p n! + 2) * φ ^ l (W' j)` for the rows `W'` over `S_B` such that
   -- `q • Y i - z ^ (n + 1) * W'` is a row over `Ainf`; row `i` of `W` is one, with `n = 0`.
   let Row : Type :=
