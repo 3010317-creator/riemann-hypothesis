@@ -314,12 +314,6 @@ S_B = `c.bicommutant` (`adjoinEDivP_le_bicommutant`). -/
 def adjoinEDivP : Subalgebra c.S BPlus :=
   Algebra.adjoin c.S {x : BPlus | (p : BPlus) * x = ainfToBPlus c.E}
 
-theorem adjoinEDivP_le_bicommutant : c.adjoinEDivP ≤ c.bicommutant := by
-  refine Algebra.adjoin_le fun x (hx : (p : BPlus) * x = ainfToBPlus c.E) ↦ ?_
-  refine c.mem_bicommutant_of_mul (natCast_mem c.bicommutant p) BPlus.isUnit_p.ne_zero ?_
-  rw [hx]
-  exact ainfToBPlus_mem_bicommutant c.E
-
 /-- The closure of `S[E/p]` in `BPlus` for the topology whose neighbourhoods of `0` are the
 `p ^ n * amaxImage`, with `p` inverted: `y` lies in it when, for some `m` and every `n`,
 `p ^ m * y` is an element of `S[E/p]` plus `p ^ n` times an element of `amaxImage`. It equals
