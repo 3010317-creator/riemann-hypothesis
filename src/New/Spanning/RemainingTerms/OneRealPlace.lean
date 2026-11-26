@@ -400,7 +400,8 @@ theorem RealPlace.IsNegativeBasis.volumeRatio_eq (hi_le : i ≤ 𝔰.ϱ)
   have h_reduce : ‖N.det‖ = ‖((P * (inclᴴ * P)⁻¹)ᴴ * (N * incl)).det‖ := by
     refine norm_det_eq_norm_det_mul_inclMatrix h_left_inv fun b hb ↦ ?_
     obtain ⟨h_le, h_ne⟩ : i ≤ b ∧ b ≠ 𝔰.top := le_and_ne_top_of_notMem_range hi_le hb
-    have h_level : j ≤ b.val := by grind
+    have h_level : j ≤ b.val :=
+      (min_le_iff.mp (hij ▸ h_le)).resolve_left (not_le_of_gt (Fin.val_lt_last h_ne))
     obtain ⟨x, x', h_shared, hx_lead, h_lead, h_above⟩ : PairOccursAt γ ζ 1 b :=
       h_flag b h_level
     have h_frames : γ.val.val *ᵥ 𝔰.frameCols *ᵥ x' = 𝔰.frameCols *ᵥ x := by
