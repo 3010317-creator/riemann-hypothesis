@@ -275,12 +275,6 @@ private lemma Space.map_conjTranspose_mul_map_J_mul_map {a b : Type*} (A : Matri
     Aᴴ.map toAdele * (V.J.map toAdele * B.map toAdele) = (Aᴴ * V.J * B).map toAdele := by
   simp [Matrix.mul_assoc]
 
-/-- `Space.map_conjTranspose_mul_map_J_mul_map` followed by a further factor `X`. -/
-private lemma Space.map_conjTranspose_mul_map_J_mul_map_mul {a b c : Type*} [Fintype b]
-    (A : Matrix n a E) (B : Matrix n b E) (X : Matrix b c (𝔸 E)) :
-    Aᴴ.map toAdele * (V.J.map toAdele * (B.map toAdele * X)) = (Aᴴ * V.J * B).map toAdele * X := by
-  simp [Matrix.mul_assoc]
-
 variable [WeilData E] {n₀ p q : Type*} [Fintype n₀] [DecidableEq n₀] [Fintype p] [DecidableEq p]
   {s₀ : n₀ → ℤˣ} (V₀ : Space E n₀ s₀)
 
@@ -447,8 +441,10 @@ lemma iCoord_mul_lAdelic : D.iCoord * D.lAdelic = 0 := by
 lemma iCoord_mul_iAdelic : D.iCoord * D.iAdelic = 1 := by
   have h_point₀ : V₀.x.valᴴ * (V₀.J.map toAdele * V₀.x.val) = stdForm E s₀ := by
     rw [← Matrix.mul_assoc, V₀.gram_point]
-  simp [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc,
-    V.map_conjTranspose_mul_map_J_mul_map_mul, h_point₀]
+  simp [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc]
+  rw [← Matrix.mul_assoc (V.J.map toAdele), ← Matrix.mul_assoc (D.iᴴ.map toAdele),
+    V.map_conjTranspose_mul_map_J_mul_map]
+  simp [h_point₀]
 
 /-- For a splitting, the three coordinate matrices along k, l and V₀ are dual to the adelic frames
 k, l, ι: each times its own frame is the identity, and times either other frame is zero. -/
