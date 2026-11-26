@@ -147,24 +147,6 @@ theorem stableProducts_subset {a : Fin 𝔰.ϱ} (h_near : F.IsNear (a + 1) x) :
     simpa [mul_assoc] using hξx_int.isIntMatrix.mulVec hw_int (eStar a)
   rwa [partialUnitriangularGroup_mulVec_eStar hξ a.val.lt_succ_self h_orth] at h_int
 
-/-- **Depth at the finite places.** For a large lattice datum, let x be near at a + 1. Then the set
-𝔡_a = `F.stableProducts a x y`, the coordinates at the dual of e_a of the vectors that are stable at
-x and x y, is an ideal of the ring of integers, and the depth of e_a, the inverse of the volume of
-this set, is the index of this ideal. -/
-theorem exists_ideal_depth_eq {a : Fin 𝔰.ϱ} (h_near : F.IsNear (a + 1) x) (y : T.G) :
-    ∃ I : Ideal P.integers,
-      (∀ t : P.integers, t ∈ I ↔ ↑t ∈ F.stableProducts a x y) ∧ F.depth a x y = I.cardQuot := by
-  obtain ⟨c, hc⟩ : ∃ c : Aˣ, F.stableProducts a x y = {t : A | c⁻¹.val * t ∈ integers} :=
-    exists_stableProducts_eq_unit_mul_integers a x y
-  have hc_mem : c.val ∈ P.integers := stableProducts_subset h_near (hc.ge (by simp))
-  obtain ⟨I, -, hI_image, hI_card⟩ : ∃ I : Ideal P.integers, I.cardQuot ≠ 0 ∧
-      integers.subtype '' I = {t : A | c⁻¹.val * t ∈ integers} ∧ I.cardQuot = (P.modulus c)⁻¹ :=
-    exists_ideal_cardQuot_eq c hc_mem
-  refine ⟨I, fun t ↦ ?_, ?_⟩
-  · rw [hc, ← hI_image]
-    exact integers.subtype_injective.mem_set_image.symm
-  · rw [depth, hc, volume_setOf_mul_mem, modulus_inv, inv_inv, hI_card]
-
 /-- For a large lattice datum and a group Z between the congruence subgroup K(g) and the integral
 group K, if the finite Bessel vectors `Z.besselVector` at two points x and z are not orthogonal,
 then for each a and each y the set 𝔡_a = `F.stableProducts a x y` contains a unit c of A lying in
