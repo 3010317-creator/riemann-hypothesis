@@ -262,7 +262,7 @@ lemma OFlat.isAbsIntegrallyClosed : IsAbsIntegrallyClosed OFlat := by
   have h_compat (n : ℕ) : (s (n + 1 + d + 1)).coeff (n + 1) ^ p = (s (n + d + 1)).coeff n := by
     rw [PreTilt.coeff_pow_p, add_right_comm n 1, eq_comm, ← sub_eq_zero, ← map_sub, h_stable]
   let root : OFlat := ⟨fun n ↦ (s (n + d + 1)).coeff n, h_compat⟩
-  refine ⟨root, ext fun n ↦ ?_⟩
+  refine ⟨root, Perfection.ext fun n ↦ ?_⟩
   -- the `n`-th coordinate of the root is that of `s (n + d + 1)`, and the `n`-th coordinate of
   -- `f (s (n + d + 1))` is a power of the `(n + d)`-th one, which is `0`
   calc (f.eval root).coeff n
@@ -292,7 +292,7 @@ instance (priority := low) [Algebra A S] : Algebra (WittVector p A) (WittVector 
 instance actOFlat : MulSemiringAction FrobGal OFlat := by
   -- `(n, g)` acts by the map induced by `g` on the tilt, followed by `x ↦ x ^ p ^ n`
   apply actionOfHoms _ fun m ↦ (iterateFrobenius _ p m.1.toAdd).comp (tiltMap (toRingHom _ _ m.2))
-  · simp [show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, tiltMap_id, RingHom.ext_iff]
+  · simp [show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, RingHom.ext_iff]
   · have hab (a b : Gp p) :
         toRingHom (Gp p) OC (a * b) = (toRingHom (Gp p) OC a).comp (toRingHom (Gp p) OC b) := by
       aesop (add simp mul_smul)
@@ -362,7 +362,7 @@ instance [CharP S p] [Algebra R S] : IsScalarTower ℤ_[p] (WittVector p R) (Wit
 lemma OFlat.frobEnd_apply : frobEnd x = x ^ p := by
   -- `φ = (ofAdd 1, 1)` acts by the identity of `G_p` on the tilt followed by `x ↦ x ^ p`
   have h_frob : frobEnd x = tiltMap (toRingHom (Gp p) OC 1) x ^ p ^ 1 := rfl
-  simp [h_frob, show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop, tiltMap_id]
+  simp [h_frob, show toRingHom (Gp p) OC 1 = RingHom.id OC by aesop]
 
 variable {G : Type*} [Group G] [MulSemiringAction G OFlat] [MulSemiringAction FrobGal S]
 
