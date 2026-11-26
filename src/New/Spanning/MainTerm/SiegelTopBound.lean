@@ -814,7 +814,7 @@ theorem IsFillingData.siegel_sum_le_lintegral_sphere (hT_N : (S.N : E)⁻¹ ∈ 
       rw [mul_assoc _ (P.modulus π), ENNReal.mul_inv_cancel_left (by simp) (by simp), ← mul_assoc]
     _ = _ := by rw [siegel_constant_eq hT_N piNAt_mul_star hβ_pos (C := C) rfl]
 
-omit [WeilData E] [S.IsAdmissible] [Fact (↑S.ideleM⁻¹ ∈ integralOff T)] in
+omit [WeilData E] [T.StarStable] [S.IsAdmissible] [Fact (↑S.ideleM⁻¹ ∈ integralOff T)] in
 /-- If the lattice basis and the translate `h_c⁻¹ γ h_c'` (`S.translateByClassReps`) of a rational
 element `γ` of `floorGroup 𝔰.ϱ` are integral off `T`, then so is the `X₀`-part of the column of `γ`
 at `z`, moved by the inverse of the representative of `c`. -/
