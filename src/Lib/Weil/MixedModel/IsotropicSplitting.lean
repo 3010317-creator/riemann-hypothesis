@@ -216,25 +216,19 @@ lemma block_diag {B : Matrix p q (𝔸 E)} (hB : IsOrthoIntegral B) :
     simp [Sum.forall, hA.snd_mem_Ô, hB.snd_mem_Ô]
 
 /-- If `B = A.submatrix id e * C`, that is, the matrix of the columns `e j` of `A` times `C`, where
-`e` is injective, and `A` and `C` are orthonormal at infinity and integral, then so is `B`. -/
-lemma of_eq_submatrix_mul_of_injective {C : Matrix p q (𝔸 E)} (e : p → n)
-    (h_injective : e.Injective) (hC : IsOrthoIntegral C) {B : Matrix m q (𝔸 E)}
-    (h_eq : B = A.submatrix id e * C) : IsOrthoIntegral B := by
+`e` is injective, and `A` and `C` are orthonormal at infinity and integral, then so is `B`. When
+`he` is not given, `simp` proves that `e` is injective. -/
+lemma of_eq_submatrix_mul {C : Matrix p q (𝔸 E)} (e : p → n) (hC : IsOrthoIntegral C)
+    {B : Matrix m q (𝔸 E)} (h_eq : B = A.submatrix id e * C)
+    (he : e.Injective := by simp [Function.Injective]) : IsOrthoIntegral B := by
   -- Selecting distinct columns of `A` keeps them orthonormal and integral: at `w` the Gram matrix
   -- of the chosen columns is the `(e, e)` block of that of `A`, which is `1` as `e` is injective.
   have h_cols : IsOrthoIntegral (A.submatrix id e) := by
     refine ⟨fun w ↦ ?_, fun i j ↦ hA.snd_mem_Ô i (e j)⟩
     rw [← submatrix_map, conjTranspose_submatrix, ← submatrix_mul _ _ e id e Function.bijective_id,
-      hA.conjTranspose_map_mul_map w, submatrix_one e h_injective]
+      hA.conjTranspose_map_mul_map w, submatrix_one e he]
   subst h_eq
   exact h_cols.mul hC
-
-/-- `of_eq_submatrix_mul_of_injective`, where `simp` proves that `e` is injective when `he` is not
-given. -/
-lemma of_eq_submatrix_mul {C : Matrix p q (𝔸 E)} (e : p → n) (hC : IsOrthoIntegral C)
-    {B : Matrix m q (𝔸 E)} (h_eq : B = A.submatrix id e * C)
-    (he : e.Injective := by simp [Function.Injective]) : IsOrthoIntegral B :=
-  hA.of_eq_submatrix_mul_of_injective e he hC h_eq
 
 end
 
@@ -990,8 +984,8 @@ lemma exists_isAdapted_and_frame_eq :
     rw [← h_cancel]
     simp [frameAt, m, fromCols_mul_fromBlocks, Matrix.mul_assoc]
   refine ⟨γ, ?_, e, h_sign, hγ⟩
-  exact .of_eq_submatrix_mul_of_injective .one e e.injective
-    (isOrthoIntegral_hyperbolicSpace_x_inv.block_diag .one) h_frame
+  exact .of_eq_submatrix_mul .one e
+    (isOrthoIntegral_hyperbolicSpace_x_inv.block_diag .one) h_frame e.injective
 
 /-! ### Rational elements -/
 

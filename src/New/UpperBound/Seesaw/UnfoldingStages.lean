@@ -91,7 +91,7 @@ lemma integrable_algFormCoeff_mul_theta_tripleWeil {κ : NumberField.InfinitePla
     fun_prop
   · -- both factors are invariant under rational points
     rintro ⟨γ, δ⟩ ⟨hγ, hδ⟩ ⟨x, r⟩
-    simp only [Prod.mk_mul_mk, h_rat γ hγ x, theta_tripleWeil_rat_mul a b f γ hγ δ hδ x r g]
+    simp only [Prod.mk_mul_mk, h_rat γ hγ x, theta_tripleWeil_rat_mul a b f hγ hδ x r g]
 
 /-- Write `P ⊗ Φ` for `integrated` applied to the Fock vector `polyVector P` and the finite datum
 `Φ`. Combining with `arrowProduct` the data `P ⊗ Φ` on `Hom(X, X')` and `Q ⊗ Φ'` on `Hom(X', X'')`,
@@ -549,7 +549,7 @@ lemma DoubleLiftData.exists_integral_constTermAtStringMap_mul_eq
     fun_prop
   · -- and invariant under its rational points
     congr 2
-    simpa only [one_mul] using theta_tripleWeil_rat_mul a b _ 1 (one_mem _) γ hγ x g _
+    simpa only [one_mul] using theta_tripleWeil_rat_mul a b _ (γ := 1) (one_mem _) hγ x g _
 
 end New.Seesaw
 
