@@ -130,10 +130,10 @@ lemma isIdempotentElem_map_piMatrixUnit (f : PiMatrix k d →ₐ[k] B) (i : Fin 
   IsIdempotentElem.map (by simp [IsIdempotentElem, ← Pi.single_mul]) f
 
 omit [∀ i, NeZero (d i)] in
-/-- Let `k` be algebraically closed of characteristic zero. If `r = f' ∘ s`, where the image of
+/-- Let `k` have characteristic zero. If `r = f' ∘ s`, where the image of
 `s` spans a finite product of matrix algebras and `f'` is an algebra map to `M_n(k)`, then the
 trace form on the span of `r(G)` is non-degenerate. -/
-lemma IsTraceNondeg.of_span_piMatrix [CharZero k] [IsAlgClosed k]
+lemma IsTraceNondeg.of_span_piMatrix [CharZero k]
     {s : G → PiMatrix k d} (s_span : span k (Set.range s) = ⊤) (hr : ∀ g : G, f' (s g) = r g) :
     IsTraceNondeg r := by
   -- Write `x = f' a`. The left ideal spanned by `a` is spanned by an idempotent `c * a`. Its image
