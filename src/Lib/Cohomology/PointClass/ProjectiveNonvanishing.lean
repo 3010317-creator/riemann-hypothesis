@@ -935,7 +935,9 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
       exact congrArg (fun w ↦ (⟨⟨true⟩, ⟨w⟩⟩ : twoDiscs.obj c))
         (charTwist_comp_evalZero ..)
     change ((oneSub (discTwist epsPow)).app c).hom (((origin ⟨true⟩).app c).hom (.of t)) = 0
-    erw [ho, hd, hz, sub_self]
+    refine (congrArg ((oneSub (discTwist epsPow)).app c).hom ho).trans (hd.trans ?_)
+    exact (congrArg (fun z' ↦ FreeAddCommGroup.of z - FreeAddCommGroup.of z') hz).trans
+      (sub_self _)
   let κ : freeAb twoDiscs ⟶ genericCoeff := projFirst ≫ one
   have h_κ (c : PadicTest) (b : Bool) (t : (tilt ⋙ reprBy (monoidAlg ℚ≥0)).obj c) :
       (κ.app c).hom (.of (⟨⟨b⟩, t⟩ : twoDiscs.obj c)) =
@@ -1042,8 +1044,11 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
       (((origin ⟨true⟩).app c).hom (.of PUnit.unit)))).down
     change ULift.up (x' * y) = ULift.up x'
     have hy : y = 1 := by
-      dsimp only [y]
-      erw [ho, projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c o.snd, h_one]
+      let project := ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
+      have h_project :
+          project (((origin ⟨true⟩).app c).hom (.of PUnit.unit)) = .of o.snd :=
+        (congrArg project ho).trans (projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c o.snd)
+      exact congrArg ULift.down ((congrArg (one.app c).hom h_project).trans h_one)
     rw [hy, mul_one]
   exact eq_zero_of_cup_eq_zero_of_isTodaCancellation h_toda h_unit h_pull x hx
 
