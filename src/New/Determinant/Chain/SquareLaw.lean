@@ -350,7 +350,7 @@ lemma hasLeftInv_toCols_of_hasLeftInv_toRows (e : b ⊕ a ≃ N ⊕ n) (k : GL (
     have h_zero : (fromCols (0 : Matrix b N R) L).submatrix id Sum.inl = 0 := toCols₁_fromCols 0 L
     exact hasLeftInv_submatrix_invLastRows k h_ext Sum.inl_injective h_zero
 
-omit [Fintype R] in
+omit [Fintype R] [DecidableEq a] in
 /-- Let any two elements `r`, `s` of `R` be multiples of `(1 - ε) r + ε s` for some idempotent `ε`
 (the hypothesis `hR`), and let `e` split the index set `N ⊕ n` into `b` and `a`. If the rows `N` or
 the rows `n` of an `(N ⊕ n) × b` matrix `y` have a left inverse, then `y` is the block
