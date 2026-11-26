@@ -378,14 +378,12 @@ lemma index_sup_idelesPowAt_le [IsTotallyComplex K] {S : Set (FinPlace K)} (hS_f
       n ^ finrank ℤ (Additive (S.unit K)) * Nat.card (powMonoidHom n : S.unit K →* S.unit K).ker :=
     index_range_pow_eq (Y := S.unit K) (mod_cast cokerKerIndex_eq_pow_finrank)
   -- As `K` is totally complex, `2 |S| + [K : ℚ] = 2 (rank E + 1)`, so `N.index ≤ En.index ^ 2`.
-  have h_deg : finrank ℚ K = 2 * Fintype.card (InfinitePlace K) := by
-    simp [← InfinitePlace.sum_mult_eq, mul_comm]
   have h_sq : N.index ≤ En.index ^ 2 :=
     calc N.index ≤ n ^ (2 * S.ncard + finrank ℚ K) := hN_le
       _ = (n ^ finrank ℤ (Additive (S.unit K)) * n) ^ 2 := by
-        rw [← pow_succ, ← pow_mul, h_deg]
+        rw [← pow_succ, ← pow_mul, finrank_eq_two_mul_card_infinitePlace, h_rank]
         congr 1
-        omega
+        ring
       _ ≤ (n ^ finrank ℤ (Additive (S.unit K)) *
           Nat.card (powMonoidHom n : S.unit K →* S.unit K).ker) ^ 2 := by
         gcongr
