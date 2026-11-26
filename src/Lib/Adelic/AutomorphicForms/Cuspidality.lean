@@ -560,6 +560,12 @@ theorem Space.exists_cuspFrame (W : Space E n s) {N : ℕ} [NeZero N]
   exact ⟨{ A with length_mul_le := A.length_mul_le.trans h_le },
     A.radicalCovered hN_diff hM hδ_pos hδ_le⟩
 
+private lemma apply_mul_pair_of_mem_level {J : Subgroup (Gf E n)} (h_level : HasLevel F J)
+    (g : G E s) (z : GInf E s) {k : Gf E n} (hk : k ∈ J) :
+    F (g * (z, k)) = F (g * (z, 1)) := by
+  have h_split : g * (z, k) = g * (z, 1) * (1, k) := by simp [mul_assoc]
+  rw [h_split, h_level k hk]
+
 /-- Let `A ≠ 0` be the rational isotropic subspace spanned by the columns of `X`, let `J` be a
 compact open subgroup of `Gf E n` inside the standard level, called a level, and let
 `N_A g ⊆ (Γ ∩ N_A) g Z_δ J` (`New.Space.RadicalCovered`), with `Z_δ` the real ball of radius `δ`
@@ -585,8 +591,7 @@ theorem Space.norm_le_of_oscillation [Nonempty n] (he : IsCuspKernel B e) {X : M
     rw [h_move]
     exact h_inv ν (Space.mem_dilationGroup_of_ratEmbed_mem_radical (W := V.move g) hν) _
   · rintro ⟨z, k⟩ ⟨hz, hk⟩
-    have h_split : g * ((z, k) * (y, 1)) = g * (z * y, 1) * (1, k) := by simp [mul_assoc]
-    rw [h_split, h_level k hk, dist_eq_norm]
+    rw [Prod.mk_mul_mk z, mul_one, apply_mul_pair_of_mem_level h_level g (z * y) hk, dist_eq_norm]
     exact hD z hz
 
 /-- A continuous function `F` on `Γ \ G`, with `Γ = V.Γ` the group of rational points, is cuspidal
@@ -650,8 +655,7 @@ theorem Space.IsCuspidal.norm_le_of_firstMinimum_lt (hF : V.IsCuspidal F) {N : �
     (fun γ hγ ↦ fixesLeft_move hF.rat_mul g γ hγ.1)
     (hF.integral_eq_zero g A.isotropicCols A.ne_zero A.isotropic) ?_
   rintro ⟨z, k⟩ ⟨hz, hk⟩
-  have h_split : g * (z, k) = g * (z, 1) * (1, k) := by simp [mul_assoc]
-  rw [h_split, h_level k hk, dist_eq_norm]
+  rw [apply_mul_pair_of_mem_level h_level g z hk, dist_eq_norm]
   exact hC z hz
 
 /-- High in a cusp, a form is bounded by its oscillation. Let `F` be a form of type `e`, with `e` a
