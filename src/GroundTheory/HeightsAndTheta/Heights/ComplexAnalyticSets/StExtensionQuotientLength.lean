@@ -4,8 +4,6 @@ public import Mathlib.RingTheory.Length
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 def ExtensionQuotientLength.Statement : Prop :=

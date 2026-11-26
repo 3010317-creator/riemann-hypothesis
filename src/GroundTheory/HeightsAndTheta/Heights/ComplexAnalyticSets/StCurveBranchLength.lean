@@ -5,8 +5,6 @@ public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Statement
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial Matrix ComplexSets Filter Topology

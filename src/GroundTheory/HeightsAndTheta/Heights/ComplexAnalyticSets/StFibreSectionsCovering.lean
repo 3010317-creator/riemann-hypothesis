@@ -6,8 +6,6 @@ public import Mathlib.Topology.Covering.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Filter Topology Matrix

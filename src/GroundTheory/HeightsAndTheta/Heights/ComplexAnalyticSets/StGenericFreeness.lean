@@ -6,8 +6,6 @@ public import Mathlib.RingTheory.FiniteType
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 universe u v w

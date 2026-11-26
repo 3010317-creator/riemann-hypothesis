@@ -8,8 +8,6 @@ public import Mathlib.RingTheory.Nullstellensatz
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial MeasureTheory Matrix ComplexSets

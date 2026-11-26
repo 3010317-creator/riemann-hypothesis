@@ -5,8 +5,6 @@ public import Mathlib.RingTheory.AdicCompletion.Algebra
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 def FormalFibreQuotient.Statement : Prop :=
