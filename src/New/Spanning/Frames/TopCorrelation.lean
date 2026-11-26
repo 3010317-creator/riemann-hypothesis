@@ -463,7 +463,7 @@ lemma exists_isCompact_scaledOrbitalIntegral_support {F : PlaceData ι T (m + 1)
   have h_back : (weylElem 𝔰.ϱ (star p) * l)⁻¹ * y' = y := by
     simp [y', mul_assoc, (weylElem_mul_left_comm hl).1]
   have y'_mem : y' ∈ S := Γ.hasMatrixSize_of_ne_zero h_cut hp.star_head hl hy' (by rwa [h_back])
-  exact ⟨(y, y'), ⟨y_mem, y'_mem⟩, by simp [y', mul_assoc]⟩
+  exact ⟨(y, y'), ⟨y_mem, y'_mem⟩, by simp [y']⟩
 
 /-- At a large lattice datum `F` and for `l` in the floor group G^(ϱ), the pairing of the scaled
 orbital integrals with heads `p`, `q` at `l` is the density `F.headDensity 𝔰.ϱ p q` of the two heads

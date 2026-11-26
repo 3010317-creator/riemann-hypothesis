@@ -91,7 +91,7 @@ lemma exists_elementary_divisors_mod_summand {O E : Type*} [CommRing O] [IsDomai
     have h_sum : (U.val * diagonal t * (P.val * Q)) *ᵥ η =
         ∑ j : K, ((P.val * Q) *ᵥ η) j • t j • U.val.col j := by
       rw [← mulVec_mulVec, mulVec_eq_sum]
-      simp [funext_iff, mul_left_comm]
+      simp [funext_iff]
     rw [mulVecLin_apply, h_right, add_mulVec, h_sum, ← mulVec_mulVec]
     exact add_mem_sup ⟨_, rfl⟩ (Submodule.sum_mem _ fun j _ ↦ smul_mem _ _ (subset_span ⟨j, rfl⟩))
   · rw [span_le]

@@ -594,7 +594,7 @@ lemma IsLaplaceDatum.norm_subOnePair_mul_intDiagonal_sq_le (hj : IsLaplaceDatum 
     simp only [map_inv, Prod.fst_inv, U.coe_inv (signMatrix_mul_self ε) (j s).1]
     ext a b
     rcases eq_or_ne a b with rfl | hab
-    · rcases units_eq_one_or (ε a) with ha | ha <;> simp [signMatrix, ha, mul_comm]
+    · rcases units_eq_one_or (ε a) with ha | ha <;> simp [signMatrix, ha]
     · simp [signMatrix, hab, mul_comm, mul_left_comm]
   calc ‖(subOnePair j s).1 * intDiagonal (offBlockIndicator e)‖ ^ 2
       = ‖intDiagonal (offBlockIndicator e) * (subOnePair j s⁻¹).1‖ ^ 2 := by

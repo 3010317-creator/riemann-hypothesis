@@ -220,7 +220,7 @@ lemma IsOrthogonalLift.toCols₁_mul_framePair (hu : IsOrthogonalLift j γ v u) 
   rw [hu.toCols₁_eq_fromRows]
   ext a (b | b)
   · cases b using lastCases <;> simp [Matrix.mul_apply, Matrix.one_apply, splitGram]
-  · simpa [Matrix.mul_apply, Matrix.one_apply, frameGram, splitGram, mul_comm] using
+  · simpa [Matrix.mul_apply, Matrix.one_apply, frameGram, splitGram] using
       congrFun₂ h_image a b
 
 /-- The first columns of an orthogonal lift are orthogonal to all its columns. -/
