@@ -203,7 +203,7 @@ abbrev gluingLevel
     (Λ : Matrix D.CarrierIndex (FirstFactorIndex j)
       (D.descentPair ϑ j).chosenModulusSq.ResidueRing) :
     Subgroup (Gf D.E (FirstFactorIndex j)) :=
-  rowFixingLevel (D.descentPair ϑ j).toLevelPlaces ((splittingV j ϑ).stackOverGenScalar Λ)
+  rowFixingLevel (D.descentPair ϑ j).toLevelPlaces ((D.descentPair ϑ j).stackOverGenScalar Λ)
     (splittingV j ϑ).fixedEmb
 
 /-- The level `J_Λ` (`gluingLevel`) is sufficiently small: at every point `g` the stabiliser
@@ -233,7 +233,7 @@ lemma isGlued_splittingV_of_isGlued {ϑ' : D.Twist}
   { hL with }
 
 /-- The lattice `glueLattice j ϑ i` is glued for the matrix `Λ = i.1` (`IsGlued`): the congruence
-modulo `ϖ` that defines it is, after a translation by a unique element of `congruenceGroup`, a
+modulo `ϖ` that defines it is, after a translation by a unique element of `DescentPair.congruenceGroup`, a
 pair of conditions on the blocks `V″` and `V°`, and its inverse is integral on most of `V″`. -/
 lemma isGlued_glueLattice (i : ChoiceIndex j) : (splittingV j ϑ).IsGlued i.1 (glueLattice j ϑ i) :=
   isGlued_splittingV_of_isGlued j ϑ ((splittingV j 1).exists_isGlued i.1).choose_spec
@@ -257,9 +257,9 @@ def firstFactor (i : ChoiceIndex j) (h : Gf D.E (FirstFactorIndex j)) :
 /-- The theta series `Ξ_{ϑ,i} (g) = ⟨φ″_{ϑ,i}, θ″_{ϑ,Λ} (g, ·)⟩` on `U(W_j)`. It is the sum
 (`kernelClassSum`) over the classes `h` of level `J_Λ` of the theta kernel `θ″_{ϑ,Λ}` of
 `(W_j, V″)` at `(g, h)`, with datum given by the rows of `Λ` stacked over those of `ϖ • 1`
-(`stackOverGenScalar`) and polynomial given by `φ″_{ϑ,i} (h)`. -/
+(`DescentPair.stackOverGenScalar`) and polynomial given by `φ″_{ϑ,i} (h)`. -/
 def firstFactorPairing (i : ChoiceIndex j) (g : G D.E (D.signsW j)) : ℂ :=
-  kernelClassSum (D.descentPair ϑ j) (firstFactorChar ϑ j) ((splittingV j ϑ).stackOverGenScalar i.1)
+  kernelClassSum (D.descentPair ϑ j) (firstFactorChar ϑ j) ((D.descentPair ϑ j).stackOverGenScalar i.1)
     (splittingV j ϑ).fixedEmb (fun h ↦ star (firstFactor j ϑ i h)) g
 
 /-- The series `Ξ_{ϑ,i}` is `c″` times the left side `thirdExchangeLeftSide` of the third exchange,
@@ -428,28 +428,28 @@ lemma firstFactorChar_mul_upsilonU1_zpow :
   rfl
 
 /-- A good form on `W_j` is invariant under the lifts `liftMod 𝗎` of the elements `𝗎` of the group
-`J̄¹` (`congruenceGroup`) of matrices modulo `ϖ²` that are `1` modulo `ϖ`, since these lifts lie in
+`J̄¹` (`DescentPair.congruenceGroup`) of matrices modulo `ϖ²` that are `1` modulo `ϖ`, since these lifts lie in
 the level `J (ϖ)` that fixes it. -/
 lemma goodForm_mul_liftMod_congruenceGroup (y : D.goodForms (D.spaceW j))
-    (u : (splittingV j 1).congruenceGroup) (g : G D.E (D.signsW j)) :
+    (u : (D.descentPair (1 : D.Twist).toTameChar j).congruenceGroup) (g : G D.E (D.signsW j)) :
     (y : G D.E (D.signsW j) → ℂ) (g * (1, (liftMod u.val : Gf D.E D.RowIndex))) =
       (y : G D.E (D.signsW j) → ℂ) g := by
   have h_level : (liftMod u.val : Gf D.E D.RowIndex) ∈ levelOf D.chosenPlace ⊥ :=
     mem_levelOf.2 ⟨(liftMod u.val).prop,
-      funext ((splittingV j 1).reduceAt_liftMod_congruenceGroup u)⟩
+      funext (DividedSplitting.reduceAt_liftMod_congruenceGroup u)⟩
   exact Space.mem_levelSpace_formRep_iff.1 (y : D.principalForms (D.spaceW j)).prop _ h_level g
 
 open scoped Classical in
 /-- The descent to `U(W_j)` of the form `glue j ϑ ζ` on `V_j` glued from a tuple `ζ` of forms on
 `V°` at the twist `ϑ`. Its conjugate at `g` is the sum, over the choices `i` and the matrices `u`
-modulo `ϖ²` that are `1` modulo `ϖ` (`congruenceGroup`), of `M ^ l₁ c Ξ_i (g u) ⟨ζ_i, θ° (g u, ·)⟩`.
+modulo `ϖ²` that are `1` modulo `ϖ` (`DescentPair.congruenceGroup`), of `M ^ l₁ c Ξ_i (g u) ⟨ζ_i, θ° (g u, ·)⟩`.
 Here `M = D.M`, `l₁ = denominatorExponent`, `c` is the scalar `weilScalar` of the lattice of `i`,
 `Ξ_i` is the theta series `firstFactorPairing j ϑ i`, the last factor is the pairing
 `thetaKernelPairing` of the copy `i` of `ζ` with the theta kernel `θ°` of `W_j, V°`, and `g u` is
 `g` times the lift `liftMod u`. -/
 lemma conj_normalizedDescent_glue (ϑ' : D.Twist) (ζ : FormTuples j) (g : G D.E (D.signsW j)) :
     conj ((D.descentPair ϑ j).normalizedDescent (glue j ϑ ζ) g) =
-      ∑ i : ChoiceIndex j, ∑ u : (splittingV j ϑ').congruenceGroup,
+      ∑ i : ChoiceIndex j, ∑ u : (D.descentPair ϑ' j).congruenceGroup,
         D.M ^ (splittingV j ϑ').denominatorExponent * (glueLattice j ϑ' i).weilScalar *
           (firstFactorPairing j ϑ i *
             thetaKernelPairing j fun c : D.SecondFactorClasses ↦ ζ (i, c))
@@ -458,7 +458,7 @@ lemma conj_normalizedDescent_glue (ϑ' : D.Twist) (ζ : FormTuples j) (g : G D.E
   let Ξ (b : ChoiceIndex j × D.SecondFactorClasses) : (D.descentPair ϑ j).FormV :=
     stdClassSum (gluingLevel j ϑ b.1.1) fun h : Gf D.E (FirstFactorIndex j) ↦
       (splittingV j ϑ).productForm (glueLattice j ϑ b.1) (h, b.2.out) (firstFactor j ϑ b.1 h) (ζ b)
-  let gu (u : (splittingV j ϑ').congruenceGroup) : G D.E (D.signsW j) :=
+  let gu (u : (D.descentPair ϑ' j).congruenceGroup) : G D.E (D.signsW j) :=
     g * (1, (liftMod u.val : Gf D.E D.RowIndex))
   let θ (b : ChoiceIndex j × D.SecondFactorClasses) (g' : G D.E (D.signsW j)) : ℂ :=
     modKernelStdSpace (D.spaceW j) (untwistedDescentPair j).charW (upsilonU1 ^ (D.m / 2 - j : ℤ))
@@ -524,7 +524,7 @@ and `ζ` a tuple of forms on `V°` with one copy `ζ_i` for each choice `i`. The
 with the adjoint of the gluing map `glue j ϑ` at the lift is the sum over `i` of
 `M ^ l₁ c #J̄¹ ∫ y (g) Ξ_i (g) ⟨ζ_i, θ° (g, ·)⟩ dg`. Here `M = D.M` is the principal level,
 `l₁ = denominatorExponent`, `c` is the scalar `weilScalar` of the lattice of `i` and `J̄¹`
-(`congruenceGroup`) the group of matrices modulo `ϖ²` that are `1` modulo `ϖ`, all taken at the
+(`DescentPair.congruenceGroup`) the group of matrices modulo `ϖ²` that are `1` modulo `ϖ`, all taken at the
 trivial twist `1`. The series `Ξ_i` is `firstFactorPairing j ϑ i`, `thetaKernelPairing` pairs with
 the theta kernel `θ°` of `W_j, V°`, and `quotMeasure` integrates over the quotient of `U(W_j)` by
 its rational points. -/
@@ -533,7 +533,7 @@ lemma inner_adjoint_glue_goodLift_eq_sum_integral (y : D.goodForms (D.spaceW j))
     inner ℂ ζ ((glue j ϑ).adjoint (D.goodLift ϑ j y)) =
       ∑ i : ChoiceIndex j, D.M ^ (splittingV j 1).denominatorExponent *
         (glueLattice j 1 i).weilScalar *
-        Nat.card (splittingV j 1).congruenceGroup *
+        Nat.card (D.descentPair (1 : D.Twist).toTameChar j).congruenceGroup *
         ∫ g : G D.E (D.signsW j),
           (y : G D.E (D.signsW j) → ℂ) g * firstFactorPairing j ϑ i g *
             thetaKernelPairing j (fun c : D.SecondFactorClasses ↦ ζ (i, c)) g
@@ -543,14 +543,15 @@ lemma inner_adjoint_glue_goodLift_eq_sum_integral (y : D.goodForms (D.spaceW j))
   -- translates of `a i * f i`. Translation does not change the integral, so both sides are the
   -- sum of `a i * ∫ f i` over all `i` and all `𝗎`.
   let V := splittingV j 1
+  let O := D.descentPair (1 : D.Twist).toTameChar j
   set μ : Measure (G D.E (D.signsW j)) := (D.spaceW j).quotMeasure
   let f (i : ChoiceIndex j) : G D.E (D.signsW j) → ℂ :=
     (y : G D.E (D.signsW j) → ℂ) * firstFactorPairing j ϑ i * thetaKernelPairing j fun c ↦ ζ (i, c)
   let a (i : ChoiceIndex j) : ℂ := D.M ^ V.denominatorExponent * (glueLattice j 1 i).weilScalar
   -- the point `(1, 𝗎)` of `U(W_j)` given by the lift of `𝗎 ∈ J̄¹`
-  let k (u : V.congruenceGroup) : G D.E (D.signsW j) := (1, (liftMod u.val : Gf D.E D.RowIndex))
+  let k (u : O.congruenceGroup) : G D.E (D.signsW j) := (1, (liftMod u.val : Gf D.E D.RowIndex))
   -- The measure is invariant under right translation, so all `𝗎` give the same integral.
-  have h_same (i : ChoiceIndex j) (u : V.congruenceGroup) :
+  have h_same (i : ChoiceIndex j) (u : O.congruenceGroup) :
       ∫ g, f i (g * k u) ∂μ = ∫ g, f i g ∂μ ∧ Integrable (fun g ↦ f i (g * k u)) μ := by
     obtain ⟨⟨h_cont, h_rat⟩, h_rapid⟩ :=
       mul_mul_thetaKernelPairing_mem_rapidFunctions j ϑ y i fun c ↦ ζ (i, c)
@@ -559,21 +560,21 @@ lemma inner_adjoint_glue_goodLift_eq_sum_integral (y : D.goodForms (D.spaceW j))
   -- Expand the descent of the glued form; the form `y` is invariant under the points `k u`.
   have h_point (g : G D.E (D.signsW j)) :
       (y : G D.E (D.signsW j) → ℂ) g * conj ((D.descentPair ϑ j).normalizedDescent (glue j ϑ ζ) g) =
-      ∑ x : ChoiceIndex j × V.congruenceGroup, a x.1 * f x.1 (g * k x.2) := by
-    rw [conj_normalizedDescent_glue j ϑ 1, sum_prod_type (α₂ := V.congruenceGroup)]
-    simp only [a, f, k, V, Pi.mul_apply, goodForm_mul_liftMod_congruenceGroup j y, mul_sum,
+      ∑ x : ChoiceIndex j × O.congruenceGroup, a x.1 * f x.1 (g * k x.2) := by
+    rw [conj_normalizedDescent_glue j ϑ 1, sum_prod_type (α₂ := O.congruenceGroup)]
+    simp only [a, f, k, V, O, Pi.mul_apply, goodForm_mul_liftMod_congruenceGroup j y, mul_sum,
       mul_assoc, mul_left_comm ((y : G D.E (D.signsW j) → ℂ) g)]
   calc inner ℂ ζ ((glue j ϑ).adjoint (D.goodLift ϑ j y))
       = ∫ g, (y : G D.E (D.signsW j) → ℂ) g *
           conj ((D.descentPair ϑ j).normalizedDescent (glue j ϑ ζ) g) ∂μ :=
         inner_adjoint_glue_goodLift_eq_integral j ϑ y ζ
-    _ = ∑ x : ChoiceIndex j × V.congruenceGroup, a x.1 * ∫ g, f x.1 g ∂μ := by
+    _ = ∑ x : ChoiceIndex j × O.congruenceGroup, a x.1 * ∫ g, f x.1 g ∂μ := by
         rw [funext h_point, integral_finsetSum _ fun x _ ↦ (h_same ..).2.const_mul (a x.1)]
         simp only [integral_const_mul, h_same]
-    _ = ∑ i : ChoiceIndex j, a i * Nat.card V.congruenceGroup * ∫ g, f i g ∂μ := by
-        simp [sum_prod_type (α₂ := V.congruenceGroup), mul_assoc,
+    _ = ∑ i : ChoiceIndex j, a i * Nat.card O.congruenceGroup * ∫ g, f i g ∂μ := by
+        simp [sum_prod_type (α₂ := O.congruenceGroup), mul_assoc,
           mul_left_comm (Fintype.card _ : ℂ)]
-    _ = _ := by simp only [a, f, V, Pi.mul_apply]
+    _ = _ := by simp only [a, f, V, O, Pi.mul_apply]
 
 /-! ### Integrality and size of the gluing map -/
 
@@ -753,6 +754,7 @@ lemma weylNormSq_evalForm_productForm_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ
       D.chosenGroupOrder ^ 2 * (exp (D.f * D.m * D.b * D.logB ^ 2) * formTupleNormSq σ ζ) := by
   obtain ⟨h_plus, h_minus⟩ := (splittingV j 1).hasColumnsBelow
   let V := splittingV j 1
+  let O := D.descentPair (1 : D.Twist).toTameChar j
   let x : Gf D.E (D.RowIndex ⊕ Fin D.t) := U.block V.ε (h, p.2.out) * (glueLattice j 1 p.1).point
   let a : ℕ := Nat.card (classAut stdEmbFin.range (D.descentPair (1 : D.Twist) j).levelGroup x)
   have h_aut : a ≤ D.chosenGroupOrder :=
@@ -980,10 +982,10 @@ lemma thetaKernelPairing_adjoint_glue_eq_zero {w : FinPlace D.E} {hw : star w �
 /-! ### The map `Θ°`, the seesaw identity and the false lifts -/
 
 /-- The number `c°_i = M ^ l₁ c_𝗀 #J̄¹ c″` of the choice `i`, with `c_𝗀` the scalar of the lattice,
-`J̄¹` the group `congruenceGroup` and `c″ = firstFactorScale j`. It does not depend on the twist. -/
+`J̄¹` the group `DescentPair.congruenceGroup` and `c″ = firstFactorScale j`. It does not depend on the twist. -/
 def glueFactor (i : ChoiceIndex j) : ℂ :=
   D.M ^ (splittingV j 1).denominatorExponent * (glueLattice j 1 i).weilScalar *
-    Nat.card (splittingV j 1).congruenceGroup * firstFactorScale j
+    Nat.card (D.descentPair (1 : D.Twist).toTameChar j).congruenceGroup * firstFactorScale j
 
 lemma glueFactor_ne_zero (i : ChoiceIndex j) : glueFactor j i ≠ 0 := by
   simp [glueFactor, DividedLattice.weilScalar, NeZero.ne, firstFactorScale_ne_zero]

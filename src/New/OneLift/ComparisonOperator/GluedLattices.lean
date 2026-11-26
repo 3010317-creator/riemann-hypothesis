@@ -29,7 +29,7 @@ handled through the integral matrix `ϖ γ⁻¹`.
 
 * `New.Rows.DividedLattice`, `New.Rows.DividedLattice.reducedInverse`: a point `γ` of G_f supported
   at the chosen places such that `ϖ γ⁻¹` is integral, and the reduction of `ϖ γ⁻¹` modulo `ϖ²`.
-* `New.Rows.DividedSplitting.congruenceGroup`: the invertible `r × r` matrices modulo `ϖ²` that are
+* `New.Rows.DescentPair.congruenceGroup`: the invertible `r × r` matrices modulo `ϖ²` that are
   `1` modulo `ϖ`.
 * `New.Rows.DividedSplitting.productForm`: the form supported on the class of `(h, h°) γ` with the
   product of two vectors as its value. The product of vectors is `New.Rows.cartanProduct`.
@@ -59,7 +59,7 @@ namespace New.Rows
 /-!
 ## Residue rings modulo ϖ² and ϖ²Q and the divided splitting
 
-* `New.Rows.DividedSplitting.genResidue_smul_eq_inclMatrix_iff`: a matrix agrees with an inclusion
+* `New.DescentPair.genResidue_smul_eq_inclMatrix_iff`: a matrix agrees with an inclusion
   matrix modulo `ϖ²` after multiplication by `ϖ` exactly when they agree at every chosen place.
 -/
 
@@ -179,19 +179,20 @@ lemma reduction_levelModulus_eq_zero_iff {c : ℕ} {x : Ô E} :
 namespace DividedSplitting
 
 /-- The class modulo `ϖ²` of the idele `ϖ = O.genIdele`, which generates the product of the places
-`O.chosenPlace i`. It depends on `O` only. The argument allows the notation `V.genResidue`. -/
-abbrev genResidue (_ : DividedSplitting N m a O z) : O.chosenModulusSq.ResidueRing :=
+`O.chosenPlace i`. -/
+abbrev _root_.New.DescentPair.genResidue (O : DescentPair E r n) : O.chosenModulusSq.ResidueRing :=
   O.chosenModulusSq.reduction O.genIntAdele
 
+variable (O) in
 /-- Let `T` be a matrix modulo `ϖ² Q = O.levelModulus 2`, with `Q` the product of the twist places,
 and let `inclMatrix _ u` be the matrix whose `j`-th column is the basis vector `u j`. Then `ϖ T` and
 `ϖ • inclMatrix _ u` agree modulo `ϖ²` if and only if `T` reduces to that inclusion matrix in the
 residue field of every chosen place, the place of index `inl i` among the chosen and the twist
 places. -/
-lemma genResidue_smul_eq_inclMatrix_iff (V : DividedSplitting N m a O z)
+lemma _root_.New.DescentPair.genResidue_smul_eq_inclMatrix_iff
     {k c : Type} [DecidableEq k] (T : Matrix k c (O.levelModulus 2).ResidueRing) (u : c → k) :
-    V.genResidue • T.map reduceToChosenModulusSq =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing u ↔
+    O.genResidue • T.map reduceToChosenModulusSq =
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing u ↔
       ∀ i : O.ChosenIndex,
         T.map (levelResidueAt (inl i)) =
           inclMatrix (ResField ((O.chosenPlace ⊕ᵥ O.twistPlace) (inl i))) u := by
@@ -207,8 +208,8 @@ lemma genResidue_smul_eq_inclMatrix_iff (V : DividedSplitting N m a O z)
       O.ideal_levelModulus_one_false (x := (of X).map (O.levelModulus 1 false).reduction) (y := 0)
   -- Both `ϖ X ≡ 0` modulo `ϖ²` and `X ≡ 0` modulo `ϖ` say that `ϖ⁻¹ X` is integral.
   have h_smul_iff :
-      V.genResidue • T.map reduceToChosenModulusSq =
-          V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing u ↔
+      O.genResidue • T.map reduceToChosenModulusSq =
+          O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing u ↔
         ∀ a b, (O.levelModulus 1 false).reduction (X a b) = 0 := by
     simp [inclMatrix, apply_ite reduceToChosenModulusSq, ← ext_iff, ← hX, ← map_mul,
       reduction_levelModulus_eq_zero_iff, sq, mul_add, mul_assoc, Matrix.one_apply]
@@ -422,69 +423,69 @@ lemma DividedLattice.exists_reducedInverse_eq (C G : Matrix n n (Ô E))
 /-- The rows of `s`, indexed by `a`, stacked above the rows of `ϖ • 1`, indexed by `N`. With this
 matrix `w`, the one equation `w x = w x'` modulo `ϖ²` says that `s x ≡ s x'` modulo `ϖ²` and
 `x ≡ x'` modulo `ϖ`. -/
-def DividedSplitting.stackOverGenScalar (V : DividedSplitting N m a O z)
+def _root_.New.DescentPair.stackOverGenScalar (O : DescentPair E r n)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) :
     Matrix (a ⊕ N) N O.chosenModulusSq.ResidueRing :=
-  fromRows s (V.genResidue • 1 : Matrix N N O.chosenModulusSq.ResidueRing)
+  fromRows s (O.genResidue • 1 : Matrix N N O.chosenModulusSq.ResidueRing)
 
 omit [DecidableEq m] [Fintype a] [DecidableEq n] in
 /-- Let `V` split the indices `n` as `N ⊕ m`, with the embedding `V.fixedEmb : r ↪ N`, and let `s`
 be an `a × N` matrix modulo `ϖ²`. Consider the integral unitary `N × N` matrices whose reduction
-fixes the rows `V.stackOverGenScalar s` modulo `ϖ²` and has the columns of the identity off
+fixes the rows `O.stackOverGenScalar s` modulo `ϖ²` and has the columns of the identity off
 `V.fixedEmb` modulo `ϖ² Q` (`rowFixingLevel`). Each of them reduces to `1` at every chosen place,
 that is, lies in the level `levelOf O.chosenPlace ⊥`. -/
 lemma rowFixingLevel_le_levelOf (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) :
-    rowFixingLevel O.toLevelPlaces (V.stackOverGenScalar s) V.fixedEmb ≤
+    rowFixingLevel O.toLevelPlaces (O.stackOverGenScalar s) V.fixedEmb ≤
       levelOf O.chosenPlace ⊥ := by
   rintro _ ⟨k, ⟨-, h_rows⟩, rfl⟩
-  -- The lower rows of `V.stackOverGenScalar s` are `genResidue • 1`, and they are fixed by the
+  -- The lower rows of `O.stackOverGenScalar s` are `genResidue • 1`, and they are fixed by the
   -- reduction of `k`.
   have h_fix :
-      V.genResidue • ((O.levelModulus 2).reductionGL k).val.map reduceToChosenModulusSq =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing id := by
-    simpa [DividedSplitting.stackOverGenScalar, inclMatrix, -factor_reductionGL] using
+      O.genResidue • ((O.levelModulus 2).reductionGL k).val.map reduceToChosenModulusSq =
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing id := by
+    simpa [DescentPair.stackOverGenScalar, inclMatrix, -factor_reductionGL] using
       congrArg toRows₂ h_rows
   -- It remains that `k` reduces to `1` at each chosen place.
   refine ⟨k, funext fun i ↦ ext ?_, rfl⟩
   exact (reductionGL_map_modulusResidue ..).symm.trans
-    ((V.genResidue_smul_eq_inclMatrix_iff _ id).1 h_fix i)
+    ((O.genResidue_smul_eq_inclMatrix_iff _ id).1 h_fix i)
 
 end
 
 namespace DividedSplitting
 
 /-- The subgroup Γ of GL_r(`O.chosenModulusSq.ResidueRing`) of matrices that are 1 modulo ϖ. It is
-defined as the stabiliser of the scalar matrix `V.genResidue • 1` under multiplication. -/
-def congruenceGroup (V : DividedSplitting N m a O z) :
+defined as the stabiliser of the scalar matrix `O.genResidue • 1` under multiplication. -/
+def _root_.New.DescentPair.congruenceGroup (O : DescentPair E r n) :
     Subgroup (GL r O.chosenModulusSq.ResidueRing) :=
   MulAction.stabilizer (GL r O.chosenModulusSq.ResidueRing)
-    (V.genResidue • 1 : Matrix r r O.chosenModulusSq.ResidueRing)
+    (O.genResidue • 1 : Matrix r r O.chosenModulusSq.ResidueRing)
 
 omit [DecidableEq n] [DecidableEq N] [DecidableEq m] [Fintype a] in
-/-- An invertible matrix `A` lies in `V.congruenceGroup` exactly when
-`V.genResidue • A = V.genResidue • 1`. Here `V.genResidue` is the class of `ϖ = O.genIdele` modulo
+/-- An invertible matrix `A` lies in `O.congruenceGroup` exactly when
+`O.genResidue • A = O.genResidue • 1`. Here `O.genResidue` is the class of `ϖ = O.genIdele` modulo
 `ϖ²`, so this says that `A` is `1` modulo `ϖ`. -/
-lemma mem_congruenceGroup_iff (V : DividedSplitting N m a O z)
+lemma mem_congruenceGroup_iff
     (A : GL r O.chosenModulusSq.ResidueRing) :
-    A ∈ V.congruenceGroup ↔ V.genResidue • A.val = V.genResidue • 1 := by
-  simp [congruenceGroup, MulAction.mem_stabilizer_iff, Units.smul_def]
+    A ∈ O.congruenceGroup ↔ O.genResidue • A.val = O.genResidue • 1 := by
+  simp [DescentPair.congruenceGroup, MulAction.mem_stabilizer_iff, Units.smul_def]
 
 omit [DecidableEq N] [DecidableEq m] [Fintype a] [DecidableEq n] in
 /-- The lift of an element of the congruence group (the matrices that are `1` modulo `ϖ`) reduces to
 `1` at every chosen place. -/
-lemma reduceAt_liftMod_congruenceGroup (V : DividedSplitting N m a O z) (Y : V.congruenceGroup)
+lemma reduceAt_liftMod_congruenceGroup (Y : O.congruenceGroup)
     (i : O.ChosenIndex) :
     stdLevel.reduceAt (O.placeAt (inl i)) (liftMod Y.val) = 1 := by
   -- The equation `genResidue • Y = genResidue • 1` says that the lift of `Y` is `1` modulo each
   -- chosen place.
   have hY :
-      V.genResidue • ((O.levelModulus 2).reductionGL (liftMod Y.val)).val.map
+      O.genResidue • ((O.levelModulus 2).reductionGL (liftMod Y.val)).val.map
         reduceToChosenModulusSq =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing id := by
-    simpa [inclMatrix] using (V.mem_congruenceGroup_iff _).1 Y.property
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing id := by
+    simpa [inclMatrix] using (mem_congruenceGroup_iff _).1 Y.property
   exact ext ((reductionGL_map_modulusResidue ..).symm.trans
-    ((V.genResidue_smul_eq_inclMatrix_iff _ id).1 hY i))
+    ((O.genResidue_smul_eq_inclMatrix_iff _ id).1 hY i))
 
 /-- The two conditions on the blocks of a matrix `x`: its block on `V°` is `(1; 0)` modulo `ϖ²`, and
 its block on `V″` lies in `(1; 0) + ϖ L″_s`, where `L″_s` consists of the `u` with `s u ≡ 0` modulo
@@ -494,8 +495,8 @@ def IsBlockNormalized (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) : Prop :=
   x.submatrix (V.ε ∘ inr) id = inclMatrix O.chosenModulusSq.ResidueRing z ∧
-    V.stackOverGenScalar s * x.submatrix (V.ε ∘ inl) id =
-      V.stackOverGenScalar s * inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb
+    O.stackOverGenScalar s * x.submatrix (V.ε ∘ inl) id =
+      O.stackOverGenScalar s * inclMatrix O.chosenModulusSq.ResidueRing V.fixedEmb
 
 /-- `L` is glued for `s`. With `γ = L.point`, the congruence `γ⁻¹ x ≡ (1; 0)` modulo `ϖ`, written as
 `(ϖ γ⁻¹) x ≡ ϖ (1; 0)` modulo `ϖ²`, holds exactly when `x Y` satisfies the conditions on the two
@@ -508,31 +509,31 @@ structure IsGlued (V : DividedSplitting N m a O z)
   /-- If `γ⁻¹ x ≡ (1; 0)` modulo `ϖ`, then for exactly one `Y` that is `1` modulo `ϖ` the translate
   `x Y` satisfies the conditions on the two blocks. -/
   existsUnique (x : Matrix n r O.chosenModulusSq.ResidueRing)
-    (hx : L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl) :
-    ∃! Y : V.congruenceGroup, V.IsBlockNormalized s
+    (hx : L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl) :
+    ∃! Y : O.congruenceGroup, V.IsBlockNormalized s
       (x * ((Y : GL r O.chosenModulusSq.ResidueRing) : Matrix r r O.chosenModulusSq.ResidueRing))
   /-- Conversely, a matrix with such a translate satisfies the congruence. -/
-  mul_eq_of_isBlockNormalized (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup)
+  mul_eq_of_isBlockNormalized (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : O.congruenceGroup)
     (hY : V.IsBlockNormalized s
       (x * ((Y : GL r O.chosenModulusSq.ResidueRing) : Matrix r r O.chosenModulusSq.ResidueRing))) :
-    L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl
+    L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl
   /-- After a column operation, the columns of `ϖ γ⁻¹` in `V″` vanish modulo `ϖ` outside
   `V.dividedEmb`. -/
   exists_cols_eq_zero : ∃ K : GL N O.chosenModulusSq.ResidueRing, ∀ x : n,
     ∀ y : N, y ∉ univ.map V.dividedEmb →
-    V.genResidue * (L.reducedInverse.submatrix id (V.ε ∘ inl) * K.val) x y = 0
+    O.genResidue * (L.reducedInverse.submatrix id (V.ε ∘ inl) * K.val) x y = 0
 
 open scoped Classical in
 /-- As `L` is glued for `s` (`IsGlued`), the congruence `(ϖ γ⁻¹) x ≡ ϖ • inclMatrix _ O.incl` modulo
-`ϖ²` holds exactly when `x Y` is block normalised for some `Y` in `V.congruenceGroup`, and this `Y`
+`ϖ²` holds exactly when `x Y` is block normalised for some `Y` in `O.congruenceGroup`, and this `Y`
 is unique. So the indicator of the congruence is the sum over `Y` of the indicators that `x Y` is
 block normalised. -/
 lemma IsGlued.indicator_eq_sum {V : DividedSplitting N m a O z}
     {s : Matrix a N O.chosenModulusSq.ResidueRing} {L : DividedLattice O} (hL : V.IsGlued s L)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) (c : ℂ) :
-    (if L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then c
+    (if L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then c
       else 0) =
-      ∑ Y : V.congruenceGroup,
+      ∑ Y : O.congruenceGroup,
         if V.IsBlockNormalized s (x * ((Y : GL r O.chosenModulusSq.ResidueRing) :
           Matrix r r O.chosenModulusSq.ResidueRing))
         then c else 0 := by
@@ -556,13 +557,13 @@ def productForm (V : DividedSplitting N m a O z) (L : DividedLattice O) (h : Gf 
   classForm O (U.block V.ε h * L.point) ∘ₗ cartanProduct V.ε 1 y
 
 omit [DecidableEq n] [DecidableEq N] [DecidableEq m] [Fintype a] in
-/-- Let `ϖ` generate the product of the chosen places of `O`, with class `V.genResidue` in the
+/-- Let `ϖ` generate the product of the chosen places of `O`, with class `O.genResidue` in the
 residue ring modulo `ϖ²`. If an `r × r` matrix `Y` has `ϖ Y = 0` modulo `ϖ²`, then `1 - Y` is the
-inverse of an element of `V.congruenceGroup`, the invertible matrices modulo `ϖ²` that are `1`
+inverse of an element of `O.congruenceGroup`, the invertible matrices modulo `ϖ²` that are `1`
 modulo `ϖ`. -/
-lemma exists_congruenceGroup_inv_eq_one_sub (V : DividedSplitting N m a O z)
-    {Y : Matrix r r O.chosenModulusSq.ResidueRing} (hY : V.genResidue • Y = 0) :
-    ∃ A : V.congruenceGroup, A⁻¹.val.val = 1 - Y := by
+lemma exists_congruenceGroup_inv_eq_one_sub
+    {Y : Matrix r r O.chosenModulusSq.ResidueRing} (hY : O.genResidue • Y = 0) :
+    ∃ A : O.congruenceGroup, A⁻¹.val.val = 1 - Y := by
   -- `ϖ Y = 0` modulo `ϖ²` says that every entry of `Y` is divisible by `ϖ`. So `Y² = 0`, and
   -- `1 - Y` is a unit that fixes `ϖ • 1`.
   have h_sq : Y ^ 2 = 0 := by
@@ -577,7 +578,7 @@ lemma exists_congruenceGroup_inv_eq_one_sub (V : DividedSplitting N m a O z)
     ext i k
     simp [sq, Matrix.mul_apply, ← hX, ← map_mul, h_mul]
   obtain ⟨A, hA⟩ : IsUnit (1 - Y) := IsNilpotent.isUnit_one_sub ⟨2, h_sq⟩
-  exact ⟨⟨A, by simp [V.mem_congruenceGroup_iff, hA, hY, smul_sub]⟩⁻¹, by simp [hA]⟩
+  exact ⟨⟨A, by simp [mem_congruenceGroup_iff, hA, hY, smul_sub]⟩⁻¹, by simp [hA]⟩
 
 variable (O z) in
 /-- The matrix with the blocks `D`, `-D ι_e ι_zᵀ`, `0` and the diagonal matrix that is `ϖ` on the
@@ -590,7 +591,7 @@ def glueMatrix (e : r ↪ N) (D : Matrix N N (Ô E)) : Matrix (N ⊕ m) (N ⊕ m
 
 omit [DecidableEq n] [Fintype a] in
 /-- Let `V.ε : N ⊕ m ≃ n` split the indices, let `ϖ` generate the product of the chosen places, with
-class `V.genResidue` modulo `ϖ²`, and let `w = V.stackOverGenScalar s` be `s` stacked above `ϖ • 1`.
+class `O.genResidue` modulo `ϖ²`, and let `w = O.stackOverGenScalar s` be `s` stacked above `ϖ • 1`.
 Write `ι_e` for the inclusion matrix of `e`, whose `j`-th column is the basis vector `e j`. A matrix
 `x` modulo `ϖ²` is block normalised if its rows in `m` form `ι_z` and its rows `u` in `N` satisfy
 `w u = w ι_e`, for `e = V.fixedEmb : r ↪ N`. Let the integral matrix `D` impose the same equations
@@ -600,29 +601,29 @@ if its rows `z` in `m` form the identity matrix and `glueMatrix` takes `x` to `�
 lemma isBlockNormalized_iff (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) {D : Matrix N N (Ô E)}
     (h_rows : ∀ X Y : Matrix N r O.chosenModulusSq.ResidueRing,
-      V.stackOverGenScalar s * X = V.stackOverGenScalar s * Y ↔
+      O.stackOverGenScalar s * X = O.stackOverGenScalar s * Y ↔
         D.map O.chosenModulusSq.reduction * X = D.map O.chosenModulusSq.reduction * Y)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) :
     V.IsBlockNormalized s x ↔ x.submatrix (V.ε ∘ inr ∘ z) id = 1 ∧
       (glueMatrix O z V.fixedEmb D).map O.chosenModulusSq.reduction * x.submatrix V.ε id =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
   -- Read the last equation by blocks: the rows of `V″` give the condition with `D`, and the rows
   -- of `V°` say that the block on `V°` is the inclusion of `z`.
   let X : Matrix N r O.chosenModulusSq.ResidueRing := x.submatrix (V.ε ∘ inl) id
   let X' : Matrix m r O.chosenModulusSq.ResidueRing := x.submatrix (V.ε ∘ inr) id
   let D' : Matrix N N O.chosenModulusSq.ResidueRing := D.map O.chosenModulusSq.reduction
   let Δ : Matrix m m O.chosenModulusSq.ResidueRing :=
-    .diagonal fun i ↦ if i ∈ range z then V.genResidue else 1
+    .diagonal fun i ↦ if i ∈ range z then O.genResidue else 1
   have h_split :
       (glueMatrix O z V.fixedEmb D).map O.chosenModulusSq.reduction * x.submatrix V.ε id =
-          V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) ↔
+          O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) ↔
         D' * X = D'.submatrix id V.fixedEmb * X'.submatrix z id ∧
-          Δ * X' = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing z := by
+          Δ * X' = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing z := by
     simp [glueMatrix, D', X, X', Δ, inclMatrix, apply_ite O.chosenModulusSq.reduction,
       diagonal_apply, sum_mul, sum_comm (γ := m), add_neg_eq_zero,
       ← ext_iff, Matrix.mul_apply, Matrix.one_apply]
   have h_diag_mul_eq_iff (h_top : X'.submatrix z id = 1) :
-      Δ * X' = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing z ↔
+      Δ * X' = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing z ↔
         X' = inclMatrix O.chosenModulusSq.ResidueRing z := by
     simp only [← ext_iff, Δ, X', diagonal_mul, inclMatrix, Matrix.smul_apply, submatrix_apply,
       id_eq, Function.comp_apply, _root_.smul_eq_mul, mul_ite, mul_one, mul_zero,
@@ -638,7 +639,7 @@ lemma isBlockNormalized_iff (V : DividedSplitting N m a O z)
     exact ⟨(h_diag_mul_eq_iff h_top).1 h_m, by rwa [h_top, Matrix.mul_one] at h_N⟩
 
 omit [Fintype a] in
-/-- Let `ϖ` generate the product of the chosen places, with class `V.genResidue` modulo `ϖ²`, and
+/-- Let `ϖ` generate the product of the chosen places, with class `O.genResidue` modulo `ϖ²`, and
 let `L.reducedInverse` be `ϖ γ⁻¹` modulo `ϖ²` for the point `γ` of the lattice `L`. Suppose that it
 is the reduction of an integral matrix `G` whose rows are ordered by `ε'` and whose columns are
 ordered by the splitting `V.ε : N ⊕ m ≃ n`, where `ε'` takes the indices `z : r ↪ m` to the indices
@@ -649,9 +650,9 @@ lemma reducedInverse_mul_eq_iff (V : DividedSplitting N m a O z) {L : DividedLat
     (hε' : ∀ i : r, ε' (inr (z i)) = O.incl i)
     (hL : L.reducedInverse = (reindex ε' V.ε G).map O.chosenModulusSq.reduction)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) :
-    L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl ↔
+    L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl ↔
       G.map O.chosenModulusSq.reduction * x.submatrix V.ε id =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
   rw [hL, ← (reindex ε'.symm (.refl r)).injective.eq_iff]
   have h_reindex_mul :
       reindex ε'.symm (.refl r) ((reindex ε' V.ε G).map O.chosenModulusSq.reduction * x) =
@@ -659,8 +660,8 @@ lemma reducedInverse_mul_eq_iff (V : DividedSplitting N m a O z) {L : DividedLat
     ext i j
     simp [Matrix.mul_apply, ← V.ε.sum_comp]
   have h_reindex_incl : reindex ε'.symm (.refl r)
-      (V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl) =
-        V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
+      (O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl) =
+        O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
     ext i j
     simp [inclMatrix, ← hε', Matrix.one_apply]
   rw [h_reindex_mul, h_reindex_incl]
@@ -668,18 +669,18 @@ lemma reducedInverse_mul_eq_iff (V : DividedSplitting N m a O z) {L : DividedLat
 omit [DecidableEq n] [DecidableEq N] [DecidableEq m] [Fintype a] in
 /-- Right multiplication by an element of the congruence group, whose elements fix `ϖ • 1`, does not
 change whether a matrix equals `ϖ B` modulo `ϖ²`. -/
-lemma mul_congruenceGroup_eq_smul_iff (V : DividedSplitting N m a O z)
-    (A B : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup) :
-    A * Y.val.val = V.genResidue • B ↔ A = V.genResidue • B := by
-  have hY : V.genResidue • Y.val.val = V.genResidue • 1 := (V.mem_congruenceGroup_iff _).1 Y.2
-  have h_fix : V.genResidue • B * Y.val.val = V.genResidue • B := by
+lemma mul_congruenceGroup_eq_smul_iff
+    (A B : Matrix n r O.chosenModulusSq.ResidueRing) (Y : O.congruenceGroup) :
+    A * Y.val.val = O.genResidue • B ↔ A = O.genResidue • B := by
+  have hY : O.genResidue • Y.val.val = O.genResidue • 1 := (mem_congruenceGroup_iff _).1 Y.2
+  have h_fix : O.genResidue • B * Y.val.val = O.genResidue • B := by
     rw [smul_mul, ← Matrix.mul_smul, hY, Matrix.mul_smul, Matrix.mul_one]
   nth_rw 1 [← h_fix]
   exact Matrix.mul_left_inj_of_invertible (m := n) Y.val.val
 
 omit [Fintype a] in
 /-- Let `V.ε : N ⊕ m ≃ n` split the indices, let `ϖ` generate the product of the chosen places, and
-let the integral matrix `D` impose modulo `ϖ²` the same equations as `w = V.stackOverGenScalar s`,
+let the integral matrix `D` impose modulo `ϖ²` the same equations as `w = O.stackOverGenScalar s`,
 which is `s` stacked above `ϖ • 1`. Write `ι_e` for the inclusion matrix of `e`. Suppose that
 `L.reducedInverse`, the matrix `ϖ γ⁻¹` modulo `ϖ²` for the point `γ` of `L`, is `glueMatrix`, with
 rows ordered by an `ε'` taking `z` to `O.incl`. Let `Y` be invertible and `1` modulo `ϖ`. Then `x Y`
@@ -691,31 +692,31 @@ lemma isBlockNormalized_mul_iff (V : DividedSplitting N m a O z)
     (hL : L.reducedInverse =
       (reindex ε' V.ε (glueMatrix O z V.fixedEmb D)).map O.chosenModulusSq.reduction)
     (h_rows : ∀ X Y : Matrix N r O.chosenModulusSq.ResidueRing,
-      V.stackOverGenScalar s * X = V.stackOverGenScalar s * Y ↔
+      O.stackOverGenScalar s * X = O.stackOverGenScalar s * Y ↔
         D.map O.chosenModulusSq.reduction * X = D.map O.chosenModulusSq.reduction * Y)
-    (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup) :
+    (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : O.congruenceGroup) :
     V.IsBlockNormalized s (x * Y.val.val) ↔
       x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ∧
-        L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl := by
+        L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl := by
   -- The rows `z` of `x` form `Y⁻¹` exactly when those of `x Y` form `1`, and right multiplication
   -- by `Y` does not change the congruence.
   have h_top : x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ↔
       (x * Y.val.val).submatrix (V.ε ∘ inr ∘ z) id = 1 := Y.val.mul_eq_one_iff_eq_inv.symm
   rw [h_top, V.isBlockNormalized_iff s h_rows, ← V.reducedInverse_mul_eq_iff hε' hL,
-    ← Matrix.mul_assoc, V.mul_congruenceGroup_eq_smul_iff]
+    ← Matrix.mul_assoc, mul_congruenceGroup_eq_smul_iff]
 
 omit [DecidableEq n] [DecidableEq m] in
 /-- Let `ϖ = O.genIntAdele` be the integral finite adele (element of `Ô E`) that generates the
 product of the chosen places of `O`, and let `s` be an `a × N` matrix over the residue ring modulo
 `ϖ²`. There are integral `N × N` matrices `B` and `D` with `B D = ϖ • 1` such that, modulo `ϖ²`,
-each of `D` and `V.stackOverGenScalar s` is a left multiple of the other. -/
-lemma exists_divisor_assoc_stackOverGenScalar (V : DividedSplitting N m a O z)
+each of `D` and `O.stackOverGenScalar s` is a left multiple of the other. -/
+lemma exists_divisor_assoc_stackOverGenScalar
     (s : Matrix a N O.chosenModulusSq.ResidueRing) :
     ∃ (B D : Matrix N N (Ô E)) (P : Matrix (a ⊕ N) N O.chosenModulusSq.ResidueRing)
       (Q : Matrix N (a ⊕ N) O.chosenModulusSq.ResidueRing),
       B * D = O.genIntAdele • 1 ∧
-      V.stackOverGenScalar s = P * D.map O.chosenModulusSq.reduction ∧
-      D.map O.chosenModulusSq.reduction = Q * V.stackOverGenScalar s := by
+      O.stackOverGenScalar s = P * D.map O.chosenModulusSq.reduction ∧
+      D.map O.chosenModulusSq.reduction = Q * O.stackOverGenScalar s := by
   classical
   -- Lift `s` to a matrix `t` over `Ô E`, take a Hermite form of `t` stacked over `ϖ`, and reduce.
   obtain ⟨t, rfl⟩ : ∃ t : Matrix a N (Ô E), t.map O.chosenModulusSq.reduction = s := by
@@ -723,10 +724,10 @@ lemma exists_divisor_assoc_stackOverGenScalar (V : DividedSplitting N m a O z)
     exact ⟨of t, ext ht⟩
   obtain ⟨U, -, D, -, hP, hQ⟩ :=
     isValuationPair_Ô.top.hermite .inr (fromRows t (O.genIntAdele • 1 : Matrix N N (Ô E)))
-  -- Reduction takes `t` stacked over `ϖ` to the matrix `V.stackOverGenScalar s`.
+  -- Reduction takes `t` stacked over `ϖ` to the matrix `O.stackOverGenScalar s`.
   have h_stack : (fromRows t (O.genIntAdele • 1 : Matrix N N (Ô E))).map
-      O.chosenModulusSq.reduction = V.stackOverGenScalar (t.map O.chosenModulusSq.reduction) := by
-    simp [stackOverGenScalar, map_smul', fromRows_map]
+      O.chosenModulusSq.reduction = O.stackOverGenScalar (t.map O.chosenModulusSq.reduction) := by
+    simp [DescentPair.stackOverGenScalar, map_smul', fromRows_map]
   refine ⟨U.val.toBlocks₂₂, D, (U.val.submatrix id inr).map O.chosenModulusSq.reduction,
     (U⁻¹.val.submatrix inr id).map O.chosenModulusSq.reduction, (congrArg toRows₂ hP).symm, ?_, ?_⟩
   · rw [← h_stack, ← Matrix.map_mul]
@@ -735,20 +736,20 @@ lemma exists_divisor_assoc_stackOverGenScalar (V : DividedSplitting N m a O z)
     exact (congrArg (fun X ↦ X.map O.chosenModulusSq.reduction) hQ).symm
 
 omit [DecidableEq n] [DecidableEq m] in
-/-- There is an invertible `K` such that the columns of `V.stackOverGenScalar s * K` outside
-`V.dividedEmb` vanish modulo `ϖ`, that is, are killed by `V.genResidue` modulo `ϖ²`. -/
+/-- There is an invertible `K` such that the columns of `O.stackOverGenScalar s * K` outside
+`V.dividedEmb` vanish modulo `ϖ`, that is, are killed by `O.genResidue` modulo `ϖ²`. -/
 lemma exists_genResidue_mul_stackOverGenScalar_eq_zero (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) :
     ∃ K : GL N O.chosenModulusSq.ResidueRing, ∀ i : a ⊕ N, ∀ y ∉ range V.dividedEmb,
-      V.genResidue * (V.stackOverGenScalar s * K.val) i y = 0 := by
+      O.genResidue * (O.stackOverGenScalar s * K.val) i y = 0 := by
   -- `K` clears the columns of `s` outside `V.dividedEmb`, and `ϖ` kills the rows `ϖ K`.
   obtain ⟨K, -, hK⟩ := (isValuationPair_residueRing _).exists_mul_clear_cols s V.dividedEmb
-  have h_sq : V.genResidue * V.genResidue = 0 := by
+  have h_sq : O.genResidue * O.genResidue = 0 := by
     simp [← map_mul, reduction_levelModulus_eq_zero_iff, sq, mul_assoc]
   refine ⟨K, fun i y hy ↦ ?_⟩
   cases i with
-  | inl i => simp [stackOverGenScalar, hK i y hy]
-  | inr i => simp [stackOverGenScalar, ← mul_assoc, h_sq]
+  | inl i => simp [DescentPair.stackOverGenScalar, hK i y hy]
+  | inr i => simp [DescentPair.stackOverGenScalar, ← mul_assoc, h_sq]
 
 omit [DecidableEq n] [Fintype a] in
 /-- Let `ϖ = O.genIntAdele` be the integral finite adele that generates the product of the chosen
@@ -794,12 +795,12 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) :
     ∃ L : DividedLattice O, V.IsGlued s L := by
   classical
-  -- Take a Hermite form `D` of `V.stackOverGenScalar s`. At the chosen places `ϖ γ⁻¹` will be
+  -- Take a Hermite form `D` of `O.stackOverGenScalar s`. At the chosen places `ϖ γ⁻¹` will be
   -- `glueMatrix` for `D`, up to the order of the rows, and `γ` the matrix `C` below, up to the
   -- order of the columns.
-  obtain ⟨B, D, P, Q, hBD, hP, hQ⟩ := V.exists_divisor_assoc_stackOverGenScalar s
+  obtain ⟨B, D, P, Q, hBD, hP, hQ⟩ := exists_divisor_assoc_stackOverGenScalar s
   have h_rows (X Y : Matrix N r O.chosenModulusSq.ResidueRing) :
-      V.stackOverGenScalar s * X = V.stackOverGenScalar s * Y ↔
+      O.stackOverGenScalar s * X = O.stackOverGenScalar s * Y ↔
         D.map O.chosenModulusSq.reduction * X = D.map O.chosenModulusSq.reduction * Y :=
     ⟨fun h ↦ by rw [hQ, Matrix.mul_assoc, h, Matrix.mul_assoc],
       fun h ↦ by rw [hP, Matrix.mul_assoc, h, Matrix.mul_assoc]⟩
@@ -815,10 +816,10 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
       L.reducedInverse = (reindex ε' V.ε G).map O.chosenModulusSq.reduction :=
     DividedLattice.exists_reducedInverse_eq (reindex V.ε ε' C) _ (by simp [hCG, submatrix_smul])
   have h_blockNormalised_iff (x : Matrix n r O.chosenModulusSq.ResidueRing)
-      (Y : V.congruenceGroup) :
+      (Y : O.congruenceGroup) :
       V.IsBlockNormalized s (x * Y.val.val) ↔
         x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ∧
-          L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl :=
+          L.reducedInverse * x = O.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl :=
     V.isBlockNormalized_mul_iff s hε' hL h_rows x Y
   refine ⟨L,
     { existsUnique := fun x hx ↦ ?_
@@ -826,14 +827,14 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
       exists_cols_eq_zero := ?_ }⟩
   · -- The rows `z` show that the top block of `x` on `V°` is `1` modulo `ϖ`; `Y` is its inverse,
     -- and this determines it.
-    have h_one : V.genResidue • (1 - x.submatrix (V.ε ∘ inr ∘ z) id) = 0 := by
+    have h_one : O.genResidue • (1 - x.submatrix (V.ε ∘ inr ∘ z) id) = 0 := by
       ext i j
       simpa [G, glueMatrix, apply_ite, Matrix.mul_apply, inclMatrix, diagonal_apply, mul_sub,
         Matrix.one_apply, sub_eq_zero] using
         congrFun₂ ((V.reducedInverse_mul_eq_iff hε' hL x).1 hx).symm (inr (z i)) j
-    obtain ⟨Y, hY⟩ : ∃ Y : V.congruenceGroup,
+    obtain ⟨Y, hY⟩ : ∃ Y : O.congruenceGroup,
         Y⁻¹.val.val = x.submatrix (V.ε ∘ inr ∘ z) id := by
-      simpa only [sub_sub_cancel] using V.exists_congruenceGroup_inv_eq_one_sub h_one
+      simpa only [sub_sub_cancel] using exists_congruenceGroup_inv_eq_one_sub h_one
     refine ⟨Y, (h_blockNormalised_iff x Y).2 ⟨hY.symm, hx⟩,
       fun Y' hY' ↦ inv_injective (Subtype.ext (Units.ext ?_))⟩
     rw [hY, ((h_blockNormalised_iff x Y').1 hY').1]
@@ -841,9 +842,9 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
     -- rows.
     obtain ⟨K, hK⟩ := V.exists_genResidue_mul_stackOverGenScalar_eq_zero s
     have h_cols (x y : N) (hy : y ∉ range V.dividedEmb) :
-        V.genResidue * (D.map O.chosenModulusSq.reduction * K.val) x y = 0 := by
+        O.genResidue * (D.map O.chosenModulusSq.reduction * K.val) x y = 0 := by
       rw [hQ, Matrix.mul_assoc, Matrix.mul_apply]
-      simp [mul_add, mul_sum, mul_left_comm V.genResidue, hK _ y hy]
+      simp [mul_add, mul_sum, mul_left_comm O.genResidue, hK _ y hy]
     refine ⟨K, ?_⟩
     simpa [hL, G, glueMatrix, ← submatrix_map, ε'.surjective.forall, Matrix.mul_apply, -map_apply,
       fromBlocks_map] using h_cols
