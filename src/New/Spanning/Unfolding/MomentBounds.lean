@@ -306,10 +306,9 @@ lemma secondMoment_fixer_isOpenElement_le [S.IsAdmissible] [WeilData E]
       rw [div_eq_mul_inv]
       nlinarith
 
-/-- Let the filling `S` be admissible (`IsAdmissible`). For `l < n = ϱ + 1` we have
-`p₀ ^ (l + r / 2) ≤ b ^ (6 k)`. Here `p₀ = levelPrime 0`, `b = S.b`, `k = |κ|`, and `r` is the rank
-of the space, that is, the number of indices in `𝔰.BesselIndex`. -/
-lemma levelPrime_pow_mul_sqrt_le [S.IsAdmissible] (l : Fin 𝔰.n) :
+/-- For `l < n = ϱ + 1` we have `p₀ ^ (l + r / 2) ≤ b ^ (6 k)`. Here `p₀ = levelPrime 0`,
+`b = S.b`, `k = |κ|`, and `r` is the rank of the space, the number of indices in `𝔰.BesselIndex`. -/
+lemma levelPrime_pow_mul_sqrt_le (l : Fin 𝔰.n) :
     (S.levelPrime 0 : ℝ) ^ l.val * √(S.levelPrime 0 ^ card 𝔰.BesselIndex) ≤ S.b ^ (6 * 𝔰.k) := by
   -- Square, and use `p₀ ≤ b¹¹`, `r = k + 2 n - 1` and `2000 n ≤ k`.
   have hb : 1 ≤ S.b := S.one_le_b
