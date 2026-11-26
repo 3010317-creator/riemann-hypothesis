@@ -74,7 +74,7 @@ def spanStabilizer (J X : Matrix n n E) : Subgroup (U J) where
     rintro γ ⟨r, hr⟩
     -- The inverse of `γ` is a polynomial in `γ`.
     obtain ⟨p, q, hpq⟩ : IsCoprime (γ : Matrix n n E).charpoly Polynomial.X :=
-      isUnit_aeval_iff_isCoprime.1 (by simpa only [aeval_X] using γ.1.isUnit)
+      isUnit_aeval_iff_isCoprime.1 (by simpa only [aeval_X] using γ.val.isUnit)
     have h_inv : aeval (γ : Matrix n n E) q * (γ : Matrix n n E) = 1 := by
       simpa [aeval_self_charpoly] using congrArg (aeval (γ : Matrix n n E)) hpq
     exact ⟨aeval r q,
