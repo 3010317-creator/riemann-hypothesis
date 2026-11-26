@@ -528,13 +528,9 @@ private lemma exists_isTransferLevel [hμ : IsStep (E := E) E' μ]
   have X_eq_Kw (w : FinPlace E) : w ∈ X → ∀ u ∈ placesAbove E' {w}, m u = localIntGL n u :=
     fun ⟨_hw_off, hw_max, _hw_split, _hw_matched⟩ ↦ hw_max
   let N : Subgroup (Gf E' n) := localLevel n (placesAbove E' Z)ᶜ m
-  obtain ⟨Y, idem_XY, on_X_le, XY_eq, idem_sum, N_eq⟩ : ∃ Y : Set (FinPlace E),
-      idem (placesAbove E' X) * idem (placesAbove E' Y) = 0 ∧
-      supportedOn n (placesAbove E' X) ≤ localLevel n (placesAbove E' Y) m ∧
-      placesAbove E' (X ∪ Y) = (placesAbove E' Z)ᶜ ∧
-      idem (placesAbove E' X) + idem (placesAbove E' Y) = 1 - idem (placesAbove E' Z) ∧
-      N = localLevel n (placesAbove E' X) ⊓ localLevel n (placesAbove E' Y) m :=
+  obtain ⟨Y, idem_XY, on_X_le, XY_eq, idem_sum, h_level_eq⟩ :=
     exists_remaining_places (fun w hw ↦ not_or.mp (X_notMem w hw)) fun x ↦ X_eq_Kw x x.property
+  have N_eq : N = _ := h_level_eq
   have N_level : IsMatchingLevel σ μ (X ∪ Y) N := by
     simpa [N, ← XY_eq] using hm.isMatchingLevel (X ∪ Y)
   have N_coh : CocyclesSplit (finrank E E') (idem (placesAbove E' Z)ᶜ) N (galoisGf σ) := by
