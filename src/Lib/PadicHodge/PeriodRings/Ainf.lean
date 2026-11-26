@@ -334,10 +334,6 @@ composing with the right inclusion of `Gp p` into `FrobGal`. -/
 instance (priority := 100) FrobGal.galAct : MulSemiringAction (Gp p) A :=
   compHom (M := FrobGal) _ (.inr ..)
 
-@[instance 100]
-lemma FrobGal.smulCommClass_gal [SMulCommClass FrobGal N A] : SMulCommClass (Gp p) N A :=
-  SMul.comp.smulCommClass _
-
 /-- The pair (n, g) of `FrobGal` acts on `A` as g followed by the n-th iterate of the Frobenius
 φ. -/
 @[local simp]
