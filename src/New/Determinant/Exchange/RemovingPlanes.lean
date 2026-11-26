@@ -64,7 +64,21 @@ attribute [mk_iff] IsForm Space.IsAutomorphic
 is a scalar multiple of that of `W`. -/
 lemma neg_mem_neg_Gamma_iff [WeilData E]
     (W : Space E n s) (g : G E s) : G.neg g ∈ W.neg.Γ ↔ g ∈ W.Γ := by
-  simp [Space.neg, Space.mem_Gamma_iff_range]
+  rw [Space.mem_Gamma_iff_range, Space.mem_Gamma_iff_range]
+  have h_val : W.neg.x.val = (normNegOneIdele E : 𝔸 E) • W.x.val := rfl
+  have h_inv : W.neg.x⁻¹.val = (normNegOneIdele E)⁻¹.val • W.x⁻¹.val := by
+    calc W.neg.x⁻¹.val = W.neg.x⁻¹.val * 1 := (Matrix.mul_one _).symm
+      _ = W.neg.x⁻¹.val * (W.neg.x.val * ((normNegOneIdele E)⁻¹.val • W.x⁻¹.val)) := by
+        rw [h_val, Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_smul, Matrix.mul_smul, smul_smul,
+          Units.mul_inv, one_smul, Units.mul_inv]
+      _ = (normNegOneIdele E)⁻¹.val • W.x⁻¹.val := by
+        rw [← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
+  have h_eq : W.neg.x.val * (G.neg g).adeleMatrix * W.neg.x⁻¹.val =
+      W.x.val * g.adeleMatrix * W.x⁻¹.val := by
+    rw [h_val, h_inv, Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, smul_smul,
+      Units.inv_mul, one_smul]
+    rfl
+  rw [h_eq]
 
 /-- Let `W` and `S` be Hermitian spaces with opposite signs `s`, `-s`, and let `G.neg` carry the
 rational points `W.Γ` onto `S.Γ`. Let `typeKernel l s` be the product over the infinite places `w`
@@ -89,11 +103,11 @@ lemma isForm_neg_iff_and_integral_neg (W : Space E n s) (S : Space E n (-s))
   -- Both claims hold by definition once the subgroup and its measure are identified. To see this,
   -- unfold the notions that mention `s` until it enters only through these two and the relation
   -- `s i = s j`, which is the same for `-s`. Some occurrences are in types, so `delta` is used.
-  simp_rw [isForm_iff, isAutomorphic_iff, quotMeasure]
+  simp only [isForm_iff, isAutomorphic_iff, quotMeasure]
   generalize W.Γ = Γ' at *
   delta HasLevel realConv typeKernel dsKernel formalDegree dsCoeff blockDiagPart flenstedJensen
     kTypeNormSq lowestKType haarK maxCompactU G.neg USign G GInf measureSpaceU at *
-  simp_rw [Pi.neg_apply, neg_inj]
+  simp only [Pi.neg_apply, neg_inj]
   -- The group occurs in types, so it is made a variable `H` (with the instance proofs about it)
   -- before it is replaced by the group for `-s`; then `G.neg` is the identity.
   generalize_proofs at *
@@ -117,13 +131,15 @@ lemma mem_ratVectors_hom_move {W W₁ : Space E n s} {V V₁ : Space E a t}
     mem_ratVectors_hom.1 hy
   -- The rational matrix `x` goes to `c' x c⁻¹`.
   refine mem_ratVectors_hom.2 ⟨c'.val * x * c⁻¹.val, ?_⟩
-  calc (c'.val * x * c⁻¹.val).map toAdele
-    _ = (c'.map toAdele).val * x.map toAdele * (c.map toAdele)⁻¹.val := by
-      rw [Matrix.map_mul, Matrix.map_mul, ← map_inv]
-      rfl
-    _ = (V₁.move k').x.val * vecToMatrix y * (W₁.move k).x⁻¹.val := by
-      simp only [hx, hk, hk', move, _root_.mul_inv_rev, inv_inv, Units.val_mul, Matrix.mul_assoc,
-        ← (c'.map toAdele).val.mul_assoc, Units.mul_inv, Matrix.mul_one, Matrix.one_mul]
+  change (c'.val * x * c⁻¹.val).map toAdele = _
+  rw [Matrix.map_mul, Matrix.map_mul]
+  change (c'.map toAdele).val * x.map toAdele * (c⁻¹.map toAdele).val = _
+  rw [map_inv, hx, hk, hk']
+  dsimp only [move]
+  rw [mul_assoc (c'.map toAdele)⁻¹, mul_assoc (c.map toAdele)⁻¹, _root_.mul_inv_rev, inv_inv,
+    ← Matrix.mul_assoc (c'.map toAdele).val, ← Matrix.mul_assoc (c'.map toAdele).val,
+    ← Units.val_mul, mul_inv_cancel_left, Matrix.mul_assoc (_ * vecToMatrix y), ← Units.val_mul,
+    mul_assoc, mul_inv_cancel, mul_one]
 
 variable [WeilData E]
 
@@ -150,8 +166,10 @@ lemma exists_circle_thetaIntegral_localDatum_eq_mul (W W₁ : Space E n s) (V V�
   -- A space enters `θ` only through its rational vectors.
   have θ_eq (f : 𝒮 ((W₁.move k).hom (V₁.move k'))) :
       (W.hom V).θ f = ((W₁.move k).hom (V₁.move k')).θ f := by
-    simpa using theta_eq_theta_omega (g := 1)
-      (fun y hy ↦ by simpa using mem_ratVectors_hom_move hk hk' hy) f
+    have h1 := theta_eq_theta_omega (g := (1 : G E _))
+      (fun y hy ↦ by rw [one_smul]; exact mem_ratVectors_hom_move hk hk' hy) f
+    rw [map_one] at h1
+    exact h1
   let u : Circle := β.val k.det / α.val k'.det
   refine ⟨u, fun v Φ g ↦ ?_⟩
   let kernel₁ (h : G E t) : ℂ := pairTheta W₁ V₁ α β (localDatum W₁ V₁ v Φ hπ) (k * g, h)
@@ -168,13 +186,28 @@ lemma exists_circle_thetaIntegral_localDatum_eq_mul (W W₁ : Space E n s) (V V�
       _ = u * kernel₁ (k' * h) := by rw [pairTheta_move, Circle.coe_div, div_eq_mul_inv]
   -- Translation by `k'` identifies the quotients by `V.Γ` and by `V₁.Γ = k' V.Γ k'⁻¹`.
   have Γ_conj (γ : G E t) : γ ∈ V.Γ ↔ MulAut.conj k' γ ∈ V₁.Γ := by
-    simp [Γ, reindex_equiv (U.conj _ hc'), emb_conj]
+    change (∃ x : U V.J, V.ratEmbed x = γ) ↔ ∃ y : U V₁.J, V₁.ratEmbed y = k' * γ * k'⁻¹
+    constructor
+    · rintro ⟨x, rfl⟩
+      exact ⟨U.conj c' hc' x, emb_conj x⟩
+    · rintro ⟨y, hy⟩
+      refine ⟨(U.conj c' hc').symm y, ?_⟩
+      have h1 : k' * V.ratEmbed ((U.conj c' hc').symm y) * k'⁻¹ = k' * γ * k'⁻¹ :=
+        (emb_conj _).symm.trans ((congrArg V₁.ratEmbed (MulEquiv.apply_symm_apply _ y)).trans hy)
+      exact mul_left_cancel (mul_right_cancel h1)
   have kernel₁_inv (γ : V₁.Γ) (h : G E t) : kernel₁ (γ • h) = kernel₁ h :=
     (pairThetaKer W₁ V₁ α β).swap.theta_rat_mul γ γ.property h
+  have h_equiv (γ : V.Γ) (h : G E t) :
+      k' * (γ • h) = ((MulAut.conj k').subtypeEquiv Γ_conj γ : V₁.Γ) • (k' * h) := by
+    change k' * ((γ : G E t) * h) = (k' * (γ : G E t) * k'⁻¹) * (k' * h)
+    rw [mul_assoc (k' * (γ : G E t)), inv_mul_cancel_left, mul_assoc]
+  have h_meas : Measurable kernel₁ :=
+    ((continuous_pairTheta (S := W₁) (T := V₁) (a := α) (b := β)).comp
+      (continuous_const.prodMk (continuous_const.prodMk continuous_id))).measurable
   have same_distrib : ProbabilityTheory.IdentDistrib (fun h : G E t ↦ kernel₁ (k' * h)) kernel₁
       V.quotMeasure V₁.quotMeasure :=
     identDistrib_orbitMeasure_comp (measurePreserving_count ((MulAut.conj k').subtypeEquiv Γ_conj))
-      (measurePreserving_mul_left _ k') (by simp [Subgroup.smul_def, mul_assoc]) kernel₁_inv
+      (measurePreserving_mul_left _ k') h_equiv kernel₁_inv h_meas
   calc thetaIntegral W V α β (localDatum W V v Φ hπ) g
     _ = ∫ h, u * kernel₁ (k' * h) ∂V.quotMeasure := congrArg _ (funext kernel_eq)
     _ = u * thetaIntegral W₁ V₁ α β (localDatum W₁ V₁ v Φ hπ) (k * g) := by
@@ -260,12 +293,65 @@ lemma exists_isBaseAdapted (t : r → ℤˣ) (h_rank : card r = card n + 2 * car
     exists_equiv_comp_eq_of_negCount_eq (by simpa +arith)
       (by simpa only [negCount_sumElim_hyperbolicSigns] using h_neg)
   let W' : Space E r t := (hyperbolicSum p W).reindex ε.symm hε
-  let A : W'.Splitting W p := splittingOfGram (submatrix 1 ε id) (by simp [W']) h_rank
+  have h_gram :
+      (submatrix (1 : Matrix ((p ⊕ p) ⊕ n) ((p ⊕ p) ⊕ n) E) ε id)ᴴ * W'.J *
+        submatrix (1 : Matrix ((p ⊕ p) ⊕ n) ((p ⊕ p) ⊕ n) E) ε id = (hyperbolicSum p W).J := by
+    refine Matrix.ext fun i j ↦ ?_
+    rw [Matrix.mul_apply, ← ε.symm.sum_comp]
+    simp only [W', Space.reindex, reindex_apply, Matrix.mul_apply, conjTranspose_apply,
+      submatrix_apply, id_eq, Matrix.one_apply, Equiv.symm_symm, Equiv.apply_symm_apply,
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
+    rw [← ε.symm.sum_comp]
+    simp only [Equiv.apply_symm_apply, apply_ite star, star_one, star_zero, ite_mul, one_mul,
+      zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
+  let A : W'.Splitting W p := splittingOfGram (submatrix 1 ε id) h_gram h_rank
   -- The frame of `A` is that of `removePlanes` with the rows permuted.
-  refine ⟨W', A,
-    ⟨.of_eq_submatrix_mul .one ε.symm (IsBaseAdapted.isOrthoIntegral (D := removePlanes p W)) ?_⟩⟩
-  simp [W', A, ← ext_iff, Matrix.mul_apply, lAdelic, kAdelic, iAdelic, Space.ratMap, removePlanes,
-    splittingOfGram, Space.reindex, val_reindexGL_apply, reindex_equiv ε.symm, Matrix.one_apply]
+  refine ⟨W', A, ⟨.of_eq_submatrix_mul_of_injective .one ε.symm ε.symm.injective
+    (IsBaseAdapted.isOrthoIntegral (D := removePlanes p W)) ?_⟩⟩
+  have h_mul {q : Type} (M : Matrix ((p ⊕ p) ⊕ n) q (𝔸 E)) :
+      W'.x⁻¹.val * M.submatrix ε id = ((hyperbolicSum p W).x⁻¹.val * M).submatrix ε id := by
+    refine Matrix.ext fun i j ↦ ?_
+    rw [Matrix.mul_apply, submatrix_apply, id_eq, Matrix.mul_apply, ← ε.sum_comp]
+    refine Finset.sum_congr rfl fun k _ ↦ ?_
+    change (reindexGL ε.symm (hyperbolicSum p W).x)⁻¹.val i k * M (ε k) j = _
+    rw [← map_inv, val_reindexGL_apply, Equiv.symm_symm, submatrix_apply]
+  have h_left (N : Matrix ((p ⊕ p) ⊕ n) ((p ⊕ p) ⊕ n) (𝔸 E)) :
+      (1 : Matrix r r (𝔸 E)).submatrix id ε.symm * N = N.submatrix ε id := by
+    refine Matrix.ext fun i j ↦ ?_
+    rw [Matrix.mul_apply, submatrix_apply, id_eq, ← ε.sum_comp]
+    simp only [submatrix_apply, id_eq, Equiv.symm_apply_apply, Matrix.one_apply, ite_mul,
+      one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
+  have hl : A.l = (removePlanes p W).l.submatrix ε id := by
+    refine Matrix.ext fun i j ↦ ?_
+    dsimp only [A, splittingOfGram, removePlanes, submatrix_apply, toCols₁_apply, toCols₂_apply]
+    rcases ε i with (a | a) | a <;>
+      simp only [fromRows_apply_inl, fromRows_apply_inr, Matrix.one_apply, Matrix.zero_apply,
+        id_eq, Sum.inl.injEq, reduceCtorEq, ↓reduceIte]
+  have hk : A.k = (removePlanes p W).k.submatrix ε id := by
+    refine Matrix.ext fun i j ↦ ?_
+    dsimp only [A, splittingOfGram, removePlanes, submatrix_apply, toCols₁_apply, toCols₂_apply]
+    rcases ε i with (a | a) | a <;>
+      simp only [fromRows_apply_inl, fromRows_apply_inr, Matrix.one_apply, Matrix.zero_apply,
+        id_eq, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, ↓reduceIte]
+  have hi : A.i = (removePlanes p W).i.submatrix ε id := by
+    refine Matrix.ext fun i j ↦ ?_
+    dsimp only [A, splittingOfGram, removePlanes, submatrix_apply, toCols₂_apply]
+    rcases ε i with (a | a) | a <;>
+      simp only [fromRows_apply_inl, fromRows_apply_inr, Matrix.one_apply, Matrix.zero_apply,
+        id_eq, Sum.inr.injEq, reduceCtorEq, ↓reduceIte]
+  have hlA : A.lAdelic = (removePlanes p W).lAdelic.submatrix ε id := by
+    rw [lAdelic, lAdelic, hl, ← submatrix_map, h_mul]
+  have hkA : A.kAdelic = (removePlanes p W).kAdelic.submatrix ε id := by
+    rw [kAdelic, kAdelic, hk, ← submatrix_map, h_mul]
+  have hiA : A.iAdelic = (removePlanes p W).iAdelic.submatrix ε id := by
+    rw [iAdelic, iAdelic, Space.ratMap, Space.ratMap, hi, ← submatrix_map, h_mul]
+    refine Matrix.ext fun i j ↦ ?_
+    rw [Matrix.mul_apply, submatrix_apply, id_eq, Matrix.mul_apply]
+    rfl
+  rw [h_left]
+  refine Matrix.ext fun i j ↦ ?_
+  rcases j with (j | j) | j <;>
+    simp only [submatrix_apply, id_eq, fromCols_apply_inl, fromCols_apply_inr, hlA, hkA, hiA]
 
 /-- Let `A`, `B` be adapted splittings of `W'` over `W`, and suppose that (`hBA`) the isotropic
 frame `B.k` consists of the columns `e` of `A.k` and the inclusions `B.i`, `A.i` of `W` are equal.
@@ -387,8 +473,19 @@ lemma theta_zeroTerm_stdColDatum_eq_zero (U : Space E b u) {μ : NumberField.Inf
     let a' := matrixToVec (vecToMatrix a * stdForm E s * g⁻¹.adeleMatrix * W.dualFrame.inv)
     have h_shift : pairWeil W U α β (g, h) (ϱ (W.hom U) (shiftMatrix s x 1 *ᵥ a) f) =
         ϱ (W.hom U) ((X.homTarget W).kAdelic *ᵥ a') (pairWeil W U α β (g, h) f) := by
-      simp [x, a', rho_pairWeil, homTarget_kAdelic, kronecker_mulVec_eq_matrixToVec,
-        vecToMatrix_matrixToVec, G.adeleMatrix, Matrix.mul_assoc]
+      rw [rho_pairWeil]
+      refine congrArg (fun v ↦ pairWeil W U α β (g, h) (ϱ (W.hom U) v f)) ?_
+      rw [kronecker_mulVec_eq_matrixToVec, homTarget_kAdelic, kronecker_mulVec_eq_matrixToVec,
+        vecToMatrix_matrixToVec]
+      dsimp only [x, a']
+      rw [vecToMatrix_matrixToVec, conjTranspose_one, Matrix.one_mul]
+      have hg : g⁻¹.adeleMatrix * g.adeleMatrix = 1 := by
+        rw [G.adeleMatrix, G.adeleMatrix, ← Units.val_mul, ← MulMemClass.coe_mul, ← map_mul,
+          inv_mul_cancel, map_one, OneMemClass.coe_one, Units.val_one]
+      refine congrArg matrixToVec ?_
+      simp only [Matrix.mul_assoc]
+      rw [← Matrix.mul_assoc W.dualFrame.inv, W.dualFrame.inv_val, Matrix.one_mul, hg,
+        Matrix.mul_one]
     simp only [ℓ, ContinuousLinearMap.comp_apply, h_shift, zeroTerm_rho_kAdelic]
   let π : 𝔸f E →+* LocProd 𝔠.ramifiedPlaces :=
     (evalPlaces 𝔠.ramifiedPlaces).comp (starRingEnd (𝔸f E))
@@ -402,7 +499,10 @@ lemma theta_zeroTerm_stdColDatum_eq_zero (U : Space E b u) {μ : NumberField.Inf
       (x.map (RingHom.snd _ _))ᴴ *
         (vecToMatrix w * (1 : Matrix n n (𝔸 E)).map (RingHom.snd _ _)) ≠ 0 := by
     obtain ⟨-, -, h_subset⟩ := h_mem
-    have h_ne : X.k ≠ 0 := fun h_zero ↦ by simpa [h_zero] using X.gram_lk
+    have h_ne : X.k ≠ 0 := fun h_zero ↦ by
+      have h1 := X.gram_lk
+      rw [h_zero, Matrix.mul_zero] at h1
+      exact one_ne_zero h1.symm
     exact U.coordMatrix_mul_ne_zero (by simpa using h_ne) 1 (h_subset hw)
   have h_kill (f : 𝒮 (W.hom U)) :
       ℓ (Space.schrodingerOp (W.hom U) (star ⁻¹' 𝔠.ramifiedPlaces) Ψ f) = 0 :=
@@ -412,7 +512,8 @@ lemma theta_zeroTerm_stdColDatum_eq_zero (U : Space E b u) {μ : NumberField.Inf
   -- The datum is `Ψ` at the conjugates of the places `𝔠.ramifiedPlaces`, tensored with `v` and
   -- vacuum elsewhere.
   change ℓ (localDatum W U v (fun w ↦ stdColDatum 𝔠.semilocalChar z wᵀ) hπ) = 0
-  simpa [Ψ, localDatum, integrated_schrodingerOp] using h_kill _
+  rw [localDatum, integrated_schrodingerOp]
+  exact h_kill _
 
 /-- One plane, the side of `U`. Let `A` split one hyperbolic plane off `W'`, with complement `W`,
 and be adapted. Let `y` be a real Schwartz vector and `z` an integral matrix at the ramified places
@@ -461,7 +562,11 @@ lemma integral_thetaSmall_lineRadical_eq_mul_thetaSmall (U : Space E b u) (A : W
     obtain ⟨m, s₀, U₀, X, hX⟩ := exists_splitting U (.of_ne_zero hx) h_iso
     have h_term : constTermAt A X.k F =
         θ (W.hom U₀) ((X.homTarget W).zeroTerm (A.homSlice U X.kAdelic F)) := by
-      simpa [lineTerm] using constTermAt_smul_k A X one_ne_zero (f := F)
+      have h1 := constTermAt_smul_k A X one_ne_zero (f := F)
+      dsimp only [lineTerm] at h1
+      rw [ite_eq_left (rfl : true = true), ContinuousLinearMap.comp_apply, map_one, one_smul,
+        one_smul] at h1
+      exact h1
     obtain ⟨c, v, h_eq⟩ := h_slice (h⁻¹.adeleMatrix * X.kAdelic)
     simp only [← hX, h_term, h_levi, h_eq, map_smul, theta_zeroTerm_stdColDatum_eq_zero U X 𝔠 hz,
       smul_zero]
@@ -469,9 +574,15 @@ lemma integral_thetaSmall_lineRadical_eq_mul_thetaSmall (U : Space E b u) (A : W
   have h_zero : A.homSlice U 0 f' = (vacuumFactor (isAdapted_homSource A U)).val •
       localDatum W U (realSlice A U 0 y) (fun w ↦ stdColDatum 𝔠.semilocalChar z wᵀ)
         𝔠.readsAt.star := by
-    simpa [f', IsIntMatrix] using homSlice_localDatum_stdColDatum U A 𝔠 y hz 0
-  rw [replicateCol_zero, constTermAt_zero, h_levi, Matrix.mul_zero, h_zero]
-  simp [α, β, pairTheta]
+    have h1 := homSlice_localDatum_stdColDatum U A 𝔠 y hz 0
+    have h_int0 : IsIntMatrix (Ô E)
+        ((0 : Matrix b Unit (𝔸 E)).map (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E))) :=
+      fun _ _ ↦ by rw [Matrix.map_apply, Matrix.zero_apply, map_zero]; exact zero_mem _
+    rw [smul_zero, ite_eq_left h_int0] at h1
+    exact h1
+  rw [replicateCol_zero, constTermAt_zero, h_levi, Matrix.mul_zero, h_zero, map_smul, map_smul,
+    smul_eq_mul]
+  rfl
 
 /-- The exchange identity `RowColExchangeIdentity W V U μ σ x y ℓ` says that `x`, `y` are Schwartz
 vectors of the Fock spaces of `(W, V)`, `(W, U)` and that there is a real `D` such that, for every
@@ -487,14 +598,16 @@ lemma RowColExchangeIdentity.congr_second_space (U : Space E b u)
     RowColExchangeIdentity W V₁ U μ σ x y ℓ := by
   obtain ⟨hx, hy, D, h_rel⟩ := h_rel
   refine ⟨hx, hy, D, fun 𝔠 ↦ ?_⟩
-  obtain ⟨a, h_move⟩ : ∃ a : Circle, ∀ (v : PairFock E s t)
-      (Φ : Matrix r n (LocProd 𝔠.ramifiedPlaces) → ℂ) (g : G E s),
-      thetaLarge W V₁ 𝔠 v Φ g = a * thetaLarge W V 𝔠 v Φ g := by
-    simpa using exists_thetaLarge_eq_mul_thetaLarge W W V₁ V 1 1 (by simp) 𝔠
+  obtain ⟨a, h_move⟩ := exists_thetaLarge_eq_mul_thetaLarge W W V₁ V 1 1
+    (by rw [map_one, inv_one, one_mul, map_one, OneMemClass.coe_one, mul_one]) 𝔠
   -- The factor `c` for `V` is replaced by `a * c`, which has the same modulus.
   obtain ⟨c, h_norm, h_eq⟩ := h_rel 𝔠
-  refine ⟨a * c, by simpa [Circle.norm_coe] using h_norm, fun z hz ↦ funext fun g ↦ ?_⟩
-  simp [h_move, h_eq z hz, mul_assoc]
+  refine ⟨a * c, by rwa [norm_mul, Circle.norm_coe, one_mul], fun z hz ↦ funext fun g ↦ ?_⟩
+  rw [h_move, one_mul, h_eq z hz, Pi.smul_apply, smul_eq_mul, Pi.smul_apply, smul_eq_mul, mul_assoc]
+
+local instance locallyCompactSpace_maxCompact {m : Type} [Fintype m] [DecidableEq m]
+    {ε : m → ℤˣ} : LocallyCompactSpace ↥(maxCompact E ε) :=
+  (isCompact_maxCompact (E := E) (s := ε)).isClosed.locallyCompactSpace
 
 /-- The exchange identity `RowColExchangeIdentity W V U μ σ x y ℓ` says: for every split tame
 character `𝔠` of `[U(1)]` of weight `μ`, the theta integral `thetaLarge` of `(W, V)` at the Fock
@@ -542,13 +655,18 @@ lemma RowColExchangeIdentity.of_planeConstantTerm_eq (U : Space E b u) {V' : Spa
   obtain ⟨c, hc : D * ‖c‖ ^ 2 = lValueProdInt 𝔠 (card r' - card n' / 2) * ℓ 𝔠, h_eq⟩ := h_rel 𝔠
   refine ⟨c * κ / γ, ?_, fun w hw ↦ funext fun g ↦ mul_left_cancel₀ hγ_ne ?_⟩
   · have h_rank : (card r' - card n' / 2 : ℤ) = card r - card n / 2 + 1 := by
-      grind [A.card_eq, X.card_eq, card_unit]
-    calc D * C / ‖κ.val‖ ^ 2 * ‖c * κ / γ‖ ^ 2 = C * (D * ‖c‖ ^ 2) / ‖γ‖ ^ 2 := by simp [field]
+      have hA : card n' = card n + 2 := by rw [A.card_eq, card_unit, mul_one]
+      have hX : card r' = card r + 2 := by rw [X.card_eq, card_unit, mul_one]
+      omega
+    have hκ : ‖κ.val‖ ≠ 0 := norm_ne_zero_iff.2 κ.ne_zero
+    have hγn : ‖γ‖ ^ 2 ≠ 0 := pow_ne_zero 2 (norm_ne_zero_iff.2 hγ_ne)
+    calc D * C / ‖κ.val‖ ^ 2 * ‖c * κ / γ‖ ^ 2 = C * (D * ‖c‖ ^ 2) / ‖γ‖ ^ 2 := by
+          rw [norm_div, norm_mul, div_pow, mul_pow]
+          field_simp [hκ, hγn]
       _ = C * lValueProdInt 𝔠 (card r - card n / 2 + 1) * ℓ 𝔠 / ‖γ‖ ^ 2 := by
           rw [hc, h_rank, mul_assoc]
       _ = lValueProdInt 𝔠 (card r - card n / 2) * ℓ 𝔠 := by
-          rw [← hγ]
-          field
+          rw [← hγ, mul_assoc, mul_comm (‖γ‖ ^ 2), mul_div_cancel_right₀ _ hγn]
   · -- Take constant terms along `A` of the identity for `(W', V', U)`.
     rw [← h_const w hw g]
     calc planeConstantTerm 𝔠 V' A σ' x w 1 g
@@ -561,8 +679,7 @@ lemma RowColExchangeIdentity.of_planeConstantTerm_eq (U : Space E b u) {V' : Spa
         rw [integral_thetaSmall_lineRadical_eq_mul_thetaSmall U A 𝔠 hy hw]
       _ = γ * ((c * κ / γ) •
           thetaSmall W U 𝔠 (realSlice A U 0 y) (stdColDatum 𝔠.semilocalChar w)) g := by
-        rw [Pi.smul_apply, smul_eq_mul]
-        field
+        rw [Pi.smul_apply, smul_eq_mul, ← mul_assoc γ, mul_div_cancel₀ _ hγ_ne, mul_assoc]
 
 -- Both sides of Poisson's formula descend by the same constant-term argument.
 private theorem RowColExchangeIdentity.descendCone (U : Space E b u) {V' : Space E r' t'}
@@ -633,8 +750,11 @@ lemma exists_rowColExchangeIdentity_removing_plane (U : Space E b u) (V' : Space
     ∃ x₀ : PairFock E s t, RowColExchangeIdentity W V U μ σ x₀ (realSlice A U 0 y) ℓ := by
   -- Replace `V'` by a space `V₁` with the same signs that splits over `V`.
   have h_card : card r' = card r + 2 * card Unit := by
-    grind [A.card_eq, card_congr σ, card_congr σ', card_sum]
-  obtain ⟨V₁, X, _⟩ := exists_isBaseAdapted Unit V t' h_card (by simp [h_negCount])
+    have h1 := A.card_eq
+    have h2 : card b + card r = card n := by rw [← card_sum, card_congr σ]
+    have h3 : card b + card r' = card n' := by rw [← card_sum, card_congr σ']
+    omega
+  obtain ⟨V₁, X, _⟩ := exists_isBaseAdapted Unit V t' h_card (by rw [card_unit]; exact h_negCount)
   -- The sign of `rk V - rk W / 2` decides on which side of Poisson's formula the cone is formed.
   obtain ⟨z, hz | hz⟩ : ∃ z : ℕ,
       (card r - card n / 2 : ℤ) = z ∨ (card r - card n / 2 : ℤ) = -(z + 1) := by
