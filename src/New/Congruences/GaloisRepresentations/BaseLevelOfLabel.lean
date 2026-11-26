@@ -83,23 +83,9 @@ theorem hasParahoricType_chosenGLRep {S : Submodule ℂ (Gf D.E n → WeylIndex 
   refine ⟨by simp, fun k g h_parab h_block ↦ ?_⟩
   -- Let `c` be `k` placed at `i`: its reductions are `reduceGL k` at `i` and `1` elsewhere.
   let c : stdLevel D.E n := ⟨ofSplitPlace hw k.val, (ofSplitPlace_mem_stdLevel hw k.val).2 k.prop⟩
-  obtain ⟨t, ht⟩ : ∃ t : GL n (LocInt (O.chosenPlace i)),
-      GeneralLinearGroup.map (LocInt (O.chosenPlace i)).subtype t = k.val := k.2
-  have h_red_same : stdLevel.reduceAt (O.chosenPlace i) c = reduceGL k := by
-    have h1 : stdLevel.reduceAt (O.chosenPlace i) c =
-        GeneralLinearGroup.map (IsLocalRing.residue (LocInt (O.chosenPlace i))) t :=
-      stdLevel.reduceAt_eq_of_atPlace ((atPlace_ofSplitPlace hw k.val).trans ht.symm)
-    have h2 : reduceGL k =
-        GeneralLinearGroup.map (IsLocalRing.residue (LocInt (O.chosenPlace i))) t := by
-      have hk : k = ⟨GeneralLinearGroup.map (LocInt (O.chosenPlace i)).subtype t, t, rfl⟩ :=
-        Subtype.ext ht.symm
-      rw [hk]
-      rfl
-    exact h1.trans h2.symm
-  have h_red_ne (j : O.ChosenIndex ⊕ O.TwistIndex) (hj : j ≠ .inl i) :
-      stdLevel.reduceAt (O.placeAt j) c = 1 :=
-    stdLevel.reduceAt_eq_one_of_atPlace
-      (atPlace_ofSplitPlace_of_ne hw k.val (O.apart.injective.ne hj) (O.apart.star_ne j (.inl i)))
+  obtain ⟨h_red_same, h_red_ne⟩ : stdLevel.reduceAt (O.chosenPlace i) c = reduceGL k ∧
+      ∀ j : O.ChosenIndex ⊕ O.TwistIndex, j ≠ .inl i → stdLevel.reduceAt (O.placeAt j) c = 1 :=
+    Function.eq_update_iff.mp (reduceFamily_ofSplitPlace (w := O.placeAt) (.inl i) k)
   -- These reductions are block triangular, with first block `g` at `i` and `1` elsewhere.
   let s₀ : ∀ j : O.ChosenIndex, GL r (ResField (O.chosenPlace j)) := Pi.mulSingle i g
   have hs₀_same : s₀ i = g :=
