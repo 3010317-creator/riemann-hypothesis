@@ -394,9 +394,8 @@ private lemma exists_isCompletionBijective_witt_tensor (G : Type) [AddCommMonoid
   obtain ⟨h_constantCoeff_surj, -⟩ := h_mod
   let e : (WittVector p b ⧸ ker coeff₀) ≃ₐ[W] b :=
     quotientKerAlgEquivOfSurjective h_constantCoeff_surj
-  have h_complete : IsAdicComplete (ker coeff₀) (WittVector p b) := by
-    rw [show ker coeff₀ = span {(p : WittVector p b)} from h_ker]
-    exact h_ct.complete
+  have h_complete : IsAdicComplete (ker coeff₀) (WittVector p b) :=
+    h_ker.symm ▸ h_ct.complete
   obtain ⟨κ, hκ⟩ : ∃ κ : T →ₐ[W] WittVector p b,
       (Ideal.Quotient.mkₐ W (ker coeff₀)).comp κ = e.symm.toAlgHom.comp includeRight :=
     FormallySmooth.exists_mkₐ_comp_eq_of_isAdicComplete (e.symm.toAlgHom.comp includeRight)
