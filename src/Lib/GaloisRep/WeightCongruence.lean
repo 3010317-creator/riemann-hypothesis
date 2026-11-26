@@ -555,8 +555,8 @@ lemma GaloisRep.exists_padicModel_hecke_contraction (j : ℕ) :
         congrArg (padicModel κ κ' M · z) (h_eig (N - j))
     -- `P` is the Hecke polynomial, whose coefficient of degree `j` is `c` times `t (N - j)`
     have h_coeff : P.coeff j = c * t (N - j) := by rw [hP, coeff_heckePoly, Fintype.card_fin]
-    rw [LinearMap.smul_apply, LinearMap.smul_apply, h_hecke, h_coeff, map_mul, map_intCast, mul_smul,
-      mul_smul, Int.cast_smul_eq_zsmul]
+    rw [LinearMap.smul_apply, LinearMap.smul_apply, h_hecke, h_coeff, map_mul, map_intCast,
+      mul_smul, mul_smul, Int.cast_smul_eq_zsmul]
     exact smul_comm _ _ _
 
 attribute [local fun_prop] Continuous.if_const

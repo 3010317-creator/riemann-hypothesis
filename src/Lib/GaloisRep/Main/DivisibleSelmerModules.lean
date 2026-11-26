@@ -156,9 +156,9 @@ that are unramified outside `S` and obey the relations `L`. -/
 noncomputable def divisibleSelmerLength : ℕ∞ :=
   Module.length O (selmerModule ρ S L (DivisibleQuot O))
 
-/-- Let `E` be an embedded number field and `a ≠ 0`. The Selmer module (cocycles for `ρ` unramified outside `S` that obey the relations `L`) with
-coefficients in `O / a` has length at most `divisibleSelmerLength ρ S L`, the length of the one with
-coefficients in `Frac(O) / O`. -/
+/-- Let `E` be an embedded number field and `a ≠ 0`. The Selmer module (cocycles for `ρ` unramified
+outside `S` that obey the relations `L`) with coefficients in `O / a` has length at most
+`divisibleSelmerLength ρ S L`, the length of the one with coefficients in `Frac(O) / O`. -/
 lemma length_le_divisibleSelmerLength {a : O} (ha : a ≠ 0) :
     Module.length O (selmerModule ρ S L (QuotSpan a)) ≤ divisibleSelmerLength ρ S L :=
   length_selmerModule_le_divisibleQuot ρ S L ha
