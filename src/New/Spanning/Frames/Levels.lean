@@ -733,13 +733,10 @@ lemma partialGroupMeasure_zero_eq {F : PlaceData ι T m} :
 lemma floorMeasure_ne_zero {F : PlaceData ι T m} (l : ℕ) : F.floorMeasure l ≠ 0 := by
   obtain hl | rfl | hl : l < 𝔰.n ∨ l = 𝔰.n ∨ 𝔰.n < l := lt_trichotomy l 𝔰.n
   · -- the measure maps onto a non-zero quadric measure
-    have h_map : (F.floorMeasure l).map (orbitPoint ⟨l, hl⟩) = F.floorQuadricMeasure ⟨l, hl⟩ :=
-      (measurePreserving_orbitPoint ⟨l, hl⟩).map_eq
+    have h_map := measurePreserving_orbitPoint (F := F) ⟨l, hl⟩
     have h_quadric : F.floorQuadricMeasure ⟨l, hl⟩ ≠ 0 := by
       simp (disch := fun_prop) [NeZero.ne]
-    intro h_zero
-    rw [h_zero, Measure.map_zero] at h_map
-    exact h_quadric h_map.symm
+    exact (Measure.map_ne_zero_iff h_map.aemeasurable).1 (h_map.map_eq ▸ h_quadric)
   · rw [floorMeasure_top]
     exact NeZero.ne F.measureH
   · have h_dirac : F.floorMeasure l = dirac 1 := by grind [floorMeasure]
