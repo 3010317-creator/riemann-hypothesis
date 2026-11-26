@@ -312,7 +312,7 @@ lemma _root_.New.AreMatched.translate
     rw [h_rows, h_cols, h_matched.apply_eq _ (h_mem_top _), h_det, map_mul]
     ring
 
-omit [Fintype N] in
+omit [Fintype N] [DecidableEq a] in
 /-- Let `k` be invertible. If `firstCols e k` has a left inverse `s` whose columns indexed by an
 injection `f` vanish, then the columns indexed by `f` of `invLastRows e k` form a matrix with a left
 inverse. -/
