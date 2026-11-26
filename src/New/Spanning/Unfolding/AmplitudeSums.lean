@@ -854,11 +854,13 @@ lemma amplitudeSum_besselU_mul (hT : S.IsStable T) {u u' : S.latticeStabilizer}
       ((S.unipotentChar u)⁻¹ * S.unipotentChar u') • S.amplitudeSum side T c s c' := by
   -- Approximate `u`, `u'` modulo `S.principalLevel` by rational `x`, `x'` in `besselU` with the
   -- same character; they lie over `(c, ū, c)` and `(c', ū', c')`. Move the block by them.
-  obtain ⟨x, hx, ⟨k, hk⟩, hψ⟩ := exists_rat_approx_unipotentChar_eq c hu
-  obtain ⟨x', hx', ⟨k', hk'⟩, hψ'⟩ := exists_rat_approx_unipotentChar_eq c' hu'
-  -- `h_c⁻¹ x h_c` is `u` times an element of the kernel of the reduction, and likewise for `x'`.
-  have hx_over : x ∈ S.termsOver c (S.reduction u) c := ⟨u * k, by simp_all⟩
-  have hx'_over : x' ∈ S.termsOver c' (S.reduction u') c' := ⟨u' * k', by simp_all⟩
+  have approx (d : S.Classes) {v : S.latticeStabilizer} (hv : v.val ∈ besselU) :
+      ∃ x : S.G E, x ∈ besselU ∧ x ∈ S.termsOver d (S.reduction v) d ∧
+        S.unipotentChar (S.ratToFin x) = S.unipotentChar v := by
+    obtain ⟨x, hx, ⟨k, hk⟩, hψ⟩ := exists_rat_approx_unipotentChar_eq d hv
+    exact ⟨x, hx, ⟨v * k, by simp_all⟩, hψ⟩
+  obtain ⟨x, hx, hx_over, hψ⟩ := approx c hu
+  obtain ⟨x', hx', hx'_over, hψ'⟩ := approx c' hu'
   -- The kernel changes by the scalar `ψ(x)⁻¹ ψ(x')`, and so does the block.
   simpa [hψ, hψ'] using amplitudeSum_mul_mul_inv hT
     (mem_partialUnitriangularGroup_of_mem_besselU hx) hx_over
