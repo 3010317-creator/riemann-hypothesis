@@ -516,6 +516,12 @@ lemma submatrix_inl_map_J :
       stdForm E (1 : X → ℤˣ) := by
   simp [← ext_iff, Y.gram_eq, gradedGram, Matrix.one_apply]
 
+private lemma ratCoordMatrix_inr_inl_eq_zero {g : G E ε} (hg : g ∈ Y.besselGroup)
+    (a : Fin s) (x : X) (ha : Y.gradeOf (Y.indexEquiv (Sum.inr a)) ≤ 0) :
+    V.ratCoordMatrix g (Y.indexEquiv (Sum.inr a)) (Y.indexEquiv (Sum.inl x)) = 0 := by
+  rw [Y.mem_besselGroup_iff.1 hg _ _ (by rwa [gradeOf_inl]) (by simp),
+    Matrix.one_apply_ne (by simp)]
+
 /-- For g in `New.Grading.besselGroup`, the X-block B of its matrix in rational coordinates
 satisfies Bᴴ S B = S, where S is the standard form of the definite space on X. -/
 lemma submatrix_inl_ratCoordMatrix_unitary {g : G E ε} (hg : g ∈ Y.besselGroup) :
@@ -525,7 +531,7 @@ lemma submatrix_inl_ratCoordMatrix_unitary {g : G E ε} (hg : g ∈ Y.besselGrou
       stdForm E (1 : X → ℤˣ) := by
   have h_zero (a : Fin s) (x : X) (ha : s ≤ 2 * a.val + 1) :
       V.ratCoordMatrix g (Y.indexEquiv (Sum.inr a)) (Y.indexEquiv (Sum.inl x)) = 0 := by
-    rw [Y.mem_besselGroup_iff.1 hg _ _ (by simp; omega) (by simp), Matrix.one_apply_ne (by simp)]
+    exact ratCoordMatrix_inr_inl_eq_zero Y hg a x (by simp; omega)
   calc
     _ = ((V.ratCoordMatrix g)ᴴ * V.J.map toAdele * V.ratCoordMatrix g).submatrix
           (Y.indexEquiv ∘ Sum.inl) (Y.indexEquiv ∘ Sum.inl) := by
@@ -553,8 +559,7 @@ lemma submatrix_inl_ratCoordMatrix_mul {g h : G E ε} (hg : g ∈ Y.besselGroup)
     obtain h_nonneg | h_nonpos := le_total 0 (Y.gradeOf (Y.indexEquiv (Sum.inr a)))
     · rw [Y.mem_besselGroup_iff.1 hg _ _ (by rwa [gradeOf_inl]) (by simp),
         Matrix.one_apply_ne (by simp), zero_mul]
-    · rw [Y.mem_besselGroup_iff.1 hh _ _ (by rwa [gradeOf_inl]) (by simp),
-        Matrix.one_apply_ne (by simp), mul_zero]
+    · rw [ratCoordMatrix_inr_inl_eq_zero Y hh a y h_nonpos, mul_zero]
   exact Matrix.ext fun x y ↦ by simp [Matrix.mul_apply, reindex_equiv Y.indexEquiv, h_string]
 
 /-- The projection from `New.Grading.besselGroup` to the adelic unitary group of the standard
