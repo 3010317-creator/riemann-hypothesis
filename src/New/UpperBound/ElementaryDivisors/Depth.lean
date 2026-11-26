@@ -281,15 +281,14 @@ theorem exists_eq_of_mem_support_specializeShallow {L : Type} [CommRing L] {n r 
       ringHom_map_zero x, zero_mul]),
     fun v ↦ by simp [h_eq, deepPart, deep, Finsupp.indicator_apply]⟩
 
-/-- Let the variable `v u b` determine `b`, and let the exponents `e u` be positive and distinct.
+/-- Let the variable `v u b` determine `b`, and let the exponents `e u` be distinct.
 The determinant of the matrix of the powers `X (v u b) ^ e u` is a signed sum of distinct
 monomials, so it is not zero. -/
 lemma _root_.New.det_X_pow_ne_zero {ι σ R : Type*} [Fintype ι] [DecidableEq ι] [CommRing R]
     [Nontrivial R] {v : ι → ι → σ} (hv_index : ∀ u u' b b' : ι, v u b = v u' b' → b = b')
-    {e : ι → ℕ} (he_inj : Function.Injective e) (he_pos : ∀ u : ι, e u ≠ 0) :
+    {e : ι → ℕ} (he_inj : Function.Injective e) :
     (of fun u b : ι ↦ (X (v u b) : MvPolynomial σ R) ^ e u).det ≠ 0 := by
   classical
-  have _ := he_pos
   -- Collapse each column's variables `X (v u b)` to `X b` to get the alternant `det (X b ^ e u)`.
   let φ : MvPolynomial σ R →ₐ[R] MvPolynomial ι R :=
     aeval fun s ↦ if h : ∃ b u, v u b = s then X h.choose else 0
@@ -359,7 +358,7 @@ lemma single_mem_lowPowerForms_of_ne_zero {r m : ℕ} (hm : 2 * r + m = k) {L : 
   have h_det : M.det ≠ 0 := by
     have h_inj : Function.Injective fun u : Fin r ↦ T.P ^ J u := fun u u' h_eq ↦
       Fin.ext (by rw [← hJ_div u, Nat.pow_right_injective hP h_eq, hJ_div u'])
-    refine det_X_pow_ne_zero (fun u u' b₁ b₂ h_var ↦ ?_) h_inj fun u ↦ by positivity
+    refine det_X_pow_ne_zero (fun u u' b₁ b₂ h_var ↦ ?_) h_inj
     simpa [entryRow, Fin.ext_iff] using congrArg Prod.fst h_var
   have h_unit : IsUnit (x.mapMatrix M) := by
     rw [isUnit_iff_isUnit_det, ← x.map_det]
