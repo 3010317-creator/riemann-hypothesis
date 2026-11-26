@@ -488,7 +488,7 @@ functions with values in `Bⁿ` that obey the relations `R`, and `New.relLength 
 section CrystallineConditions
 
 variable (ℓ : ℕ) [ThePrime ℓ] {n : Type*} [Fintype n] [DecidableEq n]
-  (E : Type) [Field E] [CMFieldWithRoot5040 E] (v : placesDividing E ℓ) {O : CoeffRing ℓ}
+  (E : Type) [Field E] [EmbeddedNumberField E] (v : placesDividing E ℓ) {O : CoeffRing ℓ}
 
 /-- A chosen embedding Ω → ℚ̄_ℓ that induces the chosen place of Ω above v, together with the
 homomorphism to Gal(ℚ̄_ℓ over ℚ_ℓ) from the decomposition group of that place that goes with it in
@@ -534,8 +534,8 @@ abbrev crystallineColength {X σ : Type*} [Fintype σ] [DecidableEq σ]
     (w : X → Gal(Ω/E) →* Matrix σ σ O) (M : ℕ) : ℕ∞ :=
   relLength (ribetCocycles w u (ℓ ^ M)) (obeying (crysRelations u) (QuotSpan ((ℓ : ↑O) ^ M)))
 
-/-- Let `E` be a CM field in the algebraic closure `Ω` of `ℚ` with a primitive `5040`-th root of
-unity, `O` the ring of integers of a finite Galois extension of `ℚ_ℓ` in `ℚ̄_ℓ`, and `u` a matrix
+/-- Let `E` be an embedded number field, `O` the ring of integers of a finite Galois extension
+of `ℚ_ℓ` in `ℚ̄_ℓ`, and `u` a matrix
 representation of `Gal(Ω/E)` over `O`. A function `c : Gal(Ω/E) → (O/a)^n` obeys the relations
 `New.Selmer.crysRelations u` if and only if, for every place `v` of `E` above `ℓ`, its restriction
 to the decomposition group of the chosen place over `v` obeys every linear relation
@@ -612,12 +612,12 @@ lemma IsCompletionGroup.index_eq_card_range (hj : IsCompletionGroup e j) :
     ((Quotient.congr (Equiv.inv (Gp ℓ)) h_left).trans
       (quotientKerEquivRange (complexEmbeddingOf e)))
 
-/-- Let `E` be a CM field in the algebraic closure `Ω` of `ℚ` with a primitive `5040`-th root of
-unity, and `ι : ℂ ≃ ℚ̄_ℓ` the isomorphism fixed by `PadicIso ℓ`. Let `v` and `w` be places of `E`
+/-- Let `E` be an embedded number field, and `ι : ℂ ≃ ℚ̄_ℓ` the isomorphism fixed by `PadicIso ℓ`.
+Let `v` and `w` be places of `E`
 above the prime `ℓ`, and `e_v`, `e_w` the restrictions to `E` of the embeddings `Ω → ℚ̄_ℓ` of their
 charts `localChart`. If `ι⁻¹ ∘ g⁻¹ ∘ e_v = ι⁻¹ ∘ g'⁻¹ ∘ e_w` for some `g` and `g'` in
 `Gp ℓ = Gal(ℚ̄_ℓ/ℚ_ℓ)`, then `v = w`: a complex embedding determines its place above `ℓ`. -/
-lemma eq_of_complexEmbeddingOf_localChart_eq [CMFieldWithRoot5040 E] {v w : placesDividing E ℓ}
+lemma eq_of_complexEmbeddingOf_localChart_eq [EmbeddedNumberField E] {v w : placesDividing E ℓ}
     {g g' : Gp ℓ}
     (h_eq : complexEmbeddingOf ((localChart ℓ E v).e.comp (algebraMap E Ω)) g =
       complexEmbeddingOf ((localChart ℓ E w).e.comp (algebraMap E Ω)) g') :
@@ -639,13 +639,13 @@ lemma eq_of_complexEmbeddingOf_localChart_eq [CMFieldWithRoot5040 E] {v w : plac
     ← UniformSpace.Completion.algEquiv_smul_coe] using h_norm
 
 open scoped Classical in
-/-- Let `E` be a CM field in the algebraic closure `Ω` of `ℚ` with a primitive `5040`-th root of
-unity, and `ι : ℂ ≃ ℚ̄_ℓ` the isomorphism fixed by `PadicIso ℓ`. For each place `v` of `E` above the
+/-- Let `E` be an embedded number field, and `ι : ℂ ≃ ℚ̄_ℓ` the isomorphism fixed by `PadicIso ℓ`.
+For each place `v` of `E` above the
 prime `ℓ`, the chart `localChart ℓ E v` has an embedding `Ω → ℚ̄_ℓ` that induces a place above `v`.
 Its restriction `e` to `E` gives the complex embeddings `complexEmbeddingOf e g = ι⁻¹ ∘ g⁻¹ ∘ e`,
 for `g` in `Gp ℓ = Gal(ℚ̄_ℓ/ℚ_ℓ)`. For distinct `v` these sets of embeddings are disjoint, so the
 sums of `a` over them add up to at most the sum of `a` over all complex embeddings of `E`. -/
-lemma sum_complexEmbeddingOf_le [CMFieldWithRoot5040 E] (a : (E →+* ℂ) → ℕ) :
+lemma sum_complexEmbeddingOf_le [EmbeddedNumberField E] (a : (E →+* ℂ) → ℕ) :
     ∑ v : placesDividing E ℓ,
         ∑ σ : E →+* ℂ with
           ∃ g : Gp ℓ, complexEmbeddingOf ((localChart ℓ E v).e.comp (algebraMap E Ω)) g = σ,
