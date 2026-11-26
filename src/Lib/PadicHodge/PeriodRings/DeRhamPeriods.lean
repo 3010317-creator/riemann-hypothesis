@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.SModEq.Pow
 public import Lib.ClassField.Places.DecompositionCyclotomic
 public import Lib.PadicHodge.PeriodRings.CrystallineRings
 

@@ -1,5 +1,6 @@
 module
 
+public import Std.Tactic.BVDecide.Normalize.BitVec
 public import Lib.Adelic.AutomorphicForms.BlockPeriods
 public import New.Determinant.AuxiliaryForms.GridFirstColumns
 public import New.Determinant.AuxiliaryForms.RegularParameters

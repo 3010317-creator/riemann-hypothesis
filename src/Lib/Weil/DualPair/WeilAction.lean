@@ -2,7 +2,6 @@ module
 
 public import Lib.Adelic.AutomorphicForms.Basic
 public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
-public import Lib.Adelic.Witt.IwasawaDecomposition
 public import Lib.Weil.Fock.OscillatorPair
 public import Lib.Weil.MixedModel.ThetaInvariance
 public import Lib.Weil.Periods.Grading

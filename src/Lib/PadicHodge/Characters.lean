@@ -4,7 +4,6 @@ public import Lib.ClassField.Global.ExistenceTheorem
 public import Lib.GaloisRep.Main.Defs
 public import Lib.GaloisRep.Main.LocalConditions
 public import Lib.General.NumberTheory.PadicLimitsValuation
-import TauCeti.RingTheory.AdicCompletion.Finite
 
 /-!
 # p-adic avatars of Hecke characters and local conditions for twists and characters

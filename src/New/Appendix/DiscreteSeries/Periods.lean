@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Complex.ExponentialBounds
 public import New.Appendix.DiscreteSeries.GaussianShape
 public import New.Appendix.DiscreteSeries.Localization
 

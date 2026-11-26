@@ -4,6 +4,7 @@ public import Lib.General.LinearAlgebra.BlockEmbeddings
 public import Lib.Weil.DualPair.MixedModel
 public import Lib.Weil.Periods.BesselIntegral
 public import Lib.Weil.Periods.Equivariant
+public import Lib.Adelic.Witt.IwasawaDecomposition
 
 /-!
 # Constant terms of Weil functions along maps of positive degree

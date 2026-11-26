@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.Algebra.Order.Star.Rat
+public import Mathlib.Analysis.Normed.Algebra.Basic
+public import Mathlib.Tactic.Linter.Style
+public import Mathlib.Topology.Algebra.Ring.Compact
 public import Lib.ClassField.Places.LocalFields
 public import Lib.PadicHodge.PeriodRings.AxTheorem
 

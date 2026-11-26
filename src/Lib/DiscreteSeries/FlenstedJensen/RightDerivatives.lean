@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Calculus.VectorField
 public import Lib.DiscreteSeries.Haar.TotalMass
 public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
 public import Lib.General.Analysis.HolomorphicIntegrals

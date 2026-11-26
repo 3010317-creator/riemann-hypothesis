@@ -1,13 +1,26 @@
 module
 
-public import Lib.Analytic.ZeroSymmetry
-public import Lib.Base
 public import TauCeti.LinearAlgebra.Matrix.GroupMatrix
 public import TauCeti.NumberTheory.Bernoulli.Basic
 public import TauCeti.NumberTheory.DirichletCharacter.LFunction.TrivialZeros
-public import TauCeti.NumberTheory.MulChar.Basic
 public import TauCeti.NumberTheory.MulChar.Orthogonality
 import TauCeti.NumberTheory.ZetaValues
+public import Mathlib.Algebra.Order.Star.Rat
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+public import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
+public import Mathlib.NumberTheory.Multiplicity
+public import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
+public import Lib.Speed
 
 /-!
 # A small nonzero integer in all Stickelberger ideals via Voronoi's congruence

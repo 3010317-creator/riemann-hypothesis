@@ -2,6 +2,7 @@ module
 
 public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
 public import Lib.General.NumberTheory.PadicLimitsValuation
+public import Lib.General.LinearAlgebra.Eigenvalues
 
 /-!
 # Spanning criteria, limits of traces and pseudorepresentations

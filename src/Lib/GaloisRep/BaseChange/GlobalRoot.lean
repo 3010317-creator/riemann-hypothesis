@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
 public import Lib.ClassField.Global.CMSplittingCharacters
 public import Lib.ClassField.Global.ExistenceTheorem
 public import Lib.GaloisRep.BaseChange.CommutingHeckeFamilies

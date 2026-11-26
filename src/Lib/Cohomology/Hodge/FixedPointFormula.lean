@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Tactic.Monotonicity.Lemmas
 public import Lib.Cohomology.Hodge.DiagonalClass
 public import Lib.Cohomology.Hodge.Kunneth
 public import Lib.General.Algebra.MultivariatePolynomials

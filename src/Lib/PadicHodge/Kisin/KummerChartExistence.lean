@@ -1,7 +1,9 @@
 module
 
+public import Mathlib.GroupTheory.NoncommCoprod
 public import Lib.PadicHodge.Crystalline.HodgeTateForms
 public import Lib.PadicHodge.Kisin.Charts
+public import Lib.ClassField.Places.TameInertia
 
 /-!
 # Witt coefficients, the Frobenius group action and existence of Kummer charts

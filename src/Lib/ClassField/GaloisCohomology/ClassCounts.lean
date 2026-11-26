@@ -1,8 +1,8 @@
 module
 
+public import TauCeti.RepresentationTheory.Homological.ContCohomology.CohomologyComparison
 public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
 public import Lib.General.Algebra.FittingIdealsAndLengths
-public import TauCeti.RepresentationTheory.Homological.ContCohomology.CohomologyComparison
 
 /-!
 # Counting cocycles through their cohomology classes

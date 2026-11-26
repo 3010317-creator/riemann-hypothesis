@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.GroupTheory.Schreier
+public import Mathlib.LinearAlgebra.Span.TensorProduct
+public import Mathlib.RingTheory.Valuation.Extension
 public import Lib.Shimura.GoodReduction.TorsionSizes
 
 /-!

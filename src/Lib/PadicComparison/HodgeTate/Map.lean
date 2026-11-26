@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.LocalRing.Pullback
 public import Lib.PadicComparison.Primitive.PeriodCoefficients
 
 /-!

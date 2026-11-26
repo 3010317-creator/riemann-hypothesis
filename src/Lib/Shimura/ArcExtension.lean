@@ -4,6 +4,8 @@ public import Lib.General.Geometry.GeometricPoints
 public import Lib.Shimura.ThetaGroup
 public import Lib.Shimura.ThetaNormality.NormalGeneration
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
+public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.Shimura.AbelianScheme.Pairings
 
 /-!
 # Uniformisations over an arc: theta coordinates, Weil pairing and extension of maps

@@ -223,8 +223,8 @@ def latticeStabilizer : Subgroup S.GFin := (intGL 𝔰.BesselIndex (Ô E)).subgr
 /-- The homomorphism from the integral subgroup K to the finite group `ResidueGL` reducing matrix
 entries modulo each chosen place above p₀ and p₁. -/
 protected def reduction : S.latticeStabilizer →* S.ResidueGL :=
-  MonoidHom.pi fun _ ↦ MonoidHom.pi
-    (reduceAt · |> intGL.map |>.comp (S.GFin.subtype.subgroupComap (intGL 𝔰.BesselIndex (Ô E))))
+  MonoidHom.pi fun _ ↦ MonoidHom.pi fun v ↦
+    (intGL.map (reduceAt v.1)).comp (S.GFin.subtype.subgroupComap (intGL 𝔰.BesselIndex (Ô E)))
 
 /-- The principal congruence subgroup K(M): the kernel of the reduction from K to `ResidueGL`, as a
 subgroup of the finite adelic unitary group. -/

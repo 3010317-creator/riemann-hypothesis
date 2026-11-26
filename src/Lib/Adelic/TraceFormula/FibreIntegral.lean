@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Topology.Algebra.Nonarchimedean.TotallyDisconnected
 public import Lib.Adelic.TraceFormula.TestFunction
 
 /-!

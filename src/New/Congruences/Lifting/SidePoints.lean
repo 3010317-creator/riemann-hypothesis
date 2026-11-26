@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Order.Interval.Finset.Box
 public import New.Congruences.Lifting.CupProductBound
 
 /-!

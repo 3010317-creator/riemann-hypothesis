@@ -1,7 +1,7 @@
 module
 
-public import Lib.CM.Sigma.Basic
 public import TauCeti.NumberTheory.ModularForms.DedekindEta.LimitFormula
+public import Lib.CM.Sigma.Basic
 
 /-!
 # Kronecker's first limit formula

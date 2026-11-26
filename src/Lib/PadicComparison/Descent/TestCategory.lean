@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Regular.IsSMulRegular
 public import Lib.Cohomology.Etale.Basic
 public import Lib.PadicHodge.PeriodRings.Ainf
 

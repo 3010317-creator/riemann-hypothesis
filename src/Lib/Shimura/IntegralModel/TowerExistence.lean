@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Combinatorics.Enumerative.IncidenceAlgebra
 public import Lib.General.Combinatorics
 public import Lib.Shimura.CongruenceRelation.HeckeNeighbours
 public import Lib.Shimura.IntegralModel.BallImmersion

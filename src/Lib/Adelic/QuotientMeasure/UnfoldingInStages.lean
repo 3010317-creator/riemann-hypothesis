@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!

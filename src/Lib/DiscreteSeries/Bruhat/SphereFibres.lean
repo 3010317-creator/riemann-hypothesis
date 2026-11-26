@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Probability.Kernel.WithDensity
 public import Lib.DiscreteSeries.Bruhat.ComplexPlace
 public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
 

@@ -1,7 +1,17 @@
 module
 
-public import Lib.Base
 public import TauCeti.Algebra.Group.AddChar.Basic
+public import Mathlib.NumberTheory.MulChar.Lemmas
+public import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
+public import Lib.Speed
 
 /-!
 # Orthogonality, Fourier inversion and matrix Gauss sums over a finite ring

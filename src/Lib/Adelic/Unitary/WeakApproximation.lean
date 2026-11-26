@@ -1,7 +1,7 @@
 module
 
-public import Lib.Adelic.Unitary.GramMatrix
 import TauCeti.LinearAlgebra.Matrix.Nonsingular.Inverse
+public import Lib.Adelic.Unitary.GramMatrix
 
 /-!
 # Closed matrix embedding of adelic unitary groups, discrete rational points, weak approximation

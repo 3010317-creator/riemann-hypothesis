@@ -1,5 +1,21 @@
 module
 
+public import Mathlib.Algebra.DualNumber
+public import Mathlib.Algebra.Module.StablyFree.Basic
+public import Mathlib.Data.Finset.Finsupp
+public import Mathlib.Data.Finsupp.PWO
+public import Mathlib.FieldTheory.PurelyInseparable.Exponent
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+public import Mathlib.RingTheory.MvPolynomial.Ideal
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Mathlib.RingTheory.Nullstellensatz
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Mathlib.Tactic.Polynomial.Basic
 public import Lib.Cohomology.Etale.Basic
 
 /-!

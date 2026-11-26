@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.Exponential
+public import Mathlib.RingTheory.Etale.Weakly
 public import Lib.GLn.SchurModule.TensorModel
 public import Lib.Shimura.ComplexTheta.AppellHumbertData
 

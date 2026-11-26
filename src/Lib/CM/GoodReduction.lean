@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.NumberTheory.Padics.Complex
 public import Lib.CM.Sigma.ThetaSections
 
 /-!

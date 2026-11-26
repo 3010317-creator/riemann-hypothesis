@@ -1,6 +1,6 @@
 module
 
-public import New.Derivatives.Field.ChosenPlaces
+public import New.Reduction.Data.Magnitudes
 
 /-!
 # Tight frames in `𝔞₀`

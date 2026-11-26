@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Topology.Algebra.Group.OpenMapping
+public import Mathlib.Topology.Baire.LocallyCompactRegular
 public import Lib.ClassField.Global.NormTheorems
 
 /-!

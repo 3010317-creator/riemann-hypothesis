@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Data.ENat.BigOperators
 public import Lib.GaloisRep.Main.DivisibleSelmerModules
 public import New.Congruences.Selmer.Mirror
 

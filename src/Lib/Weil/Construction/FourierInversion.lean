@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.GroupTheory.IndexNSmul
 public import Lib.Weil.Construction.ThetaDictionary
 
 /-!

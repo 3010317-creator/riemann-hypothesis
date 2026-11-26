@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+public import Mathlib.RingTheory.Flat.Equalizer
+public import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Cohomology.Hodge.Site
 
 /-!

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 public import New.Spanning.Bessel.SobolevBound
 public import New.Spanning.Unfolding.Link
 

@@ -2,8 +2,7 @@ module
 
 public import Lib.DiscreteSeries.Bruhat.ComplexPlace
 public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
-public import New.OneLift.ComparisonOperator.GluedLattices
-public import New.OneLift.FalseLifts.BottomOfTower
+public import Lib.Weil.Periods.DescentVanishing
 
 /-!
 # Vanishing of theta descents from W to W plus hyperbolic planes

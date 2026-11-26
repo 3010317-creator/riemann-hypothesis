@@ -1,6 +1,5 @@
 module
 
-public import New.Spanning.RemainingTerms.Data
 public import New.Spanning.Unfolding.TermStructure
 
 /-!

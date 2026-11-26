@@ -1,8 +1,8 @@
 module
 
+public import TauCeti.RingTheory.PowerSeries.Dvd
 public import Lib.General.Algebra.SeriesCongruences
 public import New.Derivatives.FormalGroup.FrobeniusCongruence
-public import TauCeti.RingTheory.PowerSeries.Dvd
 
 /-!
 # The exponent on one curve

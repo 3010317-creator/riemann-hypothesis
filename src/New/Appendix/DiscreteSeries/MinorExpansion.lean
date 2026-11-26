@@ -1,8 +1,6 @@
 module
 
 public import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
-public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
-public import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
 public import Lib.General.LinearAlgebra.MatricesNearIdentity
 
 /-!

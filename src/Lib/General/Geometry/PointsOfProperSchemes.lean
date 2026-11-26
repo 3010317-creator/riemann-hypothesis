@@ -1,10 +1,13 @@
 module
 
+import TauCeti.AlgebraicGeometry.Morphisms.Separated
+import TauCeti.AlgebraicGeometry.Morphisms.Smooth.StandardSmooth
+public import Mathlib.AlgebraicGeometry.QuasiAffine
+public import Mathlib.AlgebraicGeometry.ValuativeCriterion
+public import Mathlib.CategoryTheory.Sites.SubcanonicalOver
 public import Lib.Cohomology.ProperBaseChange.PlaceSpace
 public import Lib.General.Geometry.EtaleCharts
 public import Lib.Shimura.AbelianScheme.Basic
-import TauCeti.AlgebraicGeometry.Morphisms.Separated
-import TauCeti.AlgebraicGeometry.Morphisms.Smooth.StandardSmooth
 
 /-!
 # Functors of points of proper schemes: closed loci, atlases and descent of relations

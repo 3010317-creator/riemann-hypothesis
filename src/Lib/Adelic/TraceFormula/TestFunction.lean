@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Topology.LocallyConstant.Algebra
 public import Lib.Adelic.Adeles.LocalFactors
 public import Lib.General.LinearAlgebra.IdempotentRadical
 public import Lib.Weil.Unramified.HeckeGL

@@ -1,5 +1,8 @@
 module
 
+public import Aesop.BuiltinRules
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.CategoryTheory.Limits.Indization.LocallySmall -- shake: keep (its global `unif_hint` for `(F ⋙ G).obj X`; `sectionLift` callers need it)
 public import Lib.Cohomology.Etale.RelativeChains
 public import Lib.Cohomology.LerayHirsch
 public import Lib.General.Algebra.CohomologyBaseChange

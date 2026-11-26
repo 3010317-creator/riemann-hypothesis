@@ -1,7 +1,18 @@
 module
 
+public import Aesop.Frontend.Tactic
+public import Aesop.Main
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.Harmonic.Bounds
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
 public import Lib.Analytic.ZeroSymmetry
-public import TauCeti.NumberTheory.DirichletCharacter.GaussSum
 
 /-!
 # Gauss sums of primitive characters and the Pólya–Vinogradov bound

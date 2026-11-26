@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 public import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
 public import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
 

@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.GroupWithZero.Action.Regular
+public import Mathlib.GroupTheory.Transfer
 public import Lib.Weil.Unramified.HeckeGL
 
 /-!

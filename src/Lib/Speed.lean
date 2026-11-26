@@ -1,6 +1,52 @@
 module
 
-public import Mathlib
+public import Mathlib.Algebra.DirectSum.Internal
+public import Mathlib.Algebra.Order.Floor.Extended
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Algebra.Ring.BooleanRing
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.InnerProductSpace.Reproducing
+public import Mathlib.Analysis.Normed.Unbundled.GelfandRadiusNorm
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Combinatorics.Enumerative.DyckWord
+public import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+public import Mathlib.Data.NNRat.Floor
+public import Mathlib.Data.Nat.Choose.Multinomial
+public import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.GroupTheory.SpecificGroups.KleinFour
+public import Mathlib.NumberTheory.Chebyshev
+public import Mathlib.NumberTheory.Height.NumberField
+public import Mathlib.NumberTheory.Height.Projectivization
+public import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RepresentationTheory.Basic
+public import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.Tactic.Echelon.Zsqrtd
+public import Mathlib.Tactic.Inclusion.Extension.Core.Core
+public import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+public import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+public import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+public import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Log
+public import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Sqrt
+public import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+public import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+public import Mathlib.Tactic.Lemma
+public import Mathlib.Tactic.NormNum.Irrational
+public import Mathlib.Tactic.NormNum.IsCoprime
+public import Mathlib.Tactic.NormNum.IsSquare
+public import Mathlib.Tactic.NormNum.LegendreSymbol
+public import Mathlib.Tactic.NormNum.ModEq
+public import Mathlib.Tactic.NormNum.NatFib
+public import Mathlib.Tactic.NormNum.NatLog
+public import Mathlib.Tactic.NormNum.NatSqrt
+public import Mathlib.Tactic.NormNum.Ordinal
+public import Mathlib.Tactic.NormNum.Parity
+public import Mathlib.Tactic.NormNum.Prime
+public import Mathlib.Tactic.NormNum.RealSqrt
+public import Mathlib.Tactic.TypeStar
+public import Mathlib.Topology.Sheaves.Init
 
 /-!
 # Speed settings

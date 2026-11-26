@@ -1,6 +1,6 @@
 module
 
-public import Lib.Weil.Construction.VacuumProjections
+public import Lib.Weil.Construction.AdelicRepresentation
 
 /-!
 # Products of data along a splitting of coordinates, and changes of coordinates

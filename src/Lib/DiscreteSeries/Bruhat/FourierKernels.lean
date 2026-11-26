@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+public import Mathlib.Tactic.Monotonicity.Lemmas
 public import Lib.DiscreteSeries.Bruhat.FloorMeasures
 public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
 

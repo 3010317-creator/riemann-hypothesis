@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.Finiteness.Nilpotent
 public import Lib.GaloisRep.Main.LocalConditions
 public import Lib.General.LinearAlgebra.TensorChains
 public import Lib.PadicHodge.Limit.CrystallineLimit

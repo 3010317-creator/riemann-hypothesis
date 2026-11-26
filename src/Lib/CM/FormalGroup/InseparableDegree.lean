@@ -2,7 +2,6 @@ module
 
 public import Lib.CM.FormalGroup.PrimeNotation
 public import Lib.CM.Integrality.IsogenyIntegrality
-public import TauCeti.RingTheory.PowerSeries.Substitution
 
 /-!
 # The inseparable degree

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Topology.LocallyConstant.Algebra
 public import Lib.Weil.Construction.FiniteMultiplier
 
 /-!

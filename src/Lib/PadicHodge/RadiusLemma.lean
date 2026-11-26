@@ -55,7 +55,12 @@ private lemma exists_E_dvd_xi_sub_p_mul : ∃ b : Ainf, c.E.val ∣ xi - p * b :
 valuations, from `v_p((n + 1)!) = v_p(n + 1) + v_p(n!)` and `v_p((n + 1)!) ≤ n + 1`. -/
 private lemma sub_padicValNat_factorial_add_two_eq (n : ℕ) :
     n - padicValNat p n ! + 2 = n + 1 - padicValNat p (n + 1)! + padicValNat p (n + 1) + 1 := by
-  grind [Nat.padicValNat_def, multiplicity_factorial_le, factorial, Nat.multiplicity_mul]
+  simp only [Nat.padicValNat_def]
+  have h1 : multiplicity p (n + 1)! = multiplicity p (n + 1) + multiplicity p n ! := by
+    rw [Nat.factorial_succ, Nat.multiplicity_mul n.succ_ne_zero n.factorial_ne_zero]
+  have h2 : multiplicity p (n + 1)! ≤ n + 1 := multiplicity_factorial_le (p := p) (n + 1)
+  have h3 : multiplicity p n ! ≤ n := multiplicity_factorial_le (p := p) n
+  omega
 
 /-- If `tau` divides `E ^ h * a` in `BPlus`, for `a` in `Ainf`, then `tau` divides `a` in
 `Ainf`. -/

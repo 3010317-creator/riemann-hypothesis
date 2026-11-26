@@ -1,8 +1,10 @@
 module
 
+import TauCeti.LinearAlgebra.SesquilinearForm.SignedHermitianSpace.Witt
+public import Mathlib.RingTheory.Etale.Weakly
 public import Lib.Adelic.Adeles.IdeleModulus
 public import Lib.GaloisRep.Hilbert90.UnitaryGroups
-import TauCeti.LinearAlgebra.SesquilinearForm.SignedHermitianSpace.Witt
+public import Lib.Base
 
 /-!
 # Witt's theorem over fields and over Ô; quasi-reflections, Eichler maps, frames

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.Frobenius
 public import Lib.GaloisRep.BaseChange.PrimeDegreeTransfer
 public import Lib.LocalGL.Shintani.LiftingGreenCharacters
 

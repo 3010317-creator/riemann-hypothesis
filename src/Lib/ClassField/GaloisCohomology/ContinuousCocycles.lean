@@ -1,5 +1,11 @@
 module
 
+public import Aesop.Frontend.Tactic
+public import Aesop.Main
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.FieldTheory.Galois.IsGaloisGroup
+public import Mathlib.RepresentationTheory.Invariants
+public import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
 public import Lib.ClassField.Places.GaloisDefs
 
 /-!

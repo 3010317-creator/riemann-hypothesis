@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.NumberTheory.Harmonic.Bounds
 public import New.UpperBound.Size.ClassCount
 public import New.UpperBound.Size.ShortColumns
 

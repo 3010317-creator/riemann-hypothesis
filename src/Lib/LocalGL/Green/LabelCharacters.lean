@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 public import Lib.General.Geometry.GaloisCovers
 public import Lib.LocalGL.Shintani.CosetDescent
 

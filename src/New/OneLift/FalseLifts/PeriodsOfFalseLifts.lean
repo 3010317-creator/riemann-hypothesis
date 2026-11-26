@@ -1,6 +1,8 @@
 module
 
 public import New.OneLift.FalseLifts.HyperbolicPlaneStep
+public import New.OneLift.ComparisonOperator.GluedLattices
+public import New.OneLift.FalseLifts.BottomOfTower
 
 /-!
 # The tower of descents and the periods of false lifts

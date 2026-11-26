@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.AlgebraicGeometry.PointsPi
 public import Lib.Cohomology.SmoothBaseChange
 
 /-!

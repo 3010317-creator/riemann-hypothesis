@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
 public import Lib.ClassField.Global.CMSplittingCharacters
 
 /-!

@@ -1,8 +1,8 @@
 module
 
+public import TauCeti.LinearAlgebra.Matrix.Rank
 public import Lib.DiscreteSeries.Bruhat.BigCell
 public import New.Spanning.Unfolding.Terms
-public import TauCeti.LinearAlgebra.Matrix.Rank
 
 /-!
 # Links of isometries, the link isometry Υ_γ, and invariance under `besselU`

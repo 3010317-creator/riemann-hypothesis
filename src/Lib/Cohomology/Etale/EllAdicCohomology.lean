@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.GroupTheory.Nilpotent
 public import Lib.Cohomology.Etale.FilteredLimits
 public import Lib.PadicComparison.Completion
 

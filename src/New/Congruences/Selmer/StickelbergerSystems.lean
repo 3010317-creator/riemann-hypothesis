@@ -1,6 +1,6 @@
 module
 
-public import Lib.GaloisRep.Main.AttachedRepresentations
+public import TauCeti.Analysis.Normed.Ring.CompactMonoid
 public import Lib.General.NumberTheory.GaussValuation
 public import New.Congruences.Selmer.AuxiliaryPrimes
 

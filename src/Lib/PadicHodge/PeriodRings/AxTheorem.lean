@@ -1,12 +1,18 @@
 module
 
-public import Lib.ClassField.Places.ProfiniteGalois
 public import Lib.General.Algebra.AbsIntegrallyClosed
 public import Lib.General.Algebra.AdicCompletion
 public import TauCeti.Analysis.Normed.Ring.Ultra
 public import TauCeti.NumberTheory.Padics.Complex.FixedPoints
 
 import TauCeti.RingTheory.RootsOfUnity.Ultrametric
+public import Lib.ClassField.Places.GaloisDefs
+public import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.RingTheory.Perfectoid.FontaineTheta
+public import Mathlib.Topology.Algebra.Nonarchimedean.Completion
+public import Mathlib.Topology.Connected.Separation
+public import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 
 /-!
 # Tilting, Fontaine's θ, the ring O_C and Ax's theorem on Galois invariants in ℂ_p

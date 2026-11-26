@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Colon
 public import Lib.Cohomology.PointClass.ProjectiveNonvanishing
 
 /-!

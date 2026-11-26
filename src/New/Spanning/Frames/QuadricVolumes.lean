@@ -2,6 +2,7 @@ module
 
 public import Lib.DiscreteSeries.Bruhat.FourierKernels
 public import New.Spanning.Frames.Correlations
+public import New.Spanning.Frames.TwoGauges
 
 /-!
 # Volumes on quadrics and on sections

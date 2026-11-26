@@ -1,5 +1,10 @@
 module
 
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.Data.Finset.Functor
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.Order.Filter.AtTopBot.Interval
+public import Mathlib.Tactic.Linter.Style
 public import Lib.General.Algebra.MultivariatePolynomials
 public import Lib.PadicComparison.Descent.TestCategory
 

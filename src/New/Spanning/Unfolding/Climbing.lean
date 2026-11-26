@@ -1,5 +1,6 @@
 module
 
+public import Std.Tactic.BVDecide.Normalize.Bool
 public import Lib.Adelic.QuotientMeasure.UnfoldingInStages
 public import New.Spanning.Unfolding.AmplitudeSums
 

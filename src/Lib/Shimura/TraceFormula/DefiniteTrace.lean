@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
 public import Lib.Adelic.Reduction.FiniteVolume
 public import Lib.Shimura.Transfer.MarkedPairs
 

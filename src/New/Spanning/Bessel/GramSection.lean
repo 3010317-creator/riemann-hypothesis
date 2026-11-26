@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Complex.SqrtDeriv
 public import Lib.General.Analysis.HolomorphicIntegrals
 public import New.Spanning.Bessel.Basic
 

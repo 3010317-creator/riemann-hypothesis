@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
 public import Lib.General.Groups.IndexOfProduct
 public import New.Spanning.Unfolding.FrameMass
 public import New.Spanning.Unfolding.PoincareSeries

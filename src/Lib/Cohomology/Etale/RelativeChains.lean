@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
 public import Lib.Cohomology.Etale.DenseSubfunctors
 public import Lib.Cohomology.Hodge.CupProduct
 

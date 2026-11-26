@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap -- shake: keep (its `CStarAlgebra (E →L[ℂ] E)` instance keeps a `StarHomClass` search below from timing out)
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+public import Mathlib.Tactic.Monotonicity.Lemmas
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
 public import Lib.General.LinearAlgebra.HermitianMatrices
 

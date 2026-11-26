@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.PiTensorProduct.Generators
 public import Lib.GLn.SchurModule.GramMatrix
 
 /-!

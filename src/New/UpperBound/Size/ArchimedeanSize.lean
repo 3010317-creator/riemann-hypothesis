@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.SpecialFunctions.Stirling
 public import New.Reduction.PrimeSums
 public import New.Spanning.Unfolding.FillingAdmissible
 public import New.UpperBound.Divisibility.ChainDatumExpansion

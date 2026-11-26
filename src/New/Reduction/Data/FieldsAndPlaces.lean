@@ -1,8 +1,10 @@
 module
 
+import TauCeti.NumberTheory.Cyclotomic.Irreducible
+public import Mathlib.Algebra.Polynomial.Eval.Irreducible
+public import Mathlib.NumberTheory.Cyclotomic.Gal
 public import Lib.ClassField.Places.DecompositionCyclotomic
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
-import TauCeti.NumberTheory.Cyclotomic.Irreducible
 
 /-!
 # The parameters q₀ and d, the field E = K(ζ), its infinite places and its roots of unity

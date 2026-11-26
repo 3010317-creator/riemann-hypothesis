@@ -1,12 +1,12 @@
 module
 
+import TauCeti.LinearAlgebra.Trace.Nilpotent
 public import Lib.DiscreteSeries.Character.WeylCharacterFormula
 public import Lib.GLn.SchurModule.SchurNorm
 public import Lib.Shimura.TraceFormula.DefiniteTrace
 public import Lib.Shimura.TraceFormula.MarkedDefiniteSums
 public import Lib.Shimura.TraceFormula.TestFunction
 public import Lib.Shimura.Transfer.Lefschetz
-import TauCeti.LinearAlgebra.Trace.Nilpotent
 
 /-!
 # Coefficient systems from weights and the degrees where Hecke eigensystems occur

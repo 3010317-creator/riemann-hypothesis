@@ -1,5 +1,6 @@
 module
 
+public import TauCeti.Analysis.Normed.Ring.CompactMonoid
 public import Lib.ClassField.Avatar.LocalGlobalCompatibility
 public import Lib.GaloisRep.Main.ThetaLift
 

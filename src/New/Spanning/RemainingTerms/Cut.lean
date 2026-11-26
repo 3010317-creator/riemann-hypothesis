@@ -2,6 +2,7 @@ module
 
 public import New.Spanning.RemainingTerms.LinkLattice
 public import New.Spanning.RemainingTerms.LinkVectors
+public import New.Spanning.RemainingTerms.Data
 
 /-!
 # The cut: from the lattice of a link to the vectors common to two links

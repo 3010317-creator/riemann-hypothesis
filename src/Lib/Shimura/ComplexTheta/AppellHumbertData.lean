@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Lib.Adelic.Adeles.AdditiveCharacter
 public import Lib.General.Analysis.FourierTransforms
 public import Lib.General.Topology

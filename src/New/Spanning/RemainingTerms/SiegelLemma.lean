@@ -2,7 +2,7 @@ module
 
 public import Lib.Adelic.Adeles.LocalFactors
 public import Lib.General.NumberTheory.LatticeCovolumes
-public import New.Spanning.Unfolding.Setup
+public import Lib.Adelic.Reduction.FirstMinimumShortBases
 
 /-!
 # Discriminants of sublattices, Siegel's lemma and a height zeta function of subspaces

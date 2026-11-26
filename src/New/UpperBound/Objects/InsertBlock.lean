@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Data.Finset.Slice
 public import Lib.DiscreteSeries.Theta.BlockRule
 
 /-!

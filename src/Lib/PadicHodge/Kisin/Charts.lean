@@ -1,5 +1,10 @@
 module
 
+public import Mathlib.Algebra.CharP.Subring
+public import Mathlib.RingTheory.Polynomial.DegreeLT
+public import Mathlib.RingTheory.PowerSeries.Expand
+public import Mathlib.RingTheory.PowerSeries.Ideal
+public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
 public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!

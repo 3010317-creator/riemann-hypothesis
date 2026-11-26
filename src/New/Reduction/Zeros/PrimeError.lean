@@ -1,5 +1,10 @@
 module
 
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+public import Mathlib.MeasureTheory.Function.Floor
+public import Mathlib.NumberTheory.LSeries.Linearity
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import Mathlib.NumberTheory.LSeries.SumCoeff
 public import Lib.Analytic.EntireLFunction
 
 /-!

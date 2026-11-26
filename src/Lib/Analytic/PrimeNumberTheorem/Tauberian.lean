@@ -1,7 +1,8 @@
 module
 
-public import Lib.Analytic.EntireLFunction
 import TauCeti.Analysis.Convex.Lipschitz
+public import Mathlib.Analysis.Complex.HalfPlane
+public import Lib.Analytic.EntireLFunction
 
 /-!
 # A Tauberian theorem with a power of the logarithm

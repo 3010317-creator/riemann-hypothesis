@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
+public import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
+public import Mathlib.Topology.Germ
 public import Lib.DiscreteSeries.FlenstedJensen.FlagDensities
 
 /-!

@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import Mathlib.NumberTheory.SumTwoSquares
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
 public import Lib.ClassField.Grunwald
 

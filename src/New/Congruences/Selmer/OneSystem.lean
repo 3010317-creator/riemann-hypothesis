@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 public import Lib.General.Algebra.SharpMinors
 public import New.Congruences.Selmer.SelmerData
 

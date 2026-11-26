@@ -1,8 +1,11 @@
 module
 
+public import TauCeti.LinearAlgebra.Matrix.Range
+public import Mathlib.Algebra.Module.StablyFree.Basic
+public import Mathlib.LinearAlgebra.Matrix.Swap
+public import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Adelic.Hecke.Basic
 public import Lib.General.Groups.BesselGroups
-public import TauCeti.LinearAlgebra.Matrix.Range
 
 /-!
 # Integral matrices over subrings: Smith normal form, Gelfand's condition and lattices

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Order.Interval.Finset.Box
 public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
 public import Lib.Weil.DualPair.ThetaIntegrals
 

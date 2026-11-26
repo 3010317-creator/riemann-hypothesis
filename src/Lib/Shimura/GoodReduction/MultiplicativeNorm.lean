@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
 public import Lib.General.NumberTheory.SUnitsAndClassNumber
 public import Lib.Shimura.GoodReduction.GaussSums
 public import Lib.Shimura.ThetaModuli.PELThetaTori

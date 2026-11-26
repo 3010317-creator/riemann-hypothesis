@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
 public import Lib.Cohomology.Hodge.CupProduct
 public import Lib.General.Geometry.EtaleCharts
 

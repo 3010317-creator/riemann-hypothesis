@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Distribution.TemperateGrowth
 public import Lib.Weil.Fock.Basic
 
 /-!

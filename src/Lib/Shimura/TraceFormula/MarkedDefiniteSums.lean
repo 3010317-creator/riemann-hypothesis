@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.Polynomial.Eval.Irreducible
 public import Lib.General.Combinatorics
 public import Lib.General.LinearAlgebra.IdempotentRadical
 public import Lib.Shimura.HeckeTower.Model

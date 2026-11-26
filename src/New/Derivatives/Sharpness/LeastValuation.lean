@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.NumberTheory.SumFourSquares
 public import New.Derivatives.Sharpness.OneCurve
 
 /-!

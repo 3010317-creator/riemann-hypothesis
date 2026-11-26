@@ -1,5 +1,8 @@
 module
 
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.AddConstMap.Basic
+public import Mathlib.CategoryTheory.SingleObj
 public import Lib.PadicComparison.Descent.AlmostDescent
 
 /-!

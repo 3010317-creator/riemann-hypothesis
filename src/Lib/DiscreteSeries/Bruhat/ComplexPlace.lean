@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Analysis.Matrix.MeasurableSpace
+public import Mathlib.MeasureTheory.Order.Group.Lattice
 public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
 
 /-!

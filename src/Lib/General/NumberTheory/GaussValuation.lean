@@ -1,7 +1,7 @@
 module
 
-public import Lib.General.NumberTheory.PadicLimitsValuation
 public import TauCeti.Algebra.Ring.GeomSum
+public import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # The Gauss valuation of a polynomial over the ring of integers of ℚ̄_ℓ

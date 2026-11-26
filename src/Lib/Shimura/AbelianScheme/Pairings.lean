@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.AlgebraicGeometry.AffineSpace
 public import Lib.Cohomology.Etale.Basic
 public import Lib.General.Geometry.ProjectiveSpace
 public import Lib.Shimura.AbelianScheme.Basic

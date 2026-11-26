@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.Weil.Construction.HeisenbergModel
 
 /-!

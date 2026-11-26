@@ -7,6 +7,7 @@ public import Lib.General.Algebra.LevelModulus
 public import New.UpperBound.Objects.LiftChains
 public import New.UpperBound.Objects.Weights
 public import New.UpperBound.Seesaw.AdmissibleCombinations
+public import New.UpperBound.Objects.LiftLawsModuloN
 
 /-!
 # Levels of the chain, chain data, and the composite lift

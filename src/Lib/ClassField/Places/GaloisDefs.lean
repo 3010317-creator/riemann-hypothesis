@@ -1,7 +1,18 @@
 module
 
-public import Lib.Base
 public import TauCeti.RingTheory.Valuation.ValuationSubring
+public import Mathlib.Algebra.Pointwise.Stabilizer
+public import Mathlib.NumberTheory.Cyclotomic.CyclotomicCharacter
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.IsGaloisGroup.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
+public import Lib.Speed
 
 /-!
 # Vocabulary of Galois theory: places, decomposition, Frobenius elements and inertia

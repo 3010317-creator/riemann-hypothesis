@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
 public import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!

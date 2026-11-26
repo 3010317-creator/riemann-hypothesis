@@ -1,7 +1,10 @@
 module
 
-public import Lib.Analytic.PrimeNumberTheorem.ZeroFreeRegion
 import TauCeti.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.Dynamics.Newton
+public import Mathlib.NumberTheory.LSeries.Linearity
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import Lib.Analytic.PrimeNumberTheorem.ZeroFreeRegion
 
 /-!
 # Primes congruent to `1` modulo `M ^ k` with logarithm in a prescribed window

@@ -1,10 +1,13 @@
 module
 
-public import Lib.General.Algebra.IntegralPowerSeries
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Mathlib.GroupTheory.IndexNSmul
+public import Mathlib.NumberTheory.ModularForms.Discriminant
+import TauCeti.Analysis.SpecialFunctions.Elliptic.AdditionTheorem
 public import Lib.General.Analysis.MeanValueAndTaylor
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
 public import Lib.Shimura.ComplexTheta.DimensionFormula
-import TauCeti.Analysis.SpecialFunctions.Elliptic.LatticeClassification
 
 /-!
 # Sigma and Weierstrass functions, lattice invariants and lattices with complex multiplication

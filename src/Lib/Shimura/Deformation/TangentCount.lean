@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.AffineMonoid.UniqueSums
+public import Mathlib.LinearAlgebra.FixedSubmodule
 public import Lib.Shimura.CongruenceRelation.KernelReduction
 
 /-!

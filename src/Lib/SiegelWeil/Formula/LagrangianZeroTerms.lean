@@ -1,7 +1,9 @@
 module
 
+public import Mathlib.MeasureTheory.MeasurableSpace.NCard
 public import Lib.Weil.DualPair.MixedModel
 public import Lib.Weil.Unramified.HeckeTransfer
+public import Lib.Adelic.Witt.IwasawaDecomposition
 
 /-!
 # Lagrangians, zero terms of the Weil representation and vanishing of dominated functionals

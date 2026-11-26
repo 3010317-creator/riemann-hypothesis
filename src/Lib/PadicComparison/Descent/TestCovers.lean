@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.Regular.Pi
+public import Mathlib.Data.List.Intervals
 public import Lib.Cohomology.Etale.FilteredLimits
 public import Lib.General.Algebra.CohomologyBaseChange
 public import Lib.General.Geometry.EtaleCharts

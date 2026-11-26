@@ -1,7 +1,7 @@
 module
 
-public import Lib.Adelic.Witt.WittTheorem
 import TauCeti.MeasureTheory.Measure.Disintegration.Continuous
+public import Lib.Adelic.Witt.WittTheorem
 
 /-!
 # Measures on hermitian quadrics: existence and uniqueness of disintegrations

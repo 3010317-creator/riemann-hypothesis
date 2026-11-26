@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.CategoryTheory.Limits.Final.Type
 public import Lib.Cohomology.ProjectiveLine.ChernClass
 
 /-!

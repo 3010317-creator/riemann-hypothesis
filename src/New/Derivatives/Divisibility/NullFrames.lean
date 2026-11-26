@@ -1,5 +1,6 @@
 module
 
+public import Std.Tactic.BVDecide.Normalize.BitVec
 public import Lib.Cohomology.Etale.Basic
 public import Lib.General.Algebra.SeriesCongruences
 

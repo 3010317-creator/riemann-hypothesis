@@ -1,7 +1,8 @@
 module
 
+public import Mathlib.GroupTheory.SemidirectProduct
 public import Lib.GaloisRep.Hilbert90.TameActions
-public import Lib.LocalGL.Green.HallAlgebra
+public import Lib.General.Groups.CharacterTheory
 
 /-!
 # Root choices in a coset, induction, and extension of invariant characters

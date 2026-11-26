@@ -4,7 +4,6 @@ public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
 public import Lib.General.NumberTheory.PadicLimitsValuation
 public import Lib.PadicHodge.Kisin.PeriodMatrixFrame
 public import Lib.PadicHodge.RadiusLemma
-import TauCeti.RingTheory.AdicCompletion.Finite
 
 /-!
 # Uniform period bounds and limits of crystalline lattices with bounded jumps

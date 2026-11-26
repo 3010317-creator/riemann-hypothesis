@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Combinatorics.Additive.AP.Three.Behrend
+public import Mathlib.NumberTheory.SumTwoSquares
 public import Lib.Analytic.Primes
 public import New.Reduction.Data.AdmissibleData
 

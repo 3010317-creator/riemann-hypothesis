@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.NumberTheory.MulChar.Duality
 public import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
 public import Lib.ClassField.Places.Ideles
 public import Lib.GaloisRep.Hilbert90.UnitaryGroups

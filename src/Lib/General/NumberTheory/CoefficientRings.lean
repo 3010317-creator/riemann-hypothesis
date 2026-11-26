@@ -1,8 +1,11 @@
 module
 
+public import TauCeti.RingTheory.Length
+public import Mathlib.Algebra.Ring.Subring.IntPolynomial
+public import Mathlib.NumberTheory.Padics.ProperSpace
+public import Mathlib.Topology.Algebra.Module.Compact
 public import Lib.General.Algebra.AdicCompletion
 public import Lib.General.Algebra.FittingIdealsAndLengths
-public import TauCeti.RingTheory.Length
 
 /-!
 # Coefficient rings of ℓ-adic lattices, and length versus cardinality of modules

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Data.Int.Log
 public import Lib.General.LinearAlgebra.PolarDecomposition
 public import Lib.General.NumberTheory.FrobeniusOrbits
 

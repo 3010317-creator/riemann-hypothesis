@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.MeasureTheory.Integral.Pi
 public import Lib.Adelic.Adeles.AdditiveCharacter
 
 /-!

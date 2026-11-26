@@ -1,7 +1,7 @@
 module
 
-public import New.Congruences.Selmer.Count
 public import TauCeti.Algebra.Module.CharacterModule
+public import New.Congruences.Selmer.Count
 
 /-!
 # Reciprocity at conjugate primes

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.AlgebraicGeometry.Morphisms.LocalFlatDescent
 public import Lib.General.Geometry.SerreTheorem
 public import Lib.Shimura.ThetaNormality.RiemannRelation
 public import Lib.Shimura.Uniformisation.TorusModel

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 public import Lib.DiscreteSeries.Haar.GramCoordinates
 
 /-!

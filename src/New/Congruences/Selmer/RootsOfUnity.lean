@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Data.NNRat.BigOperators
 public import Lib.General.NumberTheory.GaussValuation
 
 /-!

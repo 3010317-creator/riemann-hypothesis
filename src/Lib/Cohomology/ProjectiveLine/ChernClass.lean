@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.Order.Ring.Opposite
+public import Mathlib.Tactic.Linter.Style
 public import Lib.Cohomology.TorsionTheories
 
 /-!

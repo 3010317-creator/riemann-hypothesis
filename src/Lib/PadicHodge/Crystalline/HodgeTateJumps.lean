@@ -1,7 +1,11 @@
 module
 
+public import Mathlib.Data.Finsupp.Pointwise
+public import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.General.Measure.HaarModulus
 public import Lib.PadicHodge.Crystalline.HodgeTateForms
+public import Lib.Adelic.Hecke.ClassSums
 
 /-!
 # Hodge frames and Hodge–Tate jumps under operations on representations

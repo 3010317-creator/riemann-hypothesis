@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.CategoryTheory.Sites.LocalSite
 public import Lib.Cohomology.Etale.EllAdicCohomology
 public import Lib.Cohomology.Etale.RelativeChains
 public import Lib.General.Geometry.GeometricPoints

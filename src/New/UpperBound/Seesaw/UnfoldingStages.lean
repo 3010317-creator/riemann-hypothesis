@@ -7,6 +7,7 @@ public import New.UpperBound.Seesaw.Frequency
 public import New.UpperBound.Seesaw.GluedLevel
 public import New.UpperBound.Seesaw.LevelIdeles
 public import New.UpperBound.Seesaw.Sandwich
+public import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # Unfolding the chain of lifts: double lifts and the functions of the unfolding

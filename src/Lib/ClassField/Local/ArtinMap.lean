@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Deriv
 public import Lib.Adelic.Adeles.IdeleModulus
 public import Lib.ClassField.LocalDuality.DualityInequality
 public import Lib.ClassField.Places.TameInertia

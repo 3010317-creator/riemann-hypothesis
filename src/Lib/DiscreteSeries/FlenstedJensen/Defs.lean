@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 public import Lib.DiscreteSeries.Haar.CayleyChart
 
 /-!

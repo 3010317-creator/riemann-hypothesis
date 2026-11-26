@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.MeasureTheory.Measure.Haar.MulEquivHaarChar
 public import Lib.DiscreteSeries.Bessel.Basic
 public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
 

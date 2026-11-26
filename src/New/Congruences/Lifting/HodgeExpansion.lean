@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 public import Lib.General.LinearAlgebra.MatrixNormBounds
 public import New.Congruences.Lifting.ExponentLattices
 

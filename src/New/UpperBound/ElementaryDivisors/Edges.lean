@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Lib.General.LinearAlgebra.HermiteForm
 public import New.UpperBound.ElementaryDivisors.InvariantAverage
 public import New.UpperBound.ElementaryDivisors.RootLemma

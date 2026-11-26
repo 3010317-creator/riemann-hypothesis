@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.Category.Grp.Ulift
+public import Mathlib.RingTheory.Regular.Category
 public import Lib.General.Algebra.CohomologyBaseChange
 
 /-!

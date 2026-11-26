@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Tactic.Monotonicity.Lemmas
+public import TauCeti.Analysis.Normed.Ring.Ultra
 public import Lib.LocalGL.Iwahori.QuadraticRelation
 public import Lib.Weil.Unramified.HeckeGL
 

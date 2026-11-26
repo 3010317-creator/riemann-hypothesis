@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.Algebra.GroupWithZero.Torsion
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.Tactic.Linarith.NNRealPreprocessor -- shake: keep (`nlinarith` over `ℝ≥0`)
 public import Lib.Shimura.ComplexTheta.DimensionFormula
 
 /-!

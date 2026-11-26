@@ -1,8 +1,10 @@
 module
 
-public import Lib.PadicComparison.Descent.TestCovers
 import TauCeti.RingTheory.Smooth.Lifting
 import TauCeti.AlgebraicGeometry.Frobenius.Perfect
+public import Mathlib.CategoryTheory.Limits.Shapes.Connected
+public import Mathlib.FieldTheory.IsPerfectClosure
+public import Lib.PadicComparison.Descent.TestCovers
 
 /-!
 # Perfect algebras, étale algebras over perfect rings, and constant Laurent polynomials

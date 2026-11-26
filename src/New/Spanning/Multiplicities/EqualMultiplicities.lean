@@ -1,9 +1,9 @@
 module
 
+import TauCeti.LinearAlgebra.Matrix.Charpoly.Newton
 public import Lib.Adelic.TraceFormula.CuspidalComparison
 public import Lib.Adelic.TraceFormula.CuspidalType
 public import New.Determinant.Norms.AdjointThetaLift
-import TauCeti.LinearAlgebra.Matrix.Charpoly.Newton
 
 /-!
 # Equality of multiplicities

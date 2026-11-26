@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Topology.Algebra.Group.CompactOpen
 public import Lib.Adelic.AutomorphicForms.PAdicGauge
 public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
 

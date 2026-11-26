@@ -1,9 +1,11 @@
 module
 
-public import Lib.Analytic.EntireLFunction
 import TauCeti.NumberTheory.DirichletCharacter.LFunction.Bounds
 import TauCeti.NumberTheory.LSeries.RiemannZeta.Basic
 import TauCeti.NumberTheory.LSeries.RiemannZeta.Bounds
+public import Mathlib.Analysis.Complex.Hadamard
+public import Mathlib.Analysis.Complex.HalfPlane
+public import Lib.Analytic.EntireLFunction
 
 /-!
 # Growth of Dirichlet L-functions near the line `re s = 1`

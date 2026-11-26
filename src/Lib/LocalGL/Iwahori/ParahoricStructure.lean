@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.Topology.Algebra.Ring.Compact
+public import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
 public import Lib.Adelic.Hecke.ClassSums
 public import Lib.Adelic.Unitary.Defs
 public import Lib.General.LinearAlgebra.HermiteForm

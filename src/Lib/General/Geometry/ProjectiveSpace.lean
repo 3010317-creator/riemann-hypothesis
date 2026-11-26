@@ -1,7 +1,13 @@
 module
 
-public import Lib.General.Geometry.LineBundles
 public import TauCeti.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
+public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.TotallySplit
+public import Lib.General.Geometry.LineBundles
 
 /-!
 # Projective space, linear systems and projective embeddings, with Segre and Veronese

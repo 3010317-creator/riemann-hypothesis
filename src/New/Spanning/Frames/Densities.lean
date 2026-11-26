@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 public import New.Spanning.Bessel.Basic
 public import New.Spanning.Frames.Depth
 

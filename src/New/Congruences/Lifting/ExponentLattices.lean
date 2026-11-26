@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.Span.TensorProduct
 public import Lib.PadicHodge.Kisin.FrameTheorem
 
 /-!

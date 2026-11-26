@@ -1,8 +1,10 @@
 module
 
+import TauCeti.NumberTheory.PrimitivePrimeDivisors.Zsigmondy
+public import Mathlib.GroupTheory.CosetCover
+public import Mathlib.RingTheory.Fintype
 public import Lib.Adelic.Adeles.LocalFactors
 public import Lib.ClassField.Global.AlbertBrauerHasseNoether
-import TauCeti.NumberTheory.PrimitivePrimeDivisors.Zsigmondy
 
 /-!
 # Artin's reciprocity law and the sign law

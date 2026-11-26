@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Mathlib.NumberTheory.ModularForms.QExpansion
 public import Lib.Weil.DualPair.HolomorphicData
 
 /-!

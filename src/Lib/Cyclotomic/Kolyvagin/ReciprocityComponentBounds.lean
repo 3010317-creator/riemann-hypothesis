@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.ZMod.Torsion
 public import Lib.ClassField.Global.Chebotarev
 public import Lib.Cyclotomic.Kolyvagin.DerivativeCocycles
 public import Lib.PadicComparison.Descent.TestCategory

@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.Algebra.Divisibility.Prod
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!

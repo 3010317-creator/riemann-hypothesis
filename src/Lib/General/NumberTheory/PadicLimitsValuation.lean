@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.Algebra.AlgebraicCard
+public import Mathlib.Algebra.Polynomial.Basis
+public import Mathlib.NumberTheory.Padics.AddChar
 public import Lib.GaloisRep.Main.SelmerModules
 public import Lib.General.Geometry.GaloisCovers
 public import Lib.General.NumberTheory.CoefficientRings

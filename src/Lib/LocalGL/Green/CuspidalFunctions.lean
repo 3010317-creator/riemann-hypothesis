@@ -1,5 +1,11 @@
 module
 
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import Mathlib.LinearAlgebra.Eigenspace.Zero
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+public import Mathlib.LinearAlgebra.Semisimple
+public import Mathlib.RingTheory.Artinian.Instances
 public import Lib.General.LinearAlgebra.MatrixPolynomials
 public import Lib.General.NumberTheory.FrobeniusOrbits
 public import Lib.LocalGL.Green.HallAlgebra

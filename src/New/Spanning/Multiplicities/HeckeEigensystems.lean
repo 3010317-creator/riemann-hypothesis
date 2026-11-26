@@ -1,5 +1,6 @@
 module
 
+public import TauCeti.RepresentationTheory.AsAlgebraHom
 public import Lib.Adelic.TraceFormula.LevelAlgebra
 public import New.UpperBound.Objects.Rows
 

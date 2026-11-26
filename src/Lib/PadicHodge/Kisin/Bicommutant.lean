@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.Module.Torsion.PrimaryComponent
 public import Lib.PadicHodge.Kisin.Charts
 
 /-!

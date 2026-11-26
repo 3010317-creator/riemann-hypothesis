@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 public import Lib.General.LinearAlgebra.HermitianMatrices
 public import Lib.General.Measure.HaarModulus
 public import Lib.General.Measure.IntegralOperators

@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 public import Lib.DiscreteSeries.Bessel.Basic
 
 /-!

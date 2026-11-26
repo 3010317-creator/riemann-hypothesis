@@ -1,5 +1,33 @@
 module
 
+public import Aesop.Frontend.Tactic
+public import Aesop.Main
+public import Mathlib.Algebra.Category.FGModuleCat.Basic
+public import Mathlib.Algebra.Category.Grp.AB
+public import Mathlib.Algebra.Category.Grp.Adjunctions
+public import Mathlib.Algebra.Category.Grp.FiniteGrp
+public import Mathlib.Algebra.Category.Grp.Zero
+public import Mathlib.Algebra.Divisibility.Prod
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Map
+public import Mathlib.Algebra.TrivSqZeroExt.Ideal
+public import Mathlib.AlgebraicGeometry.Group.Affine
+public import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
+public import Mathlib.CategoryTheory.Abelian.Exact
+public import Mathlib.CategoryTheory.Abelian.FunctorCategory
+public import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.FunctorCategory
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
+public import Mathlib.CategoryTheory.Functor.ReflectsIso.Exact
+public import Mathlib.CategoryTheory.Generator.Presheaf
+public import Mathlib.CategoryTheory.Limits.FunctorCategory.Filtered
+public import Mathlib.CategoryTheory.Linear.FunctorCategory
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.LocalProperties.Reduced
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Topology.LocallyConstant.Algebra
 public import Lib.General.Algebra.AbsIntegrallyClosed
 
 /-!

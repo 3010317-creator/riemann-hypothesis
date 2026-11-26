@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
+public import Mathlib.Topology.Metrizable.ContinuousMap
 public import Lib.DiscreteSeries.Character.WeylCharacterFormula
 public import Lib.DiscreteSeries.Rigidity.KernelFixes
 

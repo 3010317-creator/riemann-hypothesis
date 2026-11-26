@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.NumberTheory.MulChar.Duality
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Lib.LocalGL.Green.CuspidalFunctions
 
 /-!

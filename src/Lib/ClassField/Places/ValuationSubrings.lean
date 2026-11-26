@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.RingTheory.Invariant.Profinite
+public import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.RingTheory.Valuation.IsTrivialOn
+public import Mathlib.RingTheory.Valuation.LocalSubring
 public import Lib.Adelic.Adeles.Basic
 public import Lib.ClassField.Places.ProfiniteGalois
 public import Lib.General.Algebra.AdicCompletion

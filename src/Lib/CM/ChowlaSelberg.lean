@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.GroupWithZero.Torsion
+public import Mathlib.Algebra.Order.Monoid.Unbundled.Units
 public import Lib.Analytic.EntireLFunction
 public import Lib.CM.ConjugateCurve
 public import Lib.CM.Integrality.IsogenyIntegrality

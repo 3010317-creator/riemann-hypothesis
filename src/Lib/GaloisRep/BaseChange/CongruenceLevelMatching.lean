@@ -1,7 +1,8 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+public import Mathlib.RingTheory.Polynomial.IsIntegral
 public import Lib.GaloisRep.BaseChange.CommutingHeckeFamilies
+public import Lib.ClassField.Local.ArtinMap
 
 /-!
 # Matching unit pairs at congruence levels and at unramified places of a step

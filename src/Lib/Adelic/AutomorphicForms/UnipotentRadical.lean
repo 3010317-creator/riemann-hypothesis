@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Convex.Integral
 public import Lib.Adelic.AutomorphicForms.RealConvolution
 public import Lib.DiscreteSeries.CuspKernel
 

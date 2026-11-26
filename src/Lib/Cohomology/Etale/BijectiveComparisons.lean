@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
+public import Mathlib.CategoryTheory.EffectiveEpi.Comp
+public import Mathlib.CategoryTheory.ExtremalEpi
+public import Mathlib.CategoryTheory.Subfunctor.Equalizer
 public import Lib.General.Algebra.LongExactSequences
 
 /-!

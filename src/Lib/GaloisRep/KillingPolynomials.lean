@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.FieldTheory.PurelyInseparable.Exponent
 public import Lib.GaloisRep.Main.Defs
 
 /-!

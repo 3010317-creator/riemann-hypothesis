@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.AffineSpace.MidpointZero
 public import Lib.SiegelWeil.Tower.RealConeIntegral
 
 /-!

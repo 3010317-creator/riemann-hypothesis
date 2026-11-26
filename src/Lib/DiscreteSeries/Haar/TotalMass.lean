@@ -1,8 +1,11 @@
 module
 
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+public import Mathlib.Topology.ExtremallyDisconnected
 public import Lib.Adelic.Witt.WittTheorem
 public import Lib.DiscreteSeries.Haar.GramPolar
 public import Lib.General.Analysis.PackingAndSobolev
+public import Lib.General.Analysis.GaussianIntegral
 
 /-!
 # Haar measure on U(J): U(n) has mass one, covering bounds for norm balls

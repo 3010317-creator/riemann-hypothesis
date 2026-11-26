@@ -1,9 +1,12 @@
 module
 
+public import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
+public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Etale.Weakly
 public import Lib.Cohomology.Etale.Basic
 public import Lib.General.Geometry.DenseComplexPoints
 public import Lib.Shimura.AbelianScheme.Basic
-public import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
 
 /-!
 # Geometric points, specialisation, separating products and integral abelian varieties

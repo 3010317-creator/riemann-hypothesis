@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
 public import Lib.PadicComparison.Crystalline.DividedPowerEnvelope
 public import Lib.PadicComparison.Primitive.PeriodCoefficients
 

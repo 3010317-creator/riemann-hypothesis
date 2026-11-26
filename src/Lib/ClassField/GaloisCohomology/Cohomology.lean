@@ -1,8 +1,9 @@
 module
 
-public import Lib.ClassField.GaloisCohomology.ClassCounts
 public import TauCeti.RepresentationTheory.Homological.ContCohomology.Additive
 public import TauCeti.RepresentationTheory.Homological.ContCohomology.ContinuousCohomologyIso
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Lib.ClassField.GaloisCohomology.ClassCounts
 
 /-!
 # The cohomology of a discrete module

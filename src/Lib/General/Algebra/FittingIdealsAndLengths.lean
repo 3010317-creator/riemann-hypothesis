@@ -1,5 +1,17 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.Module
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.KrullDimension.PID
+public import Mathlib.RingTheory.OrderOfVanishing.Noetherian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.TotallySplit
 public import Lib.General.LinearAlgebra.HermiteForm
 
 /-!

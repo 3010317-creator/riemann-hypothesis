@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.Algebra.Order.Ring.Opposite
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.Algebra.TrivSqZeroExt.Basic
+public import Mathlib.Data.Finset.Slice
 public import Lib.GLn.SchurModule.MinorBasis
 public import Lib.General.Groups.CongruenceSubgroups
 

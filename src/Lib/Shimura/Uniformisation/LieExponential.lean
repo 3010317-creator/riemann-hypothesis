@@ -1,8 +1,12 @@
 module
 
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import Mathlib.Analysis.Calculus.TangentCone.Seq
+public import Mathlib.Analysis.Normed.Module.ContinuousInverse
 public import Lib.General.Analysis.HolomorphicIntegrals
 public import Lib.General.Geometry.GeometricPoints
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
+public import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Exponential of compact commutative Lie groups and uniformisation of abelian varieties

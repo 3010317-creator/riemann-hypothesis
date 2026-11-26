@@ -3,7 +3,6 @@ module
 public import Lib.Weil.DualPair.Flip
 public import New.Determinant.AuxiliaryForms.GridPaths
 public import New.Determinant.Chain.SquareLaw
-public import New.Determinant.Twist.FitTwists
 public import New.OneLift.ComparisonOperator.ExchangeData
 
 /-!

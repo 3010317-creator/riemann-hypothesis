@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Calculus.Deriv.Pi
 public import Lib.DiscreteSeries.Bessel.SchurBound
 public import New.Spanning.Bessel.MeanValue
 

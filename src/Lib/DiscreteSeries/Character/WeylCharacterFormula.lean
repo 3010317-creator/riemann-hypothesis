@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Analysis.Fourier.AddCircleMulti
+public import Mathlib.Data.Finset.CastCard
 public import Lib.GLn.SchurModule.SchurOrthogonality
 public import Lib.General.LinearAlgebra.Eigenvalues
 

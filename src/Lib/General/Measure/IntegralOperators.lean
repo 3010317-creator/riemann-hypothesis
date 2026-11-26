@@ -1,7 +1,10 @@
 module
 
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.Topology.Algebra.IsOpenUnits
 public import Lib.Adelic.QuotientMeasure.Basic
-public import TauCeti.MeasureTheory.Integral.Pi
 
 /-!
 # Product measures, layer cake bounds, cocompact subgroups and L² bounds of integral operators

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.PowerSeries.Inverse
 public import Lib.General.LinearAlgebra.Eigenvalues
 public import Lib.Weil.Unramified.HeckeGL
 

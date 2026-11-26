@@ -1,7 +1,6 @@
 module
 
 public import Lib.CM.Integrality.IsogenyIntegrality
-public import Lib.General.Algebra.SeriesBounds
 public import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!

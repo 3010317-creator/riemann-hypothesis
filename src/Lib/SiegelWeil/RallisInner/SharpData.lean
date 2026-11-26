@@ -1,7 +1,6 @@
 module
 
 public import Lib.General.Algebra.LevelModulus
-public import Lib.SiegelWeil.RallisInner.Doubling
 public import Lib.SiegelWeil.RallisInner.DualDatum
 public import Lib.SiegelWeil.UnramifiedSeries.RallisSeries
 

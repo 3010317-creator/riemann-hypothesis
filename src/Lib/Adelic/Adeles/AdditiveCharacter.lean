@@ -1,5 +1,10 @@
 module
 
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Dynamics.FixedPoints.Topology
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.Tactic.Linter.Style
 public import Lib.Adelic.Adeles.Basic
 public import Lib.Adelic.QuotientMeasure.Basic
 public import Lib.General.Groups.CongruenceSubgroups

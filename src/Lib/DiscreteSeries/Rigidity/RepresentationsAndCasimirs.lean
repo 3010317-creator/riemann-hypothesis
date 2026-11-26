@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Order.CompletePartialOrder
 public import Lib.DiscreteSeries.FlenstedJensen.Defs
 
 /-!

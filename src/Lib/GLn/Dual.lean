@@ -1,9 +1,9 @@
 module
 
+public import TauCeti.LinearAlgebra.Matrix.Determinant.ComplementaryMinor
 public import Lib.GLn.SchurModule.SchurNorm
 public import Lib.General.LinearAlgebra.BlockEmbeddings
 public import Lib.General.LinearAlgebra.MatrixNormBounds
-public import TauCeti.LinearAlgebra.Matrix.Determinant.ComplementaryMinor
 
 /-!
 # Duality of integral GL(n) representations, mixed weights and the Cartan product

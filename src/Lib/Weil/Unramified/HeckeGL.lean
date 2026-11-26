@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.Module
+public import Mathlib.LinearAlgebra.Projectivization.Cardinality
 public import Lib.Adelic.Unitary.CongruenceLevels
 public import Lib.LocalGL.Iwahori.ParahoricStructure
 

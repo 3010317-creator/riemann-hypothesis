@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Reduction.Data.AdmissibleData
 
 /-!

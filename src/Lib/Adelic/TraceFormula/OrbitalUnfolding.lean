@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.InnerProductSpace.Trace
 public import Lib.Adelic.TraceFormula.ChangingSigns
 public import Lib.Adelic.TraceFormula.ReduciblePolynomials
 public import Lib.Weil.Periods.Grading

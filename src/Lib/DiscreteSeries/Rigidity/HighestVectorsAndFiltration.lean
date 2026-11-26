@@ -1,5 +1,8 @@
 module
 
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.Data.Set.Finite.List
+public import Mathlib.RingTheory.Finiteness.Lattice
 public import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
 public import Lib.General.LinearAlgebra.Eigenvalues
 

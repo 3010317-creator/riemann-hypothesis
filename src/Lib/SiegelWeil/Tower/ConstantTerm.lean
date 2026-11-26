@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.CharP
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
 public import Lib.SiegelWeil.Tower.LineTerms
 public import Lib.SiegelWeil.Tower.PrincipalIdeles

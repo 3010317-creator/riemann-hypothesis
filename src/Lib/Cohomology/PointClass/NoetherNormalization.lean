@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.GroupTheory.CosetCover
+public import Mathlib.RingTheory.Invariant.Galois
 public import Lib.General.Algebra.MultivariatePolynomials
 public import Lib.General.Geometry.PointsOfProperSchemes
 public import Lib.General.Geometry.ProjectiveSpace

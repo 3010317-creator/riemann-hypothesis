@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.PicardGroup
 public import Lib.General.Geometry.ProjectiveSpace
 
 /-!

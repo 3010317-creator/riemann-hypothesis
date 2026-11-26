@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Analysis.Complex.Tietze
 public import Lib.Adelic.QuotientMeasure.UnfoldingInStages
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
 public import Lib.Weil.DualPair.ThetaIntegrals

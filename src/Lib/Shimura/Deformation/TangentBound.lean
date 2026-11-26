@@ -1,8 +1,8 @@
 module
 
+public import TauCeti.RingTheory.TrivSqZeroExt
 public import Lib.General.Geometry.SerreTheorem
 public import Lib.Shimura.Deformation.TangentCount
-public import TauCeti.RingTheory.TrivSqZeroExt
 
 /-!
 # Drinfeld lifting over k[ε] and a bound on the tangent space of the moduli scheme

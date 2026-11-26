@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Algebra.Ring.Divisibility.Lemmas
 public import Lib.GaloisRep.Hilbert90.TameActions
 
 /-!

@@ -1,5 +1,9 @@
 module
 
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
 public import Lib.Shimura.Uniformisation.AdelicFrames
 public import Lib.Weil.Unramified.HeckeGL

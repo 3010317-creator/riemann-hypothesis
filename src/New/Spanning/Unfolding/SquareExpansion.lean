@@ -1,7 +1,7 @@
 module
 
-public import New.Spanning.RemainingTerms.Sum
 public import TauCeti.Analysis.Real.Sqrt
+public import New.Spanning.RemainingTerms.Sum
 
 /-!
 # The expansion of the squares and the second moment near the Bessel subgroup

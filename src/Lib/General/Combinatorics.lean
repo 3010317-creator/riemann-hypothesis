@@ -1,7 +1,23 @@
 module
 
-public import Lib.Base
 import TauCeti.LinearAlgebra.Submodule.CardFinrank
+public import Mathlib.Algebra.AffineMonoid.UniqueSums
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.Polynomial.UniversalFactorizationRing
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
+public import Lib.Speed
 
 /-!
 # The q-binomial theorem, fibre sums, and Schur polynomials in the coefficients

@@ -1,6 +1,10 @@
 module
 
+public import Aesop.Frontend.Attribute
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.Cohomology.Hodge.CupProduct
+public import Lib.Cohomology.Etale.BijectiveComparisons
 
 /-!
 # The Leray–Hirsch map as a map of δ-functors, and dévissage from representable functors

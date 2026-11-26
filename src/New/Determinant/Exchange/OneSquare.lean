@@ -3,6 +3,7 @@ module
 public import Lib.Weil.Seesaw
 public import New.Determinant.Chain.SquareLaw
 public import New.Determinant.Exchange.TheoremForPartners
+public import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # One square: up then down against down then up

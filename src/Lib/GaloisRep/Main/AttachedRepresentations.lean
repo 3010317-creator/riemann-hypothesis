@@ -1,10 +1,9 @@
 module
 
+public import Mathlib.Analysis.Polynomial.Norm
 public import Lib.GLn.SchurModule.SchurNorm
 public import Lib.PadicHodge.Characters
 public import Lib.Weil.DualPair.FiniteAction
-public import TauCeti.Analysis.Normed.Ring.CompactMonoid
-public import TauCeti.Topology.Instances.Matrix
 
 /-!
 # Attached Galois representations: traces, characteristic polynomials and rank one
