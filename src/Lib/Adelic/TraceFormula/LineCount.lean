@@ -221,7 +221,7 @@ lemma sum_sum_dotProduct_eq_one_eq_smul {W : Type} [AddCommGroup W] [Module ℂ 
   let L : Finset (n → F) := {z : n → F | ∀ j ≠ i, z j = 0}
   let N (z : n → F) : ℕ := #{ξ : n → F | ξ i = 1 ∧ ξ ⬝ᵥ z = 1}
   have h_on : ∑ z ∈ L, N z • f z = (d * q) • y := by
-    rw [sum_eq_single_of_mem (Pi.single i 1) (by simp [L, Pi.single_eq_of_ne]) fun z hz hne ↦ by
+    rw [sum_eq_single_of_mem (Pi.single i 1) (by simp [L]) fun z hz hne ↦ by
         simp [N, card_forms_eq_zero_of_ne_single (by simpa [L] using hz) hne],
       hf _ (Pi.single_ne_zero_iff.2 one_ne_zero) (fun j hj ↦ Pi.single_eq_of_ne hj 1),
       ← Nat.cast_smul_eq_nsmul ℂ]
