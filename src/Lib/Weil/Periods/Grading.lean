@@ -883,13 +883,6 @@ multiple of the next one. -/
 lemma formAdjoint_stringMap_mul_stringMap_eq_shift :
     V.formAdjoint V' (Y.stringMap Y') * Y.stringMap Y' = Y.shift := by
   -- `T` keeps the number of a string vector and `T†` raises it by one; the factors multiply.
-  have h_factor (a b : ℕ) (hab : a = b + 1) :
-      (if Odd s ↔ s < 2 * a + 1 then 1 else (Y.genericConst : E)) * (if 2 * a = s then -N else 1) *
-          ((if Odd s ↔ 2 * b + 1 < s then 1 else (Y.genericConst : E)) *
-            (if 2 * b + 1 = s then -N else 1)) =
-        Y.genericConst * (if 2 * b + 1 = s then -N else if 2 * a = s then -N * Y.genericConst else
-          1) := by
-    grind
   rw [formAdjoint_stringMap, stringMap, shift, ← Matrix.map_mul, Matrix.submatrix_mul_equiv,
     Matrix.fromBlocks_multiply]
   simp only [Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add]
@@ -897,12 +890,10 @@ lemma formAdjoint_stringMap_mul_stringMap_eq_shift :
   ext a b
   by_cases hb : b.val < s - 1
   · rw [Matrix.mul_apply, Fintype.sum_eq_single ⟨b, hb⟩ (by simp +contextual [Fin.ext_iff])]
-    by_cases hab : a.val = b + 1
-    · simpa [hab] using h_factor a b hab
-    · simp [hab]
-  · -- the last string vector is killed by both sides
-    have h_ne (k : Fin (s - 1)) : k.val ≠ b := by omega
-    simp [Matrix.mul_apply, h_ne, show a.val ≠ b + 1 by omega]
+    by_cases hab : a.val = b + 1 <;> simp [hab]
+    grind
+  · simp [Matrix.mul_apply, show ∀ k : Fin (s - 1), k.val ≠ b by omega,
+      show a.val ≠ b + 1 by omega]
 
 /-- Let `s' = s - 1`, `T = Y.stringMap Y'` and let `T†` be its adjoint for the two forms. If `Y` and
 `Y'` have the same constant of the generic character, `Y'.genericConst = Y.genericConst`, then
@@ -910,14 +901,6 @@ lemma formAdjoint_stringMap_mul_stringMap_eq_shift :
 lemma stringMap_mul_formAdjoint_stringMap_eq_shift (hc : Y'.genericConst = Y.genericConst) :
     Y.stringMap Y' * V.formAdjoint V' (Y.stringMap Y') = Y'.shift := by
   -- `T†` raises the number of a string vector by one and `T` keeps it; the factors multiply.
-  have h_factor (a b : ℕ) (hab : a = b + 1) (ha : a < s) :
-      (if Odd s ↔ 2 * a + 1 < s then 1 else (Y.genericConst : E)) *
-        (if 2 * a + 1 = s then -N else 1) *
-          ((if Odd s ↔ s < 2 * a + 1 then 1 else (Y.genericConst : E)) *
-            (if 2 * a = s then -N else 1)) =
-        Y.genericConst * (if 2 * b + 1 = s - 1 then -N else if 2 * a = s - 1 then -N *
-          Y.genericConst else 1) := by
-    grind
   rw [formAdjoint_stringMap, stringMap, shift, hc, ← Matrix.map_mul, Matrix.submatrix_mul_equiv,
     Matrix.fromBlocks_multiply]
   simp only [Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add]
@@ -925,9 +908,8 @@ lemma stringMap_mul_formAdjoint_stringMap_eq_shift (hc : Y'.genericConst = Y.gen
   ext a b
   rw [Matrix.mul_apply,
     Fintype.sum_eq_single ⟨b + 1, by omega⟩ (by simp +contextual [Fin.ext_iff])]
-  by_cases hab : a.val = b + 1
-  · simpa [hab] using h_factor a b hab (by omega)
-  · simp [hab]
+  by_cases hab : a.val = b + 1 <;> simp [hab]
+  grind [a.isLt, b.isLt]
 
 /-- Let `Y` present `V` as `X ⊕ J_s` and `Y'` present `V'` as `X' ⊕ J_{s-1}` with the same `N`, each
 carrying a constant `c = c̄ ≠ 0`. Let `T = Y.stringMap Y'` be the map `V → V'` that kills `X` and

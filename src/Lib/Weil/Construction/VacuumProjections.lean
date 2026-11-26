@@ -893,24 +893,17 @@ lemma eventually_omega_eq_self (hf : f ∈ V.finitePart) :
     ∀ᶠ k : Gf E n in nhds 1, V.ω (1, k) f = f := by
   induction hf using span_induction with
   | zero => simp
-  | add f₁ f₂ _ _ h₁ h₂ =>
-    filter_upwards [h₁, h₂] with k hk₁ hk₂
-    rw [map_add, hk₁, hk₂]
-  | smul c f₁ _ h₁ =>
-    filter_upwards [h₁] with k hk₁
-    rw [map_smul, hk₁]
+  | add _ _ _ _ h₁ h₂ => exact (h₁.and h₂).mono fun k ⟨hk₁, hk₂⟩ ↦ by simp [hk₁, hk₂]
+  | smul _ _ _ h₁ => exact h₁.mono fun k hk ↦ by simp [hk]
   | mem _ h_gen =>
-    obtain ⟨z, rfl⟩ := h_gen
-    -- Near `1`, `k` lies in `stdLevel`, so it fixes the vacuum, and by local constancy `k z` acts
-    -- on the vacuum as `z` does. As `k` is unitary, `semichar (k z) = semichar z`.
-    have h_const :
-        IsLocallyConstant fun k : Gf E n ↦ V.ϱ (finVec ((k : Matrix n n (𝔸f E)) *ᵥ z)) V.vacElem :=
+    rcases h_gen with ⟨z, rfl⟩
+    -- Near `1`, `k` lies in `stdLevel` (fixing the vacuum) and `k z` acts on the vacuum as `z`.
+    have h_const : IsLocallyConstant fun k : Gf E n ↦
+        V.ϱ (finVec ((k : Matrix n n (𝔸f E)) *ᵥ z)) V.vacElem :=
       (isLocallyConstant_rho_finVec V.vacElem_mem_finitePart).comp_continuous (by fun_prop)
     filter_upwards [h_const.eventually_eq 1, isOpen_stdLevel.mem_nhds (by simp)] with k hk_z hk_mem
-    have h_supp : k ∈ Gf.supportedOn n (⊤ : Set (FinPlace E)) := by simp
-    have h_vac : V.ω (1, k) V.vacElem = V.vacElem :=
-      V.omega_eq_self_of_mem_stdLevel h_supp V.projOn_vacElem hk_mem
-    rw [omega_finHeisenbergOp, h_vac]
+    rw [omega_finHeisenbergOp,
+      V.omega_eq_self_of_mem_stdLevel (by simp : k ∈ Gf.supportedOn n ⊤) V.projOn_vacElem hk_mem]
     simp [finHeisenbergOp, semichar, star_mulVec_dotProduct_mulVec, hk_z]
 
 attribute [irreducible] finitePart
