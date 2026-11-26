@@ -119,7 +119,7 @@ lemma New.Rows.exists_unitary_mul_triangular_of_pos {n : Type} [Fintype n] [Deci
   have c_block : c.BlockTriangular o := by grind [BlockTriangular, of_apply]
   have c_tri : IsBorelMatrix o c := by
     refine ⟨c_block, ?_⟩
-    rw [DiscreteSeries.det_eq_prod_diag_of_blockTriangular o_inj c_block]
+    rw [c_block.det_eq_prod_diag o_inj]
     simp [prod_ne_zero_iff, c, r, p_pos, ne_of_gt]
   set M : Matrix n n ℂ := 1 - t • vecMulVec v (star v) * signMatrix s
   have unitary : (M * c)ᴴ * signMatrix s * (M * c) = signMatrix s := by

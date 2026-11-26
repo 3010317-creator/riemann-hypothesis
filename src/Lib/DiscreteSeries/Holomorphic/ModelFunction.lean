@@ -348,7 +348,7 @@ theorem IsInCornerBlock.isBorelMatrix_and_diagChar_eq_one {s : ℤˣ} {x : Matri
   have h_tri : x.BlockTriangular o := fun i j hij ↦ by
     have h_ne : i ≠ j := fun h_eq ↦ hij.ne (congrArg o h_eq.symm)
     simpa [h_ne] using hx i j fun ⟨hi, hj⟩ ↦ (h_first i j hi hj).not_gt hij
-  exact ⟨⟨h_tri, by simp [det_eq_prod_diag_of_blockTriangular ho h_tri, h_diag]⟩,
+  exact ⟨⟨h_tri, by simp [h_tri.det_eq_prod_diag ho, h_diag]⟩,
     fun w ↦ by simp [diagChar, h_diag]⟩
 
 /-- A block diagonal matrix that is invertible and upper triangular for the order `o`
