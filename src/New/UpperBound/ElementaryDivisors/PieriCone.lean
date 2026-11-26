@@ -11,6 +11,7 @@ public import Mathlib.Tactic.Field
 public import Mathlib.Tactic.FunProp
 public import Mathlib.Tactic.Linarith
 public import Mathlib.Tactic.LinearCombination
+public import TauCeti.LinearAlgebra.Determinant.Basic
 
 /-!
 # The Pieri cone, the step map and the slab: interlacing and volume of the cone
@@ -145,14 +146,6 @@ noncomputable def detOneSubPerm (q : ℝ) (τ : Perm (Fin k)) : ℝ :=
   (1 - q⁻¹ • funLeft ℝ ℝ τ : Module.End ℝ (Fin k → ℝ)).det
 
 variable (P : ℝ)
-
-/-- For linear maps `A : ℝ^ι → ℝ^κ` and `B : ℝ^κ → ℝ^ι`, the endomorphisms `1 - A B` and
-`1 - B A` have the same determinant. -/
-lemma det_one_sub_comp_comm {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
-    (A : (ι → ℝ) →ₗ[ℝ] κ → ℝ) (B : (κ → ℝ) →ₗ[ℝ] ι → ℝ) :
-    (1 - A ∘ₗ B).det = (1 - B ∘ₗ A).det := by
-  rw [← det_toMatrix', ← det_toMatrix', map_sub, map_sub, toMatrix'_one, toMatrix'_one,
-    toMatrix'_comp, toMatrix'_comp, det_one_sub_mul_comm]
 
 /-- For `P > 1` the step map `permStep v P σ` has nonzero determinant. -/
 lemma det_permStep_ne_zero (v : Fin (m + 1) → Bool) (hP : 1 < P)
