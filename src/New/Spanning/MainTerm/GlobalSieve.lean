@@ -333,10 +333,8 @@ with `a ∈ Ô E` integral. -/
 lemma extendToAdeles_sub_adeleOfLocal_add {a : 𝔸f E} (ha : a ∈ Ô E) (z : 𝔸 E) :
     extendToAdeles T r F ((0, a - adeleOfLocal T (evalPlaces T a)) + z) =
       extendToAdeles T r F z := by
-  obtain ⟨-, ha_off⟩ := (mem_Ô_iff T).1 ha
-  have h_int : a - adeleOfLocal T (evalPlaces T a) ∈ Ô E := (sub_adeleOfLocal_mem_iff T).2 ha_off
   have h_off : a - adeleOfLocal T (evalPlaces T a) ∈ integralOff T :=
-    ((mem_Ô_iff T).1 h_int).right
+    sub_mem ((mem_Ô_iff T).1 ha).right (adeleOfLocal_mem_integralOff T _)
   by_cases hz : z.2 ∈ integralOff T
   · rw [extendToAdeles_of_mem T hz, extendToAdeles_of_mem T (add_mem h_off hz)]
     simp
