@@ -1074,7 +1074,8 @@ lemma one_le_pow_mul_prod_poissonConst [S.IsAdmissible] {i : ℕ} (hi : i ≤ �
   calc
     _ ≤ S.b ^ (100 * 𝔰.n ^ 2 * numInfPlaces E) * ∏ _a ∈ range i,
           (S.b ^ numInfPlaces E)⁻¹ / ∏ _v : InfinitePlace E, ((S.b ^ 23) ^ (2 * 𝔰.ϱ)) ^ 2 := by
-      simp [field, ← pow_mul, ← pow_add]
+      simp only [← pow_mul, prod_const, card_univ, Finset.card_range, div_pow, inv_pow, field,
+        ← pow_add]
       gcongr
       grw [hi]
       lia
