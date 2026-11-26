@@ -524,24 +524,17 @@ integer `u` among the jumps at the letter `i.stepBack a`, `a` steps before `i`, 
 `μ` of type `u` there has `μ (φ^{-a} y)` in `t ^ (o a u) B_dR⁺`. -/
 lemma mem_withOrders_of_inclKer {y : S.Ambient}
     (hy : S.inclKer.wittMap y ∈ S.extensionLattice.withOrders i o) : y ∈ S.withOrders i o := by
-  obtain ⟨⟨h_span, h_letter⟩, h_exp⟩ := hy
-  have y_letter : y ∈ S.letterPart i := mem_letterPart_of_inclKer h_letter
-  refine ⟨⟨mem_kisinLocAinf_of_inclKer h_span, y_letter⟩, fun a u hu μ ⟨μ_form, μ_pole⟩ ↦ ?_⟩
+  have y_letter := mem_letterPart_of_inclKer hy.1.2
+  refine ⟨⟨mem_kisinLocAinf_of_inclKer hy.1.1, y_letter⟩, fun a u hu μ ⟨μ_form, μ_pole⟩ ↦ ?_⟩
   -- extend the letter part of `μ` to a form `ν`, keeping the order of its pole
-  obtain ⟨ν, ν_form, ν_pole, ν_res⟩ : ∃ ν ∈ S.extensionLattice.forms,
-      S.extensionLattice.ainfLattice ≤ ((hodgeFil (-u)).restrictScalars Ainf).comap ν ∧
-      ν ∘ₗ S.inclKer.wittMap.restrictScalars Ainf =
-        μ ∘ₗ (S.letterProj (i.stepBack a)).restrictScalars Ainf :=
+  obtain ⟨ν, ν_form, ν_pole, ν_res⟩ :=
     exists_extend_form _ (comp_letterProj_mem_forms μ_form) μ_pole
-  have ν_type : ν ∈ S.extensionLattice.formsOfType (i.stepBack a) u :=
-    ⟨ν_form, fun t ↦ ν_pole (letterProj_mk_mem_ainfLattice t)⟩
   -- `φ ^ (-a) • y` lies at the letter `i.stepBack a`, where `ν` restricts to `μ`
   have h_value : valueAt a ν (S.inclKer.wittMap y) = valueAt a μ y := by
     rw [← valueAt_comp_wittMap, ν_res]
     simp [JumpLattice.valueAt, mem_letterPart_iff_letterProj.1, ← phi_pow_smul_mem_letterPart_iff,
       y_letter, -Equiv.Perm.coe_inv]
-  rw [← h_value]
-  exact h_exp a u hu ν ν_type
+  exact h_value ▸ hy.2 a u hu ν ⟨ν_form, fun t ↦ ν_pole (letterProj_mk_mem_ainfLattice t)⟩
 
 /-- Let `y` be a vector of `W(C^♭) ⊗ Y`, for the lattice `Y` of the side `S`. If the image of `y` in
 the extension of `C` by `Y` lies in `kisinLoc` of the extension, then `y` lies in `kisinLoc` of `Y`.
@@ -790,25 +783,19 @@ a point at `i` over the same constant, with orders `shiftedOrders l 0 o` and dep
 `shiftedOrders l 1 o'`. -/
 lemma phi_pow_smul_mem_pointsOver (hw : w ∈ S.pointsOver c (i.stepBack l) e o o') :
     φ ^ l • w ∈ S.pointsOver c i e (shiftedOrders l 0 o) (shiftedOrders l 1 o') := by
-  have ⟨w_mem, pr_w, w_exp, _⟩ := hw
-  refine ⟨phi_pow_smul_mem_kisinLoc w_mem, ?_, phi_pow_smul_mem_withOrders w_exp, fun g ↦ ?_⟩
-  · simp [pr_w, smul_comm, phi_pow_smul_constantAt, Perm.coe_inv]
+  refine ⟨phi_pow_smul_mem_kisinLoc hw.1,
+    by simp [hw.2.1, smul_comm, phi_pow_smul_constantAt, Perm.coe_inv],
+    phi_pow_smul_mem_withOrders hw.2.2.1, fun g ↦ ?_⟩
   -- `g • w - w` is divisible by `k.zTau`, and `φ ^ l • k.zTau` vanishes at the levels `a < l`,
   -- which raises the order there from `0` to `1`
-  have quot : φ ^ l • k.zTauUnit⁻¹ • (g • w - w) ∈
-      S.extensionLattice.withOrders i (shiftedOrders l 0 o') :=
-    phi_pow_smul_mem_withOrders (zTauUnit_inv_smul_sub_mem_kerWithOrders hw g).1
-  have factor : g • φ ^ l • w - φ ^ l • w =
-      (φ ^ l • k.zTau) • φ ^ l • k.zTauUnit⁻¹ • (g • w - w) := by
-    simp [← frobGroup_smul_smul, ← zTauUnit_smul, smul_sub, smul_phi_pow_comm]
-  rw [factor]
+  have quot := phi_pow_smul_mem_withOrders (zTauUnit_inv_smul_sub_mem_kerWithOrders hw g).1
+  rw [show g • φ ^ l • w - φ ^ l • w = (φ ^ l • k.zTau) • φ ^ l • k.zTauUnit⁻¹ • (g • w - w) by
+    simp [← frobGroup_smul_smul, ← zTauUnit_smul, smul_sub, smul_phi_pow_comm]]
   refine mem_withOrders_of_mem_hodgeFil (smul_mem _ _ quot) fun a u hu h_lt μ hμ ↦ ?_
   -- the order to reach differs from the order of the quotient only at the levels below `l`
   have ha : a < l := by lia
-  have h_zTau : phiInvToBdR a (φ ^ l • k.zTau) ∈ hodgeFil 1 := by
-    rw [phiInvToBdR_mem_hodgeFil_one_iff, zTau, smul_mul']
-    exact (frobE_dvd_phi_pow_tau ha).mul_right _
-  simpa [ha] using mul_mem_hodgeFil h_zTau (quot.2 a u hu μ hμ)
+  simpa [ha] using mul_mem_hodgeFil (phiInvToBdR_mem_hodgeFil_one_iff.2 <| by
+    simpa [zTau, smul_mul'] using (frobE_dvd_phi_pow_tau ha).mul_right _) (quot.2 a u hu μ hμ)
 
 /-- The constant `1` of the Tate dual side at the letter `i` acts on `S.Ambient` as the projector to
 the letter `i`. -/

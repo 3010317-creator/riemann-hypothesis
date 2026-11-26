@@ -206,24 +206,19 @@ lemma isMainSummandWeights_mainPair {p : D.CriticalPair} {j : ℕ} (hp : p.IsMai
     IsMainSummandWeights D 1 (2 * p.z - 1) fun σ : D.E →+* ℂ ↦
       {(p.z - 1 - cmSign σ * p.negWeight (InfinitePlace.mk σ) : ℤ)} := by
   have ht : D.t = 5 * D.r := rfl
-  obtain ⟨hz_gt : D.m < p.z, hz_le : p.z ≤ D.r⟩ := hp.z_mem
+  obtain ⟨hz_gt, hz_le⟩ := hp.z_mem
   refine
     { rank_mem := ⟨le_rfl, by omega⟩
       t_le := by omega
-      low_or_high :=
-        ⟨j, hp.j_mem.2, fun σ u hu ↦ .inr
-          (abs_mainPair_weight_add_liftWeight_le hp σ (mem_singleton.1 hu))⟩
-      card_small_le σ := ?_
-      card_neg_le σ := ?_ }
-  · have hw_large : 2 * D.halfGap ^ 2 + D.t < D.liftWeight j (InfinitePlace.mk σ) :=
-      D.nat_lt_of_hasLogBound
-    have h_large : 2 * D.halfGap ^ 2 < (p.z - 1 - cmSign σ * p.negWeight (InfinitePlace.mk σ) :
-      ℤ).natAbs :=
-      lt_natAbs_of_abs_add_liftWeight_le hw_large (abs_mainPair_weight_add_liftWeight_le hp σ rfl)
-    simp [countP_eq_zero.2, h_large]
-  · -- The jumps at `σ` and at its conjugate have the sum `2 (z - 1) ≥ 0`.
-    rw [InfinitePlace.mk_conjugate_eq σ, cmSign_star, Units.val_neg, ← cons_zero, ← cons_zero]
-    grind [countP_cons, countP_zero]
+      low_or_high := ⟨j, hp.j_mem.2, fun σ _ hu ↦
+        .inr (abs_mainPair_weight_add_liftWeight_le hp σ (mem_singleton.1 hu))⟩
+      card_small_le σ := by
+        simp [countP_eq_zero.2, lt_natAbs_of_abs_add_liftWeight_le (D.nat_lt_of_hasLogBound :
+          2 * D.halfGap ^ 2 + D.t < _) (abs_mainPair_weight_add_liftWeight_le hp σ rfl)]
+      card_neg_le σ := by
+        -- The jumps at `σ` and at its conjugate have the sum `2 (z - 1) ≥ 0`.
+        rw [InfinitePlace.mk_conjugate_eq σ, cmSign_star, Units.val_neg, ← cons_zero, ← cons_zero]
+        grind [countP_cons, countP_zero] }
 
 end RowJumps
 
