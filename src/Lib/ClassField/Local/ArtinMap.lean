@@ -1036,11 +1036,8 @@ lemma exists_eq_pow_and_apply_conj_eq_pow {γ : inertiaGroup Gal(Ω/K) A} (hγ :
       ∀ (q : ℕ) (φ : D), IsFrob A q φ →
         ∃ h_mem : φ * s * φ⁻¹ ∈ inertiaGroup D A, f' ⟨φ * s * φ⁻¹, h_mem⟩ = f' s ^ q :=
     (h_galois.tame_inertia (h_unif hπ) hn hy f' h_open fun g ↦ hP _ g.property).right
-  obtain ⟨h_gen, -⟩ := h_local (incl γ)
-  obtain ⟨-, h_frob⟩ := h_local (incl s)
-  refine ⟨h_gen h_prim (incl s), fun q φ hφ ↦ ?_⟩
-  obtain ⟨h_mem, h_conj⟩ := h_frob q ⟨φ, hφ.left⟩ hφ
-  exact h_conj
+  exact ⟨(h_local (incl γ)).1 h_prim (incl s), fun q φ hφ ↦
+    ((h_local (incl s)).2 q ⟨φ, hφ.left⟩ hφ).choose_spec⟩
 
 /-- The structure of tame inertia for the chosen tame generator. Let `f` kill the elements of
 inertia near `1` and have `f g ^ n = 1` on inertia, with `n` prime to `w`. For `s` in inertia,
