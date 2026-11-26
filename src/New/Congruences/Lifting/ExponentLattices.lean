@@ -667,17 +667,12 @@ lemma phi_pow_smul_mem_kisinLoc {x : L.Ambient} (hx : x ∈ L.kisinLoc) : φ ^ l
   | zero => simpa using hx
   | succ l ih => simpa only [pow_succ', mul_smul] using phi_smul_mem_kisinLoc ih
 
-/-- The A_inf-module `L.kisinAinf` is spanned by the Kisin module `L.kisinModule`. This is a part of
-`frame_theorem`. -/
-lemma span_kisinModule : span Ainf (L.kisinModule : Set L.Ambient) = L.kisinAinf :=
-  L.frame_theorem.kisinAinf_eq_span_kisinModule.symm
-
 /-- The A_inf-span of the Kisin module `L.kisinLoc` with all φ^a E inverted is `L.kisinLocAinf`,
 which is defined as the set of x that some product of the φ^a E sends into `L.kisinAinf`, the
 A_inf-span of the Kisin module `L.kisinModule`. -/
 lemma span_kisinLoc : span Ainf (L.kisinLoc : Set L.Ambient) = L.kisinLocAinf := by
   have h_base : L.kisinAinf ≤ span Ainf (L.kisinLoc : Set L.Ambient) :=
-    span_kisinModule.ge.trans (span_mono kisinModule_le_kisinLoc)
+    kisinAinf_eq_span_kisinModule.le.trans (span_mono kisinModule_le_kisinLoc)
   have h_step (a : ℕ) (y : L.Ambient)
       (hy : (k.frobE a).val • y ∈ span Ainf (L.kisinLoc : Set L.Ambient)) :
       y ∈ span Ainf (L.kisinLoc : Set L.Ambient) := by
