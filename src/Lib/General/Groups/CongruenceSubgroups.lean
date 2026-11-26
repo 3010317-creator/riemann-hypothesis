@@ -147,6 +147,10 @@ def signMatrix (s : n → ℤˣ) : Matrix n n ℂ := Matrix.diagonal fun i : n �
 @[simp]
 lemma signMatrix_one : signMatrix (n := n) 1 = 1 := by simp [signMatrix]
 
+/-- The diagonal matrix of a vector of signs ε is Hermitian. -/
+lemma conjTranspose_signMatrix {ε : n → ℤˣ} : (signMatrix ε)ᴴ = signMatrix ε := by
+  simp [signMatrix]
+
 variable [Fintype n] [CommRing R] [CommRing S] {O : Subring R}
 
 /-- Multiplying M on the right by the inclusion matrix of u selects the columns u(j) of M. -/
