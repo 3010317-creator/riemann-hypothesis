@@ -269,11 +269,9 @@ lemma divStar_surjective : Function.Surjective (divStar : (𝔸 E)ˣ →ₜ* uni
 /-- Base change is injective: a character `μ` of `U(1)(𝔸)` is determined by `x ↦ μ(x / x̄)`, since
 every point of `U(1)(𝔸)` is of the form `y / ȳ` (`divStar_surjective`). -/
 lemma AutChar.baseChange_injective :
-    Function.Injective (AutChar.baseChange : AutChar E →* HeckeChar E) := by
-  intro α β h_eq
-  ext u
-  obtain ⟨y, rfl⟩ := divStar_surjective u
-  exact congrArg (fun χ : HeckeChar E ↦ (χ.val y : ℂ)) h_eq
+    Function.Injective (AutChar.baseChange : AutChar E →* HeckeChar E) := fun _ _ h_eq ↦
+  Subtype.ext <| DFunLike.coe_injective <|
+    divStar_surjective.injective_comp_right (congrArg (fun χ : HeckeChar E ↦ ⇑χ.val) h_eq)
 
 /-- Reduction modulo w: the homomorphism from the elements of U(1)(𝔸) with integral finite part
 to the multiplicative group of the residue field at w. -/
