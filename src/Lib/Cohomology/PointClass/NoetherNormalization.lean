@@ -721,7 +721,7 @@ lemma IsCoordsWithUnit.exists_universal_chart (hξ : IsCoordsWithUnit L ξ g)
   have h_eval {C : CommAlg k} {w : ι → C} (u : IsUnit (w i)) :
       ∃ φ : MvPolynomial ι k →ₐ[k] C,
         w i • φ ∘ X = w ∧ ∀ P, Associated ((homog P).aeval w) (φ P) := by
-    refine ⟨aeval (u.unit⁻¹.1 • w), by simp [← mul_assoc, funext_iff], fun P ↦ ?_⟩
+    refine ⟨aeval (u.unit⁻¹.val • w), by simp [← mul_assoc, funext_iff], fun P ↦ ?_⟩
     simp [← h_chart P, aeval_smul_of_isHomogeneous (h_homog_deg _), associated_unit_mul_right,
       IsUnit.pow]
   -- (`@` keeps `C` and `w` implicit in the chosen functions)

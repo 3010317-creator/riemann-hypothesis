@@ -109,10 +109,10 @@ abbrev gluing : freeAb (tiltPointsSum pointOrTorus ψ) ⟶ freeAb (twoDiscs ψ) 
   freeAb.desc
     (fun
       | _, ⟨⟨true⟩, t⟩ =>
-        .of ⟨⟨false⟩, ⟨ψ.map (discToTorus (-coeHom)) ≫ t.1⟩⟩ -
-          .of ⟨⟨true⟩, ⟨ψ.map (discToTorus coeHom) ≫ t.1⟩⟩
+        .of ⟨⟨false⟩, ⟨ψ.map (discToTorus (-coeHom)) ≫ t.down⟩⟩ -
+          .of ⟨⟨true⟩, ⟨ψ.map (discToTorus coeHom) ≫ t.down⟩⟩
       | _, ⟨⟨false⟩, t⟩ =>
-        FreeAddCommGroup.of ⟨⟨false⟩, ⟨ψ.map (evalZero (pointOrTorus { down := false })) ≫ t.1⟩⟩)
+        FreeAddCommGroup.of ⟨⟨false⟩, ⟨ψ.map (evalZero (pointOrTorus { down := false })) ≫ t.down⟩⟩)
     (by bound)
 
 private def ofTorus {ψ : CommAlg OFlat ⥤ CommAlg OFlat} {A : PadicTest}

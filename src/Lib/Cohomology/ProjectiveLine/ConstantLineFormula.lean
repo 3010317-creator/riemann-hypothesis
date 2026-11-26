@@ -238,7 +238,7 @@ def TestOver.structurePt :
       ⟨of A k, isTest_of_preValuationRing⟩ :=
   sectionMap
     { val B := ⟨⟨CommAlg.homOfRingHom (algebraMap k B.obj) (by tauto)⟩⟩
-      property f := congr(⟨⟨$(by ext; apply f.1.hom.2)⟩⟩) }
+      property f := congr(⟨⟨$(by ext; apply f.hom.hom.commutes')⟩⟩) }
 
 /-- For an algebraically closed field k over A, restriction of scalars from tests over k to tests
 over A compares the point with the functor Hom_A(k, −) in the sense of
