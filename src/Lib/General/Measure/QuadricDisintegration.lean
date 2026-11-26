@@ -616,28 +616,22 @@ lemma isDisintegration_quadricMeasure (hT : Tᴴ = T) :
   refine ⟨fun {f} hf hf_supp ↦ ?_, fun f hf ↦ ?_⟩ <;>
     simp (disch := fun_prop) only [quadricMeasure, lintegral_map, lintegral_prod]
   · -- Finiteness and continuity in `b`: the integrals over the fibres have a majorant free of `b`.
-    let bound (p : A × (ι → A)) : ℝ≥0∞ := ofNNReal (iSup f) *
-      ⨆ β : skewAdjoint A, skewMeasure {a | flatChart T β (p, a) ∈ tsupport f}
-    have h_fin : ∫⁻ p, bound p < ∞ := by
-      simpa [bound, lintegral_const_mul'] using
-        mul_lt_top coe_lt_top (lintegral_iSup_fibre_lt_top hf_supp)
-    refine ⟨continuous_iff_continuousAt.2 fun b ↦ ?_,
+    let bound (p : A × (ι → A)) := ofNNReal (iSup f) *
+      ⨆ β, skewMeasure {a | flatChart T β (p, a) ∈ tsupport f}
+    have h_fin : ∫⁻ p, bound p < ∞ := (lintegral_const_mul' _ _ coe_ne_top).trans_lt
+      (mul_lt_top coe_lt_top (lintegral_iSup_fibre_lt_top hf_supp))
+    exact ⟨continuous_iff_continuousAt.2 fun b ↦
+      tendsto_lintegral_filter_of_dominated_convergence bound (.of_forall (by fun_prop))
+        (.of_forall fun β ↦ .of_forall (lintegral_flatChart_le hf hf_supp β)) h_fin.ne
+        (h_unit.mono fun p hp ↦ (continuous_lintegral_flatChart hT hf hf_supp hp).continuousAt),
       fun b ↦ (lintegral_mono (lintegral_flatChart_le hf hf_supp b)).trans_lt h_fin⟩
-    have h_cont_fibre : ∀ᵐ p : A × (ι → A),
-        ContinuousAt (fun β : skewAdjoint A ↦ ∫⁻ a, f (flatChart T β (p, a)) ∂skewMeasure) b :=
-      h_unit.mono fun p hp ↦ (continuous_lintegral_flatChart hT hf hf_supp hp).continuousAt
-    exact tendsto_lintegral_filter_of_dominated_convergence bound (.of_forall (by fun_prop))
-      (.of_forall fun β ↦ .of_forall (lintegral_flatChart_le hf hf_supp β)) h_fin.ne h_cont_fibre
   · -- The disintegration formula, in coordinates `x = (s, t, w)`, for fixed `w` and unit `t`.
-    let Φ (x : Fin 2 ⊕ ι → A) : ℝ≥0∞ := f (star x ⬝ᵥ planeSumGram T *ᵥ x, x)
-    let fibre (b : skewAdjoint A) (p : A × (ι → A)) : ℝ≥0∞ :=
-      ∫⁻ a, f (skewUnit⁻¹.val * b, flatChart T b (p, a)) ∂skewMeasure
-    calc ∫⁻ x, Φ x = ∫⁻ r : A × A × (ι → A), Φ (![r.1, r.2.1] ⊕ᵥ r.2.2) :=
-          (measurePreserving_pair_sumElim.lintegral_comp (by fun_prop)).symm
-      _ = ∫⁻ p : A × (ι → A), ∫⁻ s : A, Φ (![s, p.1] ⊕ᵥ p.2) := lintegral_prod_symm' _ (by fun_prop)
-      _ = ∫⁻ p, ∫⁻ b, fibre b p ∂skewMeasure := lintegral_congr_of_ae_imp h_unit fun p hp ↦
-          lintegral_form_eq_lintegral_flatChart hT hf hp.unit p.2
-      _ = ∫⁻ b, ∫⁻ p, fibre b p ∂volume ∂skewMeasure := lintegral_lintegral_swap (by fun_prop)
+    let Φ (x : Fin 2 ⊕ ι → A) := f (star x ⬝ᵥ planeSumGram T *ᵥ x, x)
+    exact (measurePreserving_pair_sumElim.lintegral_comp (by fun_prop)).symm.trans <|
+      (lintegral_prod_symm' (fun r ↦ Φ (![r.1, r.2.1] ⊕ᵥ r.2.2)) (by fun_prop)).trans <|
+      (lintegral_congr_of_ae_imp h_unit fun p hp ↦
+        lintegral_form_eq_lintegral_flatChart hT hf hp.unit p.2).trans <|
+      lintegral_lintegral_swap (by fun_prop)
 
 end Place
 
