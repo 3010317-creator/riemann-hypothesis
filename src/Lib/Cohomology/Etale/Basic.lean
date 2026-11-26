@@ -974,7 +974,7 @@ extension by the dual), which turns each `x ∈ T` into a point `f x ∈ W(k[ε]
 for all `t ∈ k`. -/
 def IsTangentPoly {W Z : CommAlg k ⥤ Type 1} (d : ℕ) (c u : W ⟶ Z) (y : W.obj (of k k))
     (P : Polynomial k) : Prop :=
-  ∃ᵉ (T : FGModuleCat k) (v : W.obj (of k (TrivSqZeroExt k (Dual k T)))) (A : Module.End k T),
+  ∃ T : FGModuleCat k, ∃ v : W.obj (of k (TrivSqZeroExt k (Dual k T))), ∃ A : Module.End k T,
     -- a vector `x : T` gives a point `f x` of `W` with values in `k ⊕ k`
     let f (x : T) := W.map (ofHom (TrivSqZeroExt.map (Dual.eval k T x))) v
     -- (a) `T` has dimension `d`
