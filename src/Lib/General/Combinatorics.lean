@@ -97,7 +97,8 @@ lemma New.q_binomial_submodule (n k : Type*) [Finite n] [Field k] [Finite k]
     intro T
     change weight (finrank k T) = heckePolyCoeff X (T.map W.subtype)
     unfold heckePolyCoeff
-    rw [Nat.card_eq_fintype_card, ← (T.equivMapOfInjective W.subtype W.subtype_injective).finrank_eq]
+    rw [Nat.card_eq_fintype_card,
+      ← (T.equivMapOfInjective W.subtype W.subtype_injective).finrank_eq]
   -- Collect the terms of each dimension and apply the finite q-binomial theorem.
   have ranks (U : Submodule k W) (_ : U ∈ univ) : finrank k U ∈ range (d + 1) :=
     mem_range.mpr (Nat.lt_succ_of_le U.finrank_le)
