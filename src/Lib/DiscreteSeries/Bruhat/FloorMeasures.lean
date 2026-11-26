@@ -384,8 +384,8 @@ lemma frameMatrix_heisenbergElem :
         (𝔰.besselFrame b) := by
     simp [frameMatrix, -heisenbergElem_mulVec]
   rw [h_col, heisenbergElem_mulVec, h_dual, ← besselFrame_castSucc]
-  simp [vecMulVec_apply, Pi.single_apply, Matrix.one_apply, besselFrame_injective.eq_iff, sub_eq_add_neg,
-    -besselFrame_castSucc]
+  simp [vecMulVec_apply, Pi.single_apply, Matrix.one_apply, besselFrame_injective.eq_iff,
+    sub_eq_add_neg, -besselFrame_castSucc]
 
 /-- Let s be in G_{a+1}, so that s fixes the basis vectors of floor below a + 1. Let v be a vector
 of the floors at least a + 1, extended by zero, let β be skew, and let ν(v,
