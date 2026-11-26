@@ -561,8 +561,8 @@ lemma FrobeniusCycle.exists_mem_defectCone_sum_le (T : FrobeniusCycle N W K) (a 
   · rw [hσ]
     exact ite_nonneg (mul_nonneg hP_sq (hμ_nonneg b)) le_rfl
   · refine ⟨if T.isEven i ∧ b ≤ a then (T.P ^ 2 - 1) * (T.P ^ 2) ^ (a.val - b) else 0, ?_⟩
-    simp only [hσ, μ]
-    by_cases h_even : T.isEven i <;> by_cases hb : b ≤ a <;> simp [h_even, hb]
+    simp only [hσ, μ, ite_and, mul_ite, mul_zero, Int.cast_ite, Int.cast_mul, Int.cast_sub,
+      Int.cast_pow, Int.cast_natCast, Int.cast_one, Int.cast_zero]
   · simp only [hσ]
     split_ifs
     · rw [← Finset.mul_sum, hμ_sum, mul_geom_sum, pow_mul]
