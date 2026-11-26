@@ -380,7 +380,8 @@ lemma DescentPair.ofAlgForm_vectorKernelForm [WeilData E] (g : G E O.signs) (h :
     simpa only [ζ, star_highestVector, map_one, one_smul, OneMemClass.coe_one] using
       O.omega_fockDatum_star x 1 ζ
   calc ofAlgForm O.paramV 1 (O.vectorKernelForm g).val (x, k)
-      = gramForm ζ (conjWeylRep O.columnCount O.detExp x⁻¹ (O.vectorKernel g k)) := rfl
+      = gramForm ζ (conjWeylRep O.columnCount O.detExp x⁻¹ (O.vectorKernel g k)) := by
+        rw [algFormCoeff_apply, vectorKernelForm_apply]
     _ = gramForm (conjWeylRep O.columnCount O.detExp x ζ) (O.vectorKernel g k) := by
         rw [← gramForm_conjWeylRep x, Representation.self_inv_apply]
     _ = pairTheta O.W (stdSpace E n) O.charW O.charV (O.fockDatum ζ) ((g, 1, k) * (1, x, 1)) := by
@@ -943,6 +944,7 @@ theorem exists_hasSum_rallisTerm_inner_singleLift (j : D.LiftIndex) :
   obtain ⟨C, hC, h_rallis⟩ := rallis_inner_product_cosetTerm (S := D.spaceW j)
     (T := stdSpace D.E (D.RowIndex ⊕ Fin D.t)) (D.fitsParams_descentPair .one j).isEdge
     D.two_mul_card_rowIndex_lt
+  generalize (TameChar.one : D.TameChar) = ϑ₀ at h_rallis
   let dim : ℂ := card (WeylIndex (D.Y 1) (D.descentPair .one j).columnCount)
   refine ⟨C * dim, mul_ne_zero hC NeZero.out, fun ϑ x y ↦ ?_⟩
   let O : DescentPair D.E D.RowIndex (D.RowIndex ⊕ Fin D.t) := D.descentPair ϑ j
