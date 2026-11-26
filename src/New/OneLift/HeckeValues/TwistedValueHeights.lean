@@ -750,19 +750,6 @@ theorem exists_isTestForm_inner_kernelForm_eq {l : ℕ} [Fact l.Prime]
   let F (h₁ : Gf D.E (Fin (2 * p.z - 20))) (h₂ h₃ : Gf D.E (Fin 4)) : X.descentPair.FormV :=
     pointForm (U.blockSumOne (U.blockSumOne (1, U.blockSumOne (h₂, h₃)), h₁))
       (testColumn_injective hq hp ϑ x₀) (twistRow p.z) ((↑) ∘ c)
-  -- The pairing of `F` with the kernel of `X` factors over the four blocks.
-  have h_pair (g : Gf D.E Unit) (h₁ : Gf D.E (Fin (2 * p.z - 20))) (h₂ h₃ : Gf D.E (Fin 4))
-      (i₁ : WeylIndex (Fin (2 * p.z - 20)) (lValueData hq.2 u).descentPair.columnCount)
-      (i₂ : WeylIndex (Fin 4) (lValueData hq₂.2 ϑ).descentPair.columnCount)
-      (i₃ : WeylIndex (Fin 4) (lValueData hq₃.2 u).descentPair.columnCount) :
-      innerSLFlip ℂ (X.kernelForm g) (F h₁ h₂ h₃) =
-        (∏ τ, (X.rowLength τ)! : ℕ) / α.prod (fun _ k ↦ (k ! : ℂ)) *
-          (modKernel (stdSpace D.E Unit) (stdSpace D.E (Fin 12)) 1 χ (X.levelModulus 1 false)
-              (Pi.single x₀ 1) (monomial α 1) (1, g) (1, 1) *
-            (lValueData hq₂.2 ϑ).kernelForm g h₂ i₂ * (lValueData hq₃.2 u).kernelForm g h₃ i₃ *
-            (lValueData hq.2 u).kernelForm g h₁ i₁) := by
-    unfold F X u
-    exact inner_pointForm_kernelForm hq hq₂ hq₃ hp ϑ x₀ h_pol h_char g h₁ h₂ h₃ i₁ i₂ i₃
   -- The class sum over the last block is a test form, and the two outer class sums keep both
   -- integrality and orthogonality to the false lifts.
   have h_test (h₂ h₃ : Gf D.E (Fin 4)) :
@@ -779,7 +766,8 @@ theorem exists_isTestForm_inner_kernelForm_eq {l : ℕ} [Fact l.Prime]
   -- Sum out the three blocks one after the other.
   refine .trans ?_ (smul_apply_trivialLiftClassSum hq₂ g fun h₂ i₂ ↦
     smul_apply_trivialLiftClassSum hq₃ g fun h₃ i₃ ↦
-    smul_apply_trivialLiftClassSum hq g fun h₁ i₁ ↦ h_pair g h₁ h₂ h₃ i₁ i₂ i₃)
+    smul_apply_trivialLiftClassSum hq g fun h₁ i₁ ↦
+      inner_pointForm_kernelForm hq hq₂ hq₃ hp ϑ x₀ h_pol h_char g h₁ h₂ h₃ i₁ i₂ i₃)
   have h_lvl {m' : ℕ} {q' : D.CriticalPair} (h' : q'.HasLiftRank (Fin m')) (χ' : D.TameChar) :
       (lValueData h' χ').chosenLevel = D.chosenLevel := rfl
   have h_X_lvl : X.chosenLevel = D.chosenLevel := rfl
