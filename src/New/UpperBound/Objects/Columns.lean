@@ -850,7 +850,9 @@ is, n_j < n_{j+1}, and no column has a height strictly between n_j and n_{j+1}. 
 lemma isLiftWeight_columnCount (j : ℕ) : IsLiftWeight (D.X j) (D.X (j + 1)) D.columnCount
     (fun τ : D.Φ ↦ (Fintype.card (D.X (j + 1)) / 2 : ℕ) - D.liftWeight (j + 1) τ)
       (D.lastEntry j) := by
-  have h_rank : Fintype.card (D.X j) < Fintype.card (D.X (j + 1)) := by grind [card_X, n_succ]
+  have h_rank : Fintype.card (D.X j) < Fintype.card (D.X (j + 1)) := by
+    rw [card_X, card_X, D.n_succ]
+    exact Nat.lt_add_of_pos_right (Nat.succ_pos _)
   refine ⟨fun τ ↦ ⟨h_rank.le, fun u hu ↦ D.columnCount_eq_zero_of_mem_Ioo j τ ?_⟩, h_rank,
     funext fun τ ↦ ?_⟩
   · simpa only [rankAt, card_X] using hu
