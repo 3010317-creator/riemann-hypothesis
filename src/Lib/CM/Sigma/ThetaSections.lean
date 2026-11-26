@@ -1,5 +1,6 @@
 module
 
+public import Lib.CM.Sigma.Basic
 public import Lib.General.Analysis.MeanValueAndTaylor
 public import Lib.General.NumberTheory.SUnitsAndClassNumber
 
