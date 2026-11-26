@@ -72,8 +72,7 @@ theorem proof : PrimitiveElementFibres.Statement := by
       (fun j : Fin n => Ideal.Quotient.mk J (X j)) (adjoin_eq_top J A)
   set ℓ : (MvPolynomial (Fin n) ℂ ⧸ J) := ∑ j, algebraMap (MvPolynomial (Fin d) ℂ) (MvPolynomial (Fin n) ℂ ⧸ J) (C (c j)) * Ideal.Quotient.mk J (X j) with hℓ
   have hℓmk : ℓ = Ideal.Quotient.mk J (∑ j, C (c j) * X j) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hℓ, map_sum]
+    rw [hℓ, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul]
     congr 1
@@ -112,9 +111,8 @@ theorem proof : PrimitiveElementFibres.Statement := by
   ·
     intro τ hτ
     let _ : Algebra (Polynomial (MvPolynomial (Fin d) ℂ)) (MvPolynomial (Fin n) ℂ ⧸ J) := (Polynomial.aeval ℓ).toRingHom.toAlgebra
-    set_option synthInstance.maxHeartbeats 100000 in
-      have : IsScalarTower (MvPolynomial (Fin d) ℂ) (Polynomial (MvPolynomial (Fin d) ℂ)) (MvPolynomial (Fin n) ℂ ⧸ J) :=
-        IsScalarTower.of_algebraMap_eq fun r => (Polynomial.aeval_C ℓ r).symm
+    have : IsScalarTower (MvPolynomial (Fin d) ℂ) (Polynomial (MvPolynomial (Fin d) ℂ)) (MvPolynomial (Fin n) ℂ ⧸ J) :=
+      IsScalarTower.of_algebraMap_eq fun r => (Polynomial.aeval_C ℓ r).symm
     have : Algebra.IsIntegral (MvPolynomial (Fin d) ℂ) (MvPolynomial (Fin n) ℂ ⧸ J) := Algebra.IsIntegral.of_finite (MvPolynomial (Fin d) ℂ) (MvPolynomial (Fin n) ℂ ⧸ J)
     have : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin d) ℂ)) (MvPolynomial (Fin n) ℂ ⧸ J) :=
       ⟨fun s => (Algebra.IsIntegral.isIntegral (R := MvPolynomial (Fin d) ℂ) s).tower_top⟩

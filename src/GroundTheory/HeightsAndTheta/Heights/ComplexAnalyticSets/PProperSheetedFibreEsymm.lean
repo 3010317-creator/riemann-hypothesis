@@ -11,8 +11,6 @@ import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PUnbranchedPrope
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Topology Filter Set Complex

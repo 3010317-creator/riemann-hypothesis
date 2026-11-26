@@ -8,8 +8,6 @@ import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PartsAlg
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open ReciprocityTheory.AnForm ReciprocityTheory.AnForm.A Filter Topology Matrix

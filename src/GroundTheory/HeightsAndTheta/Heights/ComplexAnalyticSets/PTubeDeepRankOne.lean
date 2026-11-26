@@ -16,8 +16,6 @@ public import ReciprocityTheory.AnalyticForms.PotentialTheory.HessCIsHermitian
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open MvPolynomial Matrix ComplexSets ReciprocityTheory.AnForm ReciprocityTheory.AnForm.A Filter Topology
