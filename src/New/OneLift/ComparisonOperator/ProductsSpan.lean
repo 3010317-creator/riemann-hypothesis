@@ -813,8 +813,8 @@ lemma integral_mul_sum_choiceFn_eq_zero (F : D.goodForms (D.spaceW j))
     (hasWeight_upsilonU1_pow _) (hasWeight_upsilonU1_zpow (D.m / 2 - j))
     (isKDominant_kernelWeight j) h_int rank_lt .inl top_ne top_hol (fun _ ↦ Q)
     (fun _ _ ↦ by
-      -- `erw` is needed: the first weight is `negCount` only after unfolding.
-      erw [realPairWeil_fockLetters]
+      -- `letterPoly` is `fockLetters` after `toPoly`.
+      rw [letterPoly, LinearMap.comp_apply, AlgHom.toLinearMap_apply, realPairWeil_fockLetters]
       -- The translate of a `toPoly` is a combination of the `Q`; `clear` keeps the search short.
       clear * -
       aesop (add safe sum_mem, simp [Q, toPoly, linearCombination_apply])) g

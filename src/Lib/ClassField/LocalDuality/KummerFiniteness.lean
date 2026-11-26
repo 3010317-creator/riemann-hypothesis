@@ -318,9 +318,10 @@ lemma card_kummer_cocycles [hLocal : IsLocalGalois Γ k A] (n : ℕ) [NeZero n] 
   have h_div : Surjective fun x : DiscreteUnits Ω ↦ n • x := fun x ↦ x.exists_nsmul out
   have h_div' : Surjective fun f : Z1 (unitsModule Γ).ρ ↦ n • f :=
     .of_comp (by simpa [comp_def] using h_surj.comp h_div)
-  -- `erw`: the `n`-torsion of `DiscreteUnits Ω` is `rootsOfUnity n Ω` only after unfolding.
-  erw [h_units, cokerKerIndex, cokerKerIndex, range_eq_top.mpr h_div, range_eq_top.mpr h_div',
-    natCard_rootsOfUnity] at h_mul
+  -- The `n`-torsion of `DiscreteUnits Ω` is `rootsOfUnity n Ω` after unfolding.
+  rw [h_units, cokerKerIndex, cokerKerIndex, range_eq_top.mpr h_div, range_eq_top.mpr h_div',
+    show Nat.card (LinearMap.ker (n : Module.End ℤ (DiscreteUnits Ω))) = n from
+      natCard_rootsOfUnity Ω n] at h_mul
   -- What is left is an equation in `ℚ` for `c`, the number of cocycles killed by `n`.
   replace h_mul : (1 : ℚ) / n = n * Nat.card (valRingBelow k A ⧸ span {(n : valRingBelow k A)}) *
       (1 / Nat.card (n : Module.End ℤ (Z1 (unitsModule Γ).ρ)).ker) := by
