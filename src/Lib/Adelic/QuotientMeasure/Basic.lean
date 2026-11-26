@@ -662,7 +662,7 @@ variable {B A : Type*} [AddCommGroup B] [TopologicalSpace B] [IsTopologicalAddGr
 
 /-- The property that a function F on a topological abelian group B is continuous and satisfies
 F(γ+x)=F(x) for all γ in the subgroup B₀ and all x. -/
-def IsContPeriodic : Prop := Continuous F ∧ ∀ᵉ (γ ∈ B₀) (x : B), F (γ + x) = F x
+def IsContPeriodic : Prop := Continuous F ∧ ∀ γ ∈ B₀, ∀ x : B, F (γ + x) = F x
 
 /-- The Borel σ-algebra on the quotient B/B₀ of a topological abelian group B by a subgroup B₀. -/
 scoped instance IsDualFamily.quotMeasurableSpace : MeasurableSpace (B ⧸ B₀) := borel _
