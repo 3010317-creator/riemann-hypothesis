@@ -114,11 +114,12 @@ variable {p : Matrix n n k} (f : PiMatrix k d →ₐ[k] Matrix N N k)
   (f' : PiMatrix k d →ₐ[k] Matrix n n k) [Ring B] [Group H] [Algebra k B] [Module.Finite k B]
   (ρ : G →* B)
 
+omit [DecidableEq n] in
 /-- The trace of an idempotent matrix is its rank. In characteristic zero, the matrix is zero
 exactly when its trace is zero. -/
 lemma trace_of_idempotent [CharZero k] [IsAlgClosed k] (hp : IsIdempotentElem p) :
     p.trace = p.rank ∧ (p = 0 ↔ p.trace = 0) :=
-  ⟨trace_eq_rank_of_isIdempotentElem hp, fun h ↦ by simp [h],
+  ⟨IsIdempotentElem.trace_eq_rank hp, fun h ↦ by simp [h],
     Matrix.IsIdempotentElem.eq_zero_of_trace_eq_zero hp⟩
 
 attribute [local ext] ext_linearMap
@@ -376,8 +377,8 @@ lemma IsTraceNondeg.exists_conj_of_trace_eq [CharZero k]
     simpa using LinearMap.congr_fun h_lin y
   have rank_eq (i : Fin b) : (F₂ (piMatrixUnit i)).rank = (F₁ (piMatrixUnit i)).rank := by
     refine Nat.cast_injective (R := k) ?_
-    rw [← trace_eq_rank_of_isIdempotentElem (isIdempotentElem_map_piMatrixUnit F₁ i),
-      ← trace_eq_rank_of_isIdempotentElem (isIdempotentElem_map_piMatrixUnit F₂ i), trace_eq]
+    rw [← IsIdempotentElem.trace_eq_rank (isIdempotentElem_map_piMatrixUnit F₁ i),
+      ← IsIdempotentElem.trace_eq_rank (isIdempotentElem_map_piMatrixUnit F₂ i), trace_eq]
   obtain ⟨P, Q, QP, hP⟩ := exists_piMatrix_retract F₁ F₂ fun i ↦ (rank_eq i).le
   exact ⟨⟨P, Q, mul_eq_one_comm.1 QP, QP⟩, fun g ↦ by rw [← F₁_s, ← F₂_s, hP]⟩
 

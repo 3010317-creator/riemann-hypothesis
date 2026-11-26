@@ -2,6 +2,7 @@ module
 
 public import Lib.Adelic.TraceFormula.FibreIntegral
 public import Lib.General.LinearAlgebra.Eigenvalues
+public import TauCeti.LinearAlgebra.Trace.Idempotent
 
 /-!
 # Coprime factors
@@ -353,7 +354,7 @@ lemma trace_aeval_eq_natDegree (huv : u * A + v * B = 1) (hy : y.charpoly = A * 
 projection `(v B)(y)` onto the kernel of `A(y)` has rank `deg A`. -/
 lemma rank_aeval_eq_natDegree [CharZero F] (huv : u * A + v * B = 1) (hy : y.charpoly = A * B) :
     (aeval y (v * B)).rank = A.natDegree := by
-  rw [← Nat.cast_inj (R := F), ← trace_eq_rank_of_isIdempotentElem
+  rw [← Nat.cast_inj (R := F), ← IsIdempotentElem.trace_eq_rank
     (isIdempotentElem_aeval_of_charpoly_eq huv hy), trace_aeval_eq_natDegree huv hy]
 
 /-- If `A B` is a characteristic polynomial and neither factor is a unit, some proper non-empty set
