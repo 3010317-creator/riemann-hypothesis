@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.SpecialFunctions.Gaussian.Reproducing
 import TauCeti.Analysis.Matrix.L2OpNorm
 import TauCeti.Analysis.Matrix.OstrowskiTaussky
 public import Mathlib.Algebra.Algebra.Field
@@ -172,14 +173,11 @@ lemma exists_eq_conjTranspose_mul_diagonal_mul [DecidableEq ι] (hA : A.IsAccret
 integral `π / d` over `ℂ`. -/
 lemma integral_cexp_neg_star_mul {d : ℂ} (hd : 0 < d.re) (a : ℂ) :
     ∫ z : ℂ, exp (-(star z * (d * (z - a)))) = Real.pi / d := by
-  let c : Fin 2 → ℂ := (d * a) • ![1, -I]
-  rw [← volume_preserving_equiv_pi.symm.integral_comp']
-  simpa [c, mul_pow] using Eq.trans (by
-    congr 1; ext v; congr 1
-    simp only [c, Fin.sum_univ_two, Pi.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
-      smul_eq_mul]
-    linear_combination d * (v 1 : ℂ) ^ 2 * I_sq)
-    (GaussianFourier.integral_cexp_neg_mul_sum_add hd c)
+  convert TauCeti.integral_cexp_neg_mul_norm_sq_add hd 0 (d * a) using 1
+  · congr 1; ext z; congr 1
+    rw [← conj_mul', star_def]
+    ring
+  · simp
 
 /-- The complex Gaussian integral: if `A` is accretive (that is, `A + Aᴴ` is positive definite),
 then `exp (-x* A (x - a))` has integral `(det A)⁻¹` for `normalizedVolume ι`, Lebesgue measure on
