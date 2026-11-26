@@ -9,8 +9,6 @@ public import Mathlib.Analysis.Analytic.Uniqueness
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open Topology Metric Filter Set

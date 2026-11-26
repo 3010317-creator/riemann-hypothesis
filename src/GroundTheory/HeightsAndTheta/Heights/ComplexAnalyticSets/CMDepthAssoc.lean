@@ -12,8 +12,6 @@ public import Mathlib.RingTheory.Filtration
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights
 
 open IsLocalRing RingTheory.Sequence Pointwise

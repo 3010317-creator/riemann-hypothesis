@@ -7,8 +7,6 @@ public import Mathlib.RingTheory.LocalRing.RingHom.Basic
 
 @[expose] public section
 
-set_option maxSynthPendingDepth 1
-
 namespace GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets
 
 open IsLocalRing TensorProduct
