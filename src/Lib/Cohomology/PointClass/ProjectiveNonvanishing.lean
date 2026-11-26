@@ -643,10 +643,11 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
         .of (φ c ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩) := by
     let z : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩
     have ho : ((origin ⟨false⟩ twoDiscs).app c).hom (.of u) = .of z := freeAb.desc_of ..
-    change (((freeAb.map φ - origin ⟨false⟩ twoDiscs ≫ freeAb.map φ).app c).hom)
-      (.of u) = _
-    erw [NatTrans.app_sub, AddCommGrpCat.hom_sub, AddMonoidHom.sub_apply,
-      NatTrans.comp_app, AddCommGrpCat.comp_apply, ho, freeAb.map_of, freeAb.map_of]
+    let m := ((freeAb.map φ).app c).hom
+    let o := ((origin ⟨false⟩ twoDiscs).app c).hom
+    change (m - m.comp o) (.of u) = _
+    exact (AddMonoidHom.sub_apply m (m.comp o) _).trans
+      (congrArg₂ (· - ·) (freeAb.map_of ..) ((congrArg m ho).trans (freeAb.map_of ..)))
   -- The map `x ↦ [φ x] - [∞]` on the discs, `∞` the image of the origin of the disc `false`, lifts
   -- `j` to `j'` with values in `freeAb (projSpace k 1)`.
   obtain ⟨j', hj'⟩ :
@@ -659,7 +660,12 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
       rintro c ⟨⟨_ | _⟩, t⟩
       · let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨false⟩, t⟩
         change (F.app c).hom ((gluing.app c).hom (.of u)) = 0
-        erw [gluing_apply_point c t, evalZero_comp, hF, sub_self]
+        let z : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩
+        let z' : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero _ ≫ t.down⟩⟩
+        have h_origin : z' = z :=
+          congrArg (fun f ↦ (⟨⟨false⟩, ⟨f⟩⟩ : twoDiscs.obj c)) (evalZero_comp t.down)
+        refine (congrArg (F.app c).hom (gluing_apply_point c t)).trans ((hF c z').trans ?_)
+        exact sub_eq_zero.mpr (congrArg (fun v ↦ FreeAddCommGroup.of (φ c v)) h_origin)
       · let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, t⟩
         let u₀ : twoDiscs.obj c := ⟨⟨false⟩, ⟨discToTorus (-coeHom) ≫ t.down⟩⟩
         let u₁ : twoDiscs.obj c := ⟨⟨true⟩, ⟨discToTorus coeHom ≫ t.down⟩⟩
