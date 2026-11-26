@@ -191,8 +191,7 @@ private lemma pull_mk₀_comp_contractionPow_one_eq_pull_extClass_oneSubMu
       pullbackAlong α HodgeTatePair.contractionCocycle.cohomClass :=
     D.cohomClass_naturality _ α (𝟙 _) fun c d f ↦ (Category.comp_id _).symm
   rw [comp_assoc_of_eq h_nat.symm, comp_id]
-  -- `erw`: the right side is type-correct only up to unfolding `ShortComplex.map`, so `rw` fails.
-  erw [← pullbackAlong_of]
+  refine Eq.trans ?_ (pullbackAlong_of _)
   -- A unit of `B ×_T (T ⊕ M)` has a first component in `Bˣ`, which lifts its image in `Tˣ`. By
   -- `Cocycle.cohomClass_comp_eq_extClass` it remains to check that this is a lift, and that its
   -- failure to be natural in the pair is the cocycle `D`, carried into `Bˣ`.
