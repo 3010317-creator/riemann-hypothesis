@@ -518,7 +518,7 @@ filter `F` span, its Hodge–Tate jumps at each embedding `g` of `O` lie in `U g
 allowed by `K s` kills `s` on its periods, for `s` in inertia. Let `L` lie in the class for `U'` and
 `s ↦ K s⁻¹`. If `U` and `U'` lie at each embedding in `[-η, η]` and in the opposite far windows
 `∓ε [b, b + W]`, and `p > b + 6 (W + η) + r² (N + 1)² + 2`, then
-`p ^ (3 r² (N + 1)² + 150 (η + W + 1))` times any crystalline cocycle of `L` has cup product a
+`p ^ (3 r² (N + 1)² + 8 η + 2 W)` times any crystalline cocycle of `L` has cup product a
 coboundary with every crystalline cocycle of a lattice in `InClass F K U` paired with `L`. -/
 lemma hasCupExponent_of_isTameType [TopologicalSpace Γ] (ho : IsOpenEmbedding Γ.overGp.toGp)
     (h_surj : Surjective Γ.overGp.toGp) {F : Filter Γ} {K : Γ → O[X] → Prop}
@@ -527,7 +527,7 @@ lemma hasCupExponent_of_isTameType [TopologicalSpace Γ] (ho : IsOpenEmbedding �
     (hU : ∀ g : O →ₐ[ℤ_[p]] ℂ_[p], FitsWindows η (-ε) b W (U g))
     (hU' : ∀ g : O →ₐ[ℤ_[p]] ℂ_[p], FitsWindows η ε b W (U' g))
     (hp : b + 6 * (W + η) + r ^ 2 * (N + 1) ^ 2 + 2 < p) :
-    HasCupExponent (InClass F K U) L (3 * (r ^ 2 * (N + 1) ^ 2) + 150 * (η + W + 1)) := by
+    HasCupExponent (InClass F K U) L (3 * (r ^ 2 * (N + 1) ^ 2) + (8 * η + 2 * W)) := by
   -- Take a tame chart `d` of ramification index `e = lcm (p ^ i - 1)`, `1 ≤ i ≤ r`, over which all
   -- lattices of the class become crystalline, and apply `isScaledCupCoboundary_of_killsCokernel`
   -- with `a = 0` and `κ = r ^ 2 * (N + 1) ^ 2`. The three cokernels are killed by `p ^ κ` thanks to
@@ -583,9 +583,7 @@ lemma hasCupExponent_of_isTameType [TopologicalSpace Γ] (ho : IsOpenEmbedding �
       (fun i ↦ window_le (h_window i)) hq he_le hp (cost_le (by omega))
   · exact d.killsCokernel_of_isKilledBy (hL.isKilledBy_of_isWeilPair hKq' d.isWeilPair_tameGen)
       (fun i ↦ window_le (h_window' i)) hq' he_le hp (cost_le (by omega))
-  · show 3 * (r ^ 2 * (N + 1) ^ 2 + (8 * (6 * (0 + η + W)) + 4) * d.differentBound) ≤
-      3 * (r ^ 2 * (N + 1) ^ 2) + 150 * (η + W + 1)
-    grw [d.differentBound_le_one]
+  · grw [d.differentBound_le_one]
     lia
 
 end New.Lift
