@@ -299,7 +299,7 @@ lemma amplitudeSum_besselS_eq_zero {side : FullOrCut} {s : S.ResidueGL}
 
 /-- The complement of the Bessel subgroup is stable under multiplication by the unipotent group
 `besselU` on both sides. -/
-lemma isStable_compl_besselS [HasPrimitiveRoot5040 E] :
+lemma isStable_compl_besselS :
     S.IsStable ((S.ratMiddle E).besselS : Set (S.G E))ᶜ :=
   fun u hu u' hu' γ ↦ (S.isStable_besselS u hu u' hu' γ).not
 
