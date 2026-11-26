@@ -872,7 +872,7 @@ lemma edges_eq_oldEdges_innerCorner {z : Bool} (Γ' : TwoGridPath D.m)
     (hΓ' : Γ'.half z = q.down.right.append r) :
     Γ'.edges = (D.innerCorner z a b).oldEdges (q.edges z ∪ r.edges z ∪ (Γ'.half !z).edges !z) := by
   rw [edges_eq_union_halves Γ' z, hΓ']
-  simp [GridPath.edges_append, GridPath.edges] <;> grind
+  simp [GridPath.edges_append, GridPath.edges]
 
 /-- If the half in the grid `z` is replaced by `q`, the two sides through `(a + 1, b + 1)`, then
 `r`, the edges are these two sides and the edges of `q`, `r` and the other half. -/
@@ -881,7 +881,7 @@ lemma edges_update_eq_newEdges_innerCorner (z : Bool) (Γ' : TwoGridPath D.m)
     (⟨Γ'.diagonalIndex, update Γ'.half z (q.right.down.append r)⟩ : TwoGridPath D.m).edges =
       (D.innerCorner z a b).newEdges (q.edges z ∪ r.edges z ∪ (Γ'.half !z).edges !z) := by
   rw [edges_eq_union_halves _ z]
-  simp [GridPath.edges_append, GridPath.edges, Bool.not_ne_self] <;> grind
+  simp [GridPath.edges_append, GridPath.edges]
 
 /-- The exchange at the corner `(a, b)` of the grid `z`, for one twist `ϑ`. Let `q` be a grid path
 from `(0, D.m)` to `(a, b + 1)` and `r` one from `(a + 1, b)` to a diagonal node `(k, k)`. Let the
