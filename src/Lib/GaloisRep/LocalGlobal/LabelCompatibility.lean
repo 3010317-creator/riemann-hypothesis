@@ -67,7 +67,7 @@ attribute [local instance low] Fintype.ofFinite
 variable {E : Type} [Field E] [EmbeddedNumberField E]
   (w : FinPlace E) (A : ClosurePlace)
   {K : Type} [Field K] [Algebra (ResField w) K]
-  (T : MulChar K ℂ) [IsFaithfulMulChar K T] (f : ℕ) (s : Gal(Ω/E)) (a : ℕ)
+  (T : MulChar K ℂ) (f : ℕ) (s : Gal(Ω/E)) (a : ℕ)
 
 /-- A ring homomorphism `g` from `𝓞 E` to a field that kills the prime `w` factors through the
 residue field of `w`. -/
@@ -97,8 +97,6 @@ variable {w A f s a}
 
 open Nat
 
--- Without this, `IsDomain K` is found through the faithful character of the section variables.
-attribute [-instance] New.Variety.IsAbsIntegrallyClosedLocal.toIsDomain in
 /-- Inertia acts through the tame characters of level `f` given by the roots of `c`. This is in the
 sense of the relation `P` between automorphisms and polynomials (such as "the polynomial kills the
 image of `s`"). Whenever `s` has tame exponent `a` (`New.GaloisRep.IsTameExponent`), `P` holds for
@@ -110,7 +108,6 @@ def IsLabelledAt {ℓ : ℕ} [ThePrime ℓ] [PadicIso ℓ] (A : ClosurePlace) (T
   ∀ ⦃s : Gal(Ω/E)⦄ ⦃a : ℕ⦄,
     IsTameExponent w A T f s a → P s ((c.aroots K).map fun x : K ↦ X - C (ιℓ ((T ^ a) x))).prod
 
-omit [IsFaithfulMulChar K T] in
 lemma IsTameExponent.mem_inertiaGroup (h_exp : IsTameExponent w A T f s a) :
     s ∈ inertiaGroup Gal(Ω/E) A :=
   let ⟨_, _, hs, _⟩ := h_exp; hs
@@ -119,8 +116,8 @@ lemma IsTameExponent.mem_inertiaGroup (h_exp : IsTameExponent w A T f s a) :
 algebraically closed and `T` injective, and let `u` be a local unit whose local Artin symbol is the
 class of `s`. Then for every character `χ` of `k_wˣ`, the value of `T ^ a` at the image in `K` of
 the unit `charName T χ` of `k_w` that names `χ` is the value of `χ` at the residue of `u`. -/
-lemma IsTameExponent.pow_apply_charName {hs_dec : s ∈ decompGroup Gal(Ω/E) A}
-    (h_exp : IsTameExponent w A T f s a)
+lemma IsTameExponent.pow_apply_charName [IsFaithfulMulChar K T]
+    {hs_dec : s ∈ decompGroup Gal(Ω/E) A} (h_exp : IsTameExponent w A T f s a)
     {u : (IsDedekindDomain.HeightOneSpectrum.adicCompletion E w)ˣ}
     (hu : Valued.v u.val = 1) (h_artin : localArtin Gal(Ω/E) A w u = ⟦⟨s, hs_dec⟩⟧)
     (χ : MulChar (ResField w) ℂ) :
@@ -190,7 +187,7 @@ lemma exists_ringHom_centrePrime_le_ker [IsAlgClosed K] (hA : IsPlaceOver A w) :
 tame exponent `1`; (b) every element `s` of the inertia group has a tame exponent `a`, and if `s` is
 the chosen generator `hA.tameGenerator` of tame inertia, this `a` is prime to `q ^ f ! - 1`, where
 `q = w.q` is the order of the residue field. -/
-lemma exists_isTameExponent (hA : IsPlaceOver A w) (f : ℕ) :
+lemma exists_isTameExponent [IsFaithfulMulChar K T] (hA : IsPlaceOver A w) (f : ℕ) :
     -- (a)
     (∃ s : inertiaGroup Gal(Ω/E) A, IsTameExponent w A T (f)! s.val 1) ∧
     -- (b)
@@ -229,7 +226,6 @@ lemma exists_isTameExponent (hA : IsPlaceOver A w) (f : ℕ) :
   refine ⟨a, tame_of_eq ⟨s, hs⟩ a ha, fun hs_gen ↦ (hζj.pow_iff_coprime hN.pos a).1 ?_⟩
   rwa [ha, hs_gen]
 
-omit [IsFaithfulMulChar K T] in
 /-- Tame exponents after an unramified base change. Let `u` be a place of `L / E` above `w` and
 below `A`, unramified and with `q_u = q_w ^ p`. If `σ ∈ Gal(Ω/L)` has tame exponent `a` at level
 `p * g` over `E`, then the residue fields form a tower `k_w → k_u → K`, whose first step has degree
