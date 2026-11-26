@@ -393,7 +393,9 @@ lemma detVector_apply (k : ℕ) (m : InfinitePlace E → ℕ) (F : InfinitePlace
       Fintype.sum_eq_zero _ fun j ↦ by simp [units_int_mul_eq_one_iff, Ne.symm j.2]
     rw [h_zero, add_zero] at h_split
     simp [detPolyMatrix, posCoordMatrix, toSquareBlockProp, Matrix.mul_apply, holomorphicCoord_eq,
-      posProj, mulVec_diagonal, pairSign, i.2, mul_comm, ← h_split, fun j : {j // s j = σ} ↦ j.2]
+      posProj, mulVec_diagonal, pairSign, i.2, mul_comm]
+    rw [← h_split]
+    exact Fintype.sum_congr _ _ fun j ↦ by simp [j.2]
   have h_minor (w : InfinitePlace E) (σ : ℤˣ) :
       eval (holomorphicCoord (realSigns E (homSigns s t)) u ∘ Subtype.val)
         (detPolyMatrix s t F w σ).det =
