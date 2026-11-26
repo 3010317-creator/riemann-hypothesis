@@ -68,15 +68,6 @@ lemma isIntegralAbove_of_isIntegral_mul {E : Type} [Field E] [CMType E] {N : ℕ
 
 variable [PadicPlace p] {J : Type} [Fintype J]
 
-/-- Multiplying the linear forms `μ_j` by `s` turns the product `Θ(z) = ∏ θ(μ_j z) ^ m j` of copies
-of the theta series of `C` into `Θ(s z)`. -/
-lemma CMLattice.thetaProd_smul {d : ℕ} (C : CMLattice d) {X : Type} [Fintype X]
-    (μ : J → X → ℂ_[p]) (m : J → ℕ) (s : ℂ_[p]) :
-    C.thetaProd (s • μ) m = (C.thetaProd μ m).rescale fun _ : X ↦ s := by
-  simp only [thetaProd, map_prod, map_pow, rescale_subst_linearSeries,
-    subst_rescale_eq_subst_smul _ (.of_constantCoeff_zero (constantCoeff_linearSeries _))]
-  simp [linearSeries, smul_sum, smul_smul]
-
 /-- For a family `w` in the field `E = P.E s`, the linear forms `μ_i z = ∑ μ_(i τ) z_τ` with the
 coefficients `μ_(i τ) = periodFactor * conj (τ (w i))` at the places `τ`, read in `ℂ_p` by the
 homomorphism `ιₚ : ℂ → ℂ_p`. The complex number `periodFactor = P.periodFactor s` normalises the
@@ -253,7 +244,7 @@ lemma exists_hasNormalForm_resolutionForms (D : Data P) {w : J → D.E} {c : J �
   have h𝔰 : IsUnit 𝔰 := isUnit_integer_iff_norm_eq_one.2 (D.norm_taylorScale h_nonsplit)
   refine ⟨ϖ, fun e j ↦ 𝔰 ^ ((p ^ e + 1) * p ^ j) * lam e j, hϖ,
     fun e he ↦ (h𝔰.pow _).mul (h_lam_unit h_inert e he), ?_⟩
-  rw [resolutionForms_eq_smul, CMLattice.thetaProd_smul]
+  rw [resolutionForms_eq_smul, ← CMLattice.rescale_thetaProd]
   exact hΘ.rescale 𝔰
 
 /-- If `w`, taken `c i` times, is a tight frame with frame bound `M = D.M` (`IsTightFrame w c D.M`),
