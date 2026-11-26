@@ -134,7 +134,7 @@ lemma pow_mul_identitySecondMoment_le_mul_mainSecondMoment [hS : S.IsAdmissible]
 frame modulo `w`. If its Boolean is `true`, it is taken modulo the conjugate of `w` instead. Let `s`
 fix all of them. So `meetNorm s`, the product of the norms of the places at which `s` meets, is at
 least `levelPrime 0 ^ numInfPlaces E`. -/
-lemma levelPrime_pow_le_meetNorm_of_mem_fixer [S.IsAdmissible]
+lemma levelPrime_pow_le_meetNorm_of_mem_fixer
     {vectors : ∀ w : S.chosenPlaces 0, S.FrameVector w} {s : S.ResidueGL}
     (hs : s ∈ S.fixer univ vectors) : S.levelPrime 0 ^ Core.numInfPlaces E ≤ S.meetNorm s := by
   classical
