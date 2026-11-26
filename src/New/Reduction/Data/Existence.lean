@@ -725,7 +725,8 @@ end Parameters.IsLargeScale
 `D : Data P` bundles such objects and scales `x`, `x₁` with the inequalities `(log b) ^ 100 ≤ x`,
 `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b`, `(log x₁) ^ 6 ≤ log b`, `10¹² P.constantBound ≤ log log b`,
 `m ∈ [√x, 2 √x]` and `r ∈ [x⁵, 3 x⁵]`. There is a `D` whose ranks, scales and tower exponent are
-the given ones, with `x₁ = ⌊exp W⌋` (`Data.HasFields`). Moreover `W - 1 ≤ log x₁` and `W ^ 6 ≤ log b ≤ W ^ 6 + 1`. -/
+the given ones, with `x₁ = ⌊exp W⌋` (`Data.HasFields`). Moreover `W - 1 ≤ log x₁` and
+`W ^ 6 ≤ log b ≤ W ^ 6 + 1`. -/
 lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b N : ℕ} {W : ℝ}
     {T : Finset (P.Φ s)} {g : Fin 2 → ℕ} {α : 𝓞 P.K} {β : 𝓞 (P.E s)}
     (h_adm : P.IsAdmissibleData x W m r s b T g α N β) (h_scale : P.IsLargeScale n (log x) W) :
@@ -789,8 +790,8 @@ lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b
 
 /-- **Admissible data are fields of the data.** Let `0 < ε < 1 / 100`. For every large enough
 integer `x`, any admissible data (`Parameters.IsAdmissibleData`) at `x` and `W = x ^ (ε / 6)` give
-the ranks, scales and tower exponent of some `D : Data P` (`Data.HasFields`). This `D` has `x ^ (ε / 6) - 1 ≤ D.logX₁`, and
-`D.logB` lies in `[x ^ ε, x ^ ε + 1]`. -/
+the ranks, scales and tower exponent of some `D : Data P` (`Data.HasFields`). This `D` has
+`x ^ (ε / 6) - 1 ≤ D.logX₁`, and `D.logB` lies in `[x ^ ε, x ^ ε + 1]`. -/
 theorem eventually_exists_data_of_isAdmissibleData (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop, ∀ (m r s b : ℕ) (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ)

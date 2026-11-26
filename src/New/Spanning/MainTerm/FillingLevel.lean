@@ -317,8 +317,9 @@ lemma exists_isAddHaarMeasure_skewAdjoint {i τ : LocProd T} (hi : i ∈ O) (hτ
       mem_of_eq_of_mem h_trace (mul_mem (neg_mem hi) (add_mem hx (IsStarStable.star_mem hx)))
     exact ⟨ha, (add_mem_cancel_left (mul_mem (mul_mem hτ hi) ha)).1 hx⟩
   have h_map : (ν.prod ν).map π = volume := by
-    simpa [h_pre, SemilocalField.volume_O, hν, Set.inter_univ] using measure_smul_map_restrict_eq_smul_neg
-      (ν.prod ν) volume (by measurability) .univ h_lift isCompact_O.measurableSet
+    simpa [h_pre, SemilocalField.volume_O, hν, Set.inter_univ] using
+      measure_smul_map_restrict_eq_smul_neg (ν.prod ν) volume (by measurability) .univ h_lift
+        isCompact_O.measurableSet
   exact ⟨ν, inferInstance, hν, by fun_prop, h_map⟩
 
 /-- If the integers at `T` are self-dual for the character `ψ`, then there is a kernel `G` for

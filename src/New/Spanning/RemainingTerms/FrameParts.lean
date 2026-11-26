@@ -657,7 +657,8 @@ lemma IsNear.genIndex_M_mul_leadingMinor_le {γ : S.G E} (j : Fin (𝔰.ϱ + 2))
   simp only [map_mul, map_natCast, norm_mul, Complex.norm_natCast]
   gcongr
   have hb : 1 ≤ S.b ^ (270 * 𝔰.n ^ 2) := one_le_pow₀ S.one_le_b
-  exact le_of_sq_le_sq ((h_near.norm_map_leadingMinor_sq_le j v).trans (le_self_pow₀ hb two_ne_zero))
+  exact le_of_sq_le_sq
+    ((h_near.norm_map_leadingMinor_sq_le j v).trans (le_self_pow₀ hb two_ne_zero))
     (zero_le_one.trans hb)
 
 omit [S.IsAdmissible] [HasPrimitiveRoot5040 E] in

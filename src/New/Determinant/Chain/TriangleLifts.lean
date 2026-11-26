@@ -445,10 +445,11 @@ lemma mem_triangleBase_of_inner_eq_inner_triangleFirstLift {P : Parameters} (D :
 
 /-- The inner product formula for `a = triangleFirstLift z ϑ i`, which copies a form from the corner
 `(0, 0)` of the triangle `z` to `(i, 0)` and lifts it to `(i, 1)`. Here `i < D.m`, the number of
-lifts of the data `D`. There is a constant `C` such that for every twist `ϑ` and every form `y` at the
-corner fixed by the base level (`triangleBase`), the lift vanishes only if `y = 0`. For each form
-`x` at the corner, the series of the terms `C * triangleRallisTerm` converges to `triangleGLCard z ϑ 0 * ⟪a x, a y⟫`; the first factor is
-the order of the general linear group of the corner modulo `𝔪 = triangleModulus z ϑ`. -/
+lifts of the data `D`. There is a constant `C` such that for every twist `ϑ` and every form `y` at
+the corner fixed by the base level (`triangleBase`), the lift vanishes only if `y = 0`. For each
+form `x` at the corner, the series of the terms `C * triangleRallisTerm` converges to
+`triangleGLCard z ϑ 0 * ⟪a x, a y⟫`; the first factor is the order of the general linear group of
+the corner modulo `𝔪 = triangleModulus z ϑ`. -/
 lemma exists_hasSum_triangleRallisTerm {P : Parameters} (D : Data P) (z : Bool) (i : ℕ)
     (hi : i < D.m) :
     ∃ C : ℂ, ∀ (ϑ : D.MFoldTwist) (y : D.triangleBase z),
@@ -464,12 +465,14 @@ lemma exists_hasSum_triangleRallisTerm {P : Parameters} (D : Data P) (z : Bool) 
       (D.two_mul_card_gridIndex_zero_lt z)
   refine ⟨C, fun ϑ y ↦ ?_⟩
   obtain ⟨h_inj, h_series⟩ :=
-    h_rallis (D.gridChar ϑ (!z) (0 + i) (D.GridIndex z 0 0)) _ (D.isSharp_pointDatum z ϑ i) _ (D.hasLevel_triangleNegEquiv z ϑ i y)
+    h_rallis (D.gridChar ϑ (!z) (0 + i) (D.GridIndex z 0 0)) _ (D.isSharp_pointDatum z ϑ i) _
+      (D.hasLevel_triangleNegEquiv z ϑ i y)
   refine ⟨fun hy ↦ ?_, fun x ↦ ?_⟩
   · have h_copy : D.triangleNegEquiv z i y = 0 := h_inj hy
     simpa using h_copy
   · let term (γ : D.TriangleCoset z ϑ) : ℂ :=
-      cosetTerm (card (D.GridIndex z 0 (0 + 1))) (D.gridChar ϑ (!z) (0 + i) (D.GridIndex z 0 (0 + 1)))
+      cosetTerm (card (D.GridIndex z 0 (0 + 1)))
+        (D.gridChar ϑ (!z) (0 + i) (D.GridIndex z 0 (0 + 1)))
         (triangleModulus z ϑ).places.conjClosureᶜ (D.triangleNegEquiv z i x)
           (D.triangleNegEquiv z i y) γ
     have h_sum : HasSum
