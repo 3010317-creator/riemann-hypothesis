@@ -296,7 +296,9 @@ lemma gaussVal_X_sub_C (α : intQpBar ℓ) :
   have h_const : (X - C α : (intQpBar ℓ)[X]).coeff 0 = -α := by simp
   have h_linear : (X - C α : (intQpBar ℓ)[X]).coeff 1 = 1 := by simp
   refine le_antisymm (le_min ?_ ?_) ?_
-  · simpa [h_const, ellVal_neg] using gaussVal_le_coeff (ρ := ρ) (X - C α) 0
+  · have h := gaussVal_le_coeff (ρ := ρ) (X - C α) 0
+    rw [h_const, ellVal_neg] at h
+    simpa using h
   · simpa using gaussVal_le_of_isUnit_coeff (ρ := ρ) (g := X - C α) (d := 1) (by simp)
   · unfold gaussVal
     refine le_iInf fun i ↦ ?_
