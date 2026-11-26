@@ -708,11 +708,6 @@ theorem exists_mem_coe_eq_norm_aeval_of_forall_det_aeval_mem {R A : Type*} [Comm
   rw [Algebra.norm_eq_matrix_det b, ← aeval_algHom_apply]
   exact hd_det
 
-/-- The finite idele of `y` in `Lˣ` is the image of `y` in the finite adeles. -/
-private lemma New.coe_principalIdele {L : Type*} [Field L] [NumberField L] (y : Lˣ) :
-    ((principalIdele y : (𝔸f L)ˣ) : 𝔸f L) = algebraMap L (𝔸f L) y :=
-  rfl
-
 /-- The Hasse principle at one prime factor `q`, for the step `E'/E` with character `μ` and `σ` of
 prime order `p`. Here `θ` presents the adeles of the CM field `L = E'[X] / (q)` as adelic
 polynomials modulo `q`, and `T c = z * σ c`. Here `θ (f̄(v)) = star (θ f)`, `θ z` is a unit with
@@ -896,7 +891,8 @@ private lemma New.exists_isUnit_aeval_and_isRootQuotient_of_isSelfAdjoint {E E' 
   have local_prop (q : primeFactors P) :
       IsUnit (θ q x) ∧ IsSelfAdjoint (star (θ q c) * θ q x) := by
     have θ_x : θ q x = (principalIdele (y q)).val * θ q (T c) := by
-      rw [hx, map_mul, hθ_rat, hw_eq, coe_principalIdele]
+      rw [hx, map_mul, hθ_rat, hw_eq]
+      rfl
     rw [θ_x]
     exact h_local c hc_eq q
   choose x_unit x_adj using local_prop
