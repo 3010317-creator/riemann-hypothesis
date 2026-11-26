@@ -701,7 +701,11 @@ theorem exists_poincareAt_eq_poincareMap_comp :
       D.poincareAt g t = D.filling_fits.poincareMap ∘ₗ D.sourceFormCoords.toLinearMap := by
   -- Both forms have the same inner product, the Bessel period, with every form `y`.
   obtain ⟨g, t, h_period⟩ := D.filling_fits.exists_integral_poincareSeries_eq_period
-    (by simp [gradingY, filling, M, field, WeilData.j_ne_zero])
+    (by
+      simp [gradingY, filling, M, field]
+      rw [mul_assoc, mul_assoc, ← div_div, div_self WeilData.j_ne_zero, one_div]
+      simp only [mul_inv_rev]
+      ac_rfl)
   refine ⟨g, t, LinearMap.ext fun φ ↦ ext_inner_left ℂ fun y ↦ ?_⟩
   have hf_level : HasLevel (star (y.1 : New.G D.E (D.signsY 0) → ℂ))
       D.filling.stdPrincipalLevel.toSubgroup := fun k hk x ↦
