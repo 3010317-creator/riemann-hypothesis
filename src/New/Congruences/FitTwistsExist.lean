@@ -268,7 +268,7 @@ conjugate self-dual with the parameter `1`, meets the local conditions of `IsCon
 all finite places (the level is `∅`) with the single jump `0` at each embedding of `D.E` in `ℂ`, and
 inertia at each chosen place acts through the root of the label. -/
 lemma New.Selmer.isRepOfType_one {P : Parameters} {D : Data P} {ℓ : ℕ} [ThePrime ℓ]
-    [PadicIso ℓ] {n : Type} [Fintype n] [DecidableEq n] (O : DescentPair D.E Unit n) :
+    [PadicIso ℓ] {n : Type} [Fintype n] (O : DescentPair D.E Unit n) :
     IsRepOfType O (Fintype.card Unit) (fun _ : D.E →+* ℂ ↦ {0})
       (fun _ : O.ChosenIndex ↦ Polynomial.X - 1) ∅ (1 : GalRep ℓ D.E Unit) := by
   -- the local clauses are those of the trivial character
