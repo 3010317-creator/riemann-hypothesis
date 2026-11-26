@@ -15,8 +15,7 @@ measurability in the operator norm is needed. In the results on analytic familie
 finite-dimensional complex normed space, K a compact R₁ space and f : E → K → ℂ a family of
 functions on K with parameter in E. The file also contains the Schwarz lemma in normed spaces,
 holomorphy of dominated parameter integrals, a uniqueness result for analytic functions along
-submersions, and Euler's beta integral together with Hua's bound for negative powers of
-determinants.
+submersions, and Hua's bound for negative powers of determinants.
 
 ## Main definitions and results
 
@@ -470,7 +469,7 @@ lemma New.eq_zero_of_submersion {E F : Type*} [NormedAddCommGroup E] [NormedSpac
   exact congrFun (hG.eq_of_eventuallyEq analyticOnNhd_const h_near) y
 
 /-!
-## Euler's beta integral and Hua's integral bound
+## Hua's integral bound
 
 The integrals are lower Lebesgue integrals with values in `[0, ∞]`.
 -/
@@ -478,24 +477,6 @@ The integrals are lower Lebesgue integrals with values in `[0, ∞]`.
 section HuaIntegral
 
 open ComplexOrder Fintype Function Matrix MatrixOrder MeasureTheory Real
-
-/-- Euler's beta integral: for Im z > 0 and s > 1/2, the integral over real t of |z + t|^{−2s}
-equals √π Γ(s − 1/2)/Γ(s) · (Im z)^{−(2s−1)}. -/
-lemma New.lintegral_norm_add_rpow (z : ℂ) {s : ℝ} (hz : 0 < z.im) (hs : 1 / 2 < s) :
-    ∫⁻ t : ℝ, ENNReal.ofReal (‖z + t‖ ^ (-2 * s)) =
-      ENNReal.ofReal (√π * Gamma (s - 1 / 2) / Gamma s * z.im ^ (-(2 * s - 1))) := by
-  -- After the shift by `z.re` the integrand is `(z.im ^ 2 + t ^ 2)⁻¹ ^ s`.
-  have shift (t : ℝ) : ‖z + ↑(t - z.re)‖ ^ (-2 * s) = (z.im ^ 2 + t ^ 2)⁻¹ ^ s := by
-    simp (disch := positivity) [rpow_neg, rpow_mul, Complex.norm_eq_sqrt_sq_add_sq, add_comm,
-      inv_rpow]
-  rw [← lintegral_sub_right_eq_self _ z.re]
-  simp_rw [shift]
-  rw [lintegral_inv_add_rpow (pow_pos hz 2) hs sq_nonneg (by bound)]
-  have im_pow : (1 / z.im ^ 2) ^ (s - 1 / 2) = z.im ^ (-(2 * s - 1)) := by
-    rw [one_div, inv_rpow (by positivity), ← rpow_natCast_mul hz.le, ← rpow_neg hz.le]
-    norm_num [mul_sub]
-  rw [← sqrt_eq_rpow π, im_pow]
-  ring_nf
 
 /-- For a square matrix C over ℂ and a row vector y, |det (C⋆C + (yC)⋆(yC))| = |det C|² (1 + |y|²),
 where ⋆ is the conjugate transpose. -/
