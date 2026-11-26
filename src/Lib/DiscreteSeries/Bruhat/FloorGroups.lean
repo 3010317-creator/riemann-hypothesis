@@ -158,13 +158,13 @@ def weylOn (P : ℕ → Prop) (p : ℕ → A) : T.G :=
         if swapped then (if level j < 𝔰.ϱ then p (floorOf j) else (star (p (floorOf j)))⁻¹ʳ) else 1
       else
         0
-  have hM (q : ℕ → A) : M q * M (star q) = 1 := by
+  have hM : M p * M (star p) = 1 := by
     ext
     simp only [Pi.star_apply, isUnit_star, star_star, Matrix.mul_apply, of_apply, mul_ite,
       ite_mul, one_mul, zero_mul, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
       ↓reduceIte, Matrix.one_apply, M]
     grind [oppositeIndex_involutive_and_floorOf_level, inverse_mul_cancel]
-  { val := ⟨M p, M (star p), hM p, by simpa only [star_star] using hM (star p)⟩
+  { val := ⟨M p, M (star p), hM, (mul_eq_one_comm_of_card_eq _ _ _ rfl).mp hM⟩
     property := by
       rw [mem_unitaryGroupOf_iff]
       ext
