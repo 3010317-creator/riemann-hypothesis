@@ -127,7 +127,7 @@ lemma PlaceData.exists_out_inv_mul_mem {y : T.G}
     ∃ w : F.UnipotentCosets, (w.out : T.G)⁻¹ * y ∈ F.congruenceSubgroup := by
   obtain ⟨u, hu, huy⟩ := hy
   exact ⟨(⟨u, hu⟩ : T.besselU),
-    by simpa [mul_assoc] using mul_mem (inv_mem (inv_mul_out_mem ⟨u, hu⟩)) huy⟩
+    by simpa using mul_mem (inv_mem (inv_mul_out_mem ⟨u, hu⟩)) huy⟩
 
 /-- An integral point `s` of the unitary group normalises `K(M) = F.congruenceSubgroup`, so the
 cosets `s K(M)` and `K(M) s` agree. -/

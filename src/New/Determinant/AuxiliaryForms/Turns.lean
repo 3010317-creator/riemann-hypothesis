@@ -740,7 +740,7 @@ lemma exists_squareLaw_grid_hasAbsUpToNormPower (z : Bool) (ha : a < D.m) (hb : 
   let n : D.LiftIndex := ⟨(if z then a else b) + 1, by grind⟩
   have h_signs : negCount (Sum.elim (D.gridSigns z 0 a (b + 1)) (D.gridSigns z 0 (a + 1) b)) =
       negCount (D.gridSigns z 0 (a + 1) (b + 1)) + negCount (D.gridSigns z 0 a b) := by
-    simp [negCount_gridSigns, add_comm]
+    simp [negCount_gridSigns]
   have h_rank : card (D.GridIndex z (a + 1) (b + 1)) = card (D.GridIndex z a b) + 2 * D.t := by
     cases z <;> simp [card_gridIndex] <;> grind
   have h_ratio : (fun ϑ : D.MFoldTwist ↦ D.lRatioProd pair.character pair.z (ϑ.pow n)) =
