@@ -1095,12 +1095,6 @@ def homReprEquiv (F : C ⥤ Ab) : (freeAb (reprBy A) ⟶ F) ≃+ F A :=
   -- The universal property of `freeAb`, then the Yoneda lemma.
   ⟨(freeAb.homEquiv (reprBy A) F).trans uliftCoyonedaEquiv, by tauto⟩
 
-/-- The additive Yoneda bijection is natural in the target: composing with `e : E ⟶ F` corresponds
-to applying `e` at `A`. -/
-private lemma homReprEquiv_comp {E : C ⥤ Ab} (f : freeAb (reprBy A) ⟶ E) (e : E ⟶ F) :
-    homReprEquiv A F (f ≫ e) = e.app A (homReprEquiv A E f) :=
-  rfl
-
 /-- The free abelian group ℤ[h_A] on a represented functor is projective. -/
 instance : Projective (freeAb (reprBy A)) where
   factors {E X} f e h_epi := by
@@ -1109,7 +1103,8 @@ instance : Projective (freeAb (reprBy A)) where
     obtain ⟨x, hx⟩ :=
       (AddCommGrpCat.epi_iff_surjective (e.app A)).mp inferInstance (homReprEquiv A X f)
     refine ⟨(homReprEquiv A E).symm x, (homReprEquiv A X).injective ?_⟩
-    rw [homReprEquiv_comp, AddEquiv.apply_symm_apply, hx]
+    change e.app A (homReprEquiv A E ((homReprEquiv A E).symm x)) = _
+    rw [AddEquiv.apply_symm_apply, hx]
 
 /-- The value at `x ∈ N(A)` of a finite sum of maps `N ⟶ F` is the sum of their values. -/
 lemma sum_app_apply {ι : Type*} {A : C} {x : N.obj A} [Fintype ι] {g : ι → (N ⟶ F)} :
