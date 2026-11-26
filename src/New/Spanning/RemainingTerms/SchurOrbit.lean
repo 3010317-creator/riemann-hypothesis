@@ -177,6 +177,7 @@ lemma HasCellRank.norm_det_subframeBlock (h_rank : S.HasCellRank j γ) (v : Infi
   exact RealPlace.norm_det_subframeBlock (min_le_left 𝔰.ϱ j) (hZ := rfl) h_pair j.is_le
     (hij := rfl)
 
+omit [HasPrimitiveRoot5040 E] in
 /-- A matrix product `P * M` with `P` integral has the conjugates of its rows in every `Ô`-module
 that contains the conjugates of the rows of `M`. -/
 lemma col_conjTranspose_mul_mem {m m' n : Type} [Fintype m]
