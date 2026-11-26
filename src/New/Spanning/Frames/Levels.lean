@@ -407,14 +407,17 @@ lemma measurePreserving_orbitPoint {F : PlaceData ι T m} (b : Fin 𝔰.n) :
       ∫⁻ t : A, modulus t ^ d * ∫⁻ u : V, ∫⁻ β : skewAdjoint A,
         Φ (orbitPoint a.castSucc ((floorWeyl a t : T.G)⁻¹ * heisenbergElem a (u, β)))
           ∂P.skewMeasure := by
-    -- `fun_prop` has to unfold the measurable space that `volume` carries
-    simp (disch := with_unfolding_all fun_prop) [floorMeasure, heisenbergMeasure, lintegral_map,
-      mconv, lintegral_prod, lintegral_withDensity_eq_lintegral_mul, hd, V]
+    simp (disch := fun_prop) [floorMeasure, heisenbergMeasure, lintegral_map,
+      mconv, lintegral_prod, hd, V]
+    rw [weylLaw, lintegral_map (by fun_prop) (by fun_prop),
+      lintegral_withDensity_eq_lintegral_mul _ (by fun_prop) (by fun_prop)]
+    rfl
   have h_quadric : ∫⁻ v, Φ v ∂F.floorQuadricMeasure a.castSucc =
       ∫⁻ t : A, ∫⁻ u : V, ∫⁻ β : skewAdjoint A, Φ (χ t u β) ∂P.skewMeasure := by
     rw [floorQuadricMeasure_castSucc_eq_map]
-    simp (disch := with_unfolding_all fun_prop)
+    simp (disch := fun_prop)
       [lintegral_map, lintegral_prod, volume_eq_prod, χ, V]
+    rw [lintegral_prod _ (by fun_prop)]
   rw [h_floor, h_quadric]
   refine lintegral_congr_of_ae_imp ae_isUnit ?_
   rintro _ ⟨t, rfl⟩
