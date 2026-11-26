@@ -282,8 +282,8 @@ lemma trace_besselTranslate [HasPrimitiveRoot5040 E] (s : S.ResidueGL) :
         S.amplitudeSum .full (S.ratMiddle E).besselS y.1 s⁻¹ y.1 (y.2, y.2) /
           S.unipotentCovolume := by
   classical
-  rw [LinearMap.trace_eq_sum_inner _ (basisFun _ ℂ)]
-  simp [besselTranslate, inner_single_left, amplitudeSum_besselS_inv]
+  simp [LinearMap.trace_eq_sum_inner _ (basisFun _ ℂ), besselTranslate, inner_single_left,
+    amplitudeSum_besselS_inv]
 
 /-- Equivariance on the right. Let `S` be admissible filling data for a unitary group `G` over the
 CM field `E`, which contains a primitive `5040`-th root of unity, and let `Ḡ = S.ResidueGL` be the
@@ -1248,8 +1248,8 @@ theorem HasAmplitudeBlocks.isNearIsometry_piTensorElem_comp [WeilData E]
     gcongr <;> linarith
   have h_bad : hilbertSchmidtNorm ((1 - ρ.asAlgebraHom (piTensorElem g)) ∘ₗ P) ^ 2 ≤
       4 * (S.b ^ 4)⁻¹ * finrank ℂ (EuclideanSpace ℂ (S.Classes × S.BesselCoord)) := by
-    rw [finrank_source_eq_sourceDim]
-    exact hP.hilbertSchmidtNorm_one_sub_piTensorElem_comp_sq_le hρ hg hg_small
+    simpa only [finrank_source_eq_sourceDim] using
+      hP.hilbertSchmidtNorm_one_sub_piTensorElem_comp_sq_le hρ hg hg_small
   have h_proj : (ρ.asAlgebraHom (piTensorElem g)).IsSymmetricProjection :=
     (IsCentralProj.piTensorElem hg).isSymmetricProjection hρ
   exact (h_isom.proj_comp h_proj h_bad).mono (le_of_eq (by ring))
