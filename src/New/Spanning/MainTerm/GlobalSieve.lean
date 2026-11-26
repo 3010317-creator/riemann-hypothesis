@@ -123,8 +123,7 @@ lemma absNorm_denominator_le {y : E} (hy : y ∈ ratIntegralOff T) :
   have h_comap : (denominator y).toAddSubgroup = D.comap f := by
     ext a
     have h_off : algebraMap E (𝔸f E) (algebraMap (𝓞 E) E a * y) ∈ integralOff T := by
-      rw [map_mul]
-      exact mul_mem ((mem_Ô_iff T).1 (h_integral a)).right hy
+      simpa only [map_mul] using mul_mem ((mem_Ô_iff T).1 (h_integral a)).right hy
     rw [Submodule.mem_toAddSubgroup, mem_denominator, ← algebraMap_mem_Ô, mem_Ô_iff T,
       and_iff_left h_off]
     simp [D, f, mul_comm]
