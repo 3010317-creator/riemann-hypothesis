@@ -126,6 +126,11 @@ lemma relLength_add_length_inf : relLength S T + length A ↥(S ⊓ T) = length 
   rw [relLength, ← (T.submoduleOfEquivInf S).length_eq, add_comm]
   exact (length_eq_add_of_exact (T.submoduleOf S).subtype (T.submoduleOf S).mkQ
     (Submodule.subtype_injective _) (mkQ_surjective _) (LinearMap.exact_subtype_mkQ _)).symm
+/-- The length of `S` is the sum of the lengths of its image under `f` and the kernel of `f` on `S`. -/
+lemma length_map_add_length_inf_ker :
+    length A (S.map f) + length A ↥(S ⊓ f.ker) = length A S := by
+  rw [← relLength_ker S f, relLength_add_length_inf]
+
 @[simp]
 lemma relLength_bot : relLength S ⊥ = length A S := by rw [← ker_id, relLength_ker, S.map_id]
 
