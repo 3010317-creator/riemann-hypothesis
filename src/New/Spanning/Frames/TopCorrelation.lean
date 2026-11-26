@@ -87,7 +87,7 @@ lemma lintegral_ofReal_re_sum_sum_mul {X j : Type} [MeasurableSpace X] [Fintype 
 /-- Let `C` and `L` be compact sets of vectors over `A`, and let `φ` be locally constant along `Q`
 at the points of `C`. Then for all scalars `b` near `0` one has `φ (x + b • v) = φ x` whenever
 `x ∈ C`, `v ∈ L`, and both `x` and `x + b • v` lie in `Q`. -/
-lemma eventually_forall_apply_add_smul_eq {A n : Type} [SemilocalField A] [Fintype n]
+lemma eventually_forall_apply_add_smul_eq {A n : Type} [SemilocalField A]
     {Q C L : Set (n → A)} (hC : IsCompact C) (hL : IsCompact L) {φ : (n → A) → ℂ}
     (h_loc : ∀ e ∈ C, ∀ᶠ x : n → A in nhds e, x ∈ Q → φ x = φ e) :
     ∀ᶠ b : A in nhds 0, ∀ z ∈ C ×ˢ L,
