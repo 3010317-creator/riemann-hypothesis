@@ -437,7 +437,8 @@ theorem exists_integralPlace : ∃ P : IntegralPlace (LocProd T), P.ψ = S.charO
       kernelBound := 1
       continuous_psi := continuous_ψf.subtypeVal.comp ((continuous_adeleOfLocal T).const_mul _)
       measurable_modulus := by
-        simp [modulus, genIndex_eq_inv_prod_norm]
+        simp only [modulus, genIndex_eq_inv_prod_norm, MonoidHom.coe_mk, OneHom.coe_mk,
+          measurable_inv_iff]
         fun_prop
       star_skewUnit := by simp [h_skew]
       measurePreserving_split := h_split

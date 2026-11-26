@@ -215,7 +215,8 @@ lemma skewMeasure_le_of_sub_mem_ofSize {S : Set (skewAdjoint A)} (u : Aˣ)
     push_cast
     ring
   · grw [volume_ofSize_le]
-    simp [mul_pow, ← rpow_mul_natCast, ← pow_mul]
+    simp only [modulus_inv, inv_inv, mul_pow, ← rpow_mul_natCast, Nat.cast_ofNat,
+      inv_mul_cancel₀ (two_ne_zero' ℝ), rpow_one, ← pow_mul]
     gcongr
     · exact Γ.one_le_loss
     · lia
