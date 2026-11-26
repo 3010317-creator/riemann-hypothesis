@@ -236,7 +236,7 @@ def matchOf (χ : MulChar R ℂ) (e : b ⊕ a ≃ n) (Ψ : Matrix n b R → ℂ)
 
 variable {χ : MulChar R ℂ} {e : b ⊕ a ≃ n} {Φ Φ' : Matrix a n R → ℂ} {Ψ : Matrix n b R → ℂ}
 
-omit [Fintype R] in
+omit [Fintype R] [DecidableEq a] in
 /-- If the rows `a` of `γ⁻¹` and `γ'⁻¹` agree, then the columns `b` of `γ'` are those of `γ`
 multiplied on the right by an invertible `h` with `det γ' = det γ * det h`. -/
 lemma exists_firstCols_eq_mul_of_invLastRows_eq {γ γ' : GL n R}
