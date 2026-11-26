@@ -1019,9 +1019,10 @@ theorem exists_isBallFamily {ν : ℕ} (o : ModuliPoint E D.Index ν) :
     simpa [hμ, ← he (_ ᵥ* _), ← he (e.symm _), hu₀.ne', hμ_ne, mulVec_smul, mulVec_transpose] using
       hform (e.symm (0, w)) u₀
   obtain ⟨N, hN, hN_roots⟩ := exists_charpoly_roots_eq_erase (star μ) _ h_first h_second
-  -- `erw`: `ᴴᵀ` is the entrywise conjugate only after unfolding, which `rw` does not do.
+  -- `ᴴᵀ` is the entrywise conjugate after unfolding.
   have h_roots : N.charpoly.roots = (z.val.charpoly.map (star (Φ v₀))).roots.erase (star μ) := by
-    erw [hN_roots, e.charpoly_conj, charpoly_toLin', z.val.charpoly_map (star _)]
+    rw [hN_roots, e.charpoly_conj, charpoly_toLin',
+      show (z.val.map (Φ v₀))ᴴᵀ = z.val.map ⇑(star (Φ v₀)) from rfl, z.val.charpoly_map]
   -- `fibreEnd μ N z a` is the action of `a • z` on periods; `ballEnd μ N z α` moves the base
   -- point by `(star μ)⁻¹ • N`.
   refine ⟨ballEnd μ N z α, ?_, eval_localTerm_eq_mul_det hz rfl hμ_ne
