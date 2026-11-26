@@ -540,10 +540,6 @@ private lemma linearIndependent_n (F : Frame L) : LinearIndependent Ainf F.n := 
     simp [comb, ht, Fintype.linearCombination_apply]
   simpa using F.phiInvToBdR_frobE_pow_mul_mem_of_forall_crysForms 0 ⊥ t h_kill i
 
-private lemma comb_zero_apply (F : Frame L) (t : Fin (finrank ℤ_[p] L.Carrier) → Ainf) :
-    F.comb 0 t = ∑ i : Fin (finrank ℤ_[p] L.Carrier), t i • F.n i := by
-  simp [comb, Fintype.linearCombination_apply]
-
 /-- The frame vectors `F.n i` span the Kisin module over `S`. -/
 private lemma span_n_eq_kisinModule (F : Frame L) : span k.S (Set.range F.n) = L.kisinModule := by
   simpa [frobKisinAinf_zero] using F.span_phi_pow_smul_n_eq_valueFieldPoints 0
@@ -611,7 +607,8 @@ private lemma exists_mem_bicommutant_of_mem_kisinModule (F : Frame L) {μ : L.Fu
       (b := ∑ i, l (finBasis ℤ_[p] L.Carrier i) * F.M i ν) (h_fixed ν)
   refine ⟨b ⬝ᵥ F.Z *ᵥ ainfToBPlus ∘ fun i ↦ (c i : Ainf), ?_, ?_⟩
   · simp (maxDischargeDepth := 4) [sum_mem, mul_mem, hb_mem, F.Z_mem, dotProduct, mulVec]
-  · simpa [hl, frobPowToBdR, ← map_mul, ← map_sum, ← hb, F.comb_zero_apply, frobE, smul_eq_val_smul,
+  · simpa [hl, frobPowToBdR, ← map_mul, ← map_sum, ← hb, comb, Fintype.linearCombination_apply,
+      frobE, smul_eq_val_smul,
       dotProduct, vecMul, basisValues, Prod.mk_one_one, ← IsScalarTower.algebraMap_apply] using
       F.frobE_pow_smul_apply_comb μ 0 fun i ↦ (c i : Ainf)
 
