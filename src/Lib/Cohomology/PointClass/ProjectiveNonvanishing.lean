@@ -709,19 +709,10 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
       change relFreeAb.mk Z (φ c u) - relFreeAb.mk Z (φ c z) = _
       rw [hz, sub_zero]
       obtain ⟨⟨_ | _⟩, t⟩ := u
-      · let u : twoDiscs.obj c := ⟨⟨false⟩, t⟩
-        have h_proj : ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u) = 0 := by
-          change FreeAddCommGroup.lift _ (.of u) = _
-          erw [FreeAddCommGroup.lift_apply_of]
-        erw [h_proj]
+      · erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c t]
         simp only [map_zero]
         exact relFreeAb_mk_stdChart_one_eq_zero C _
-      · let u : twoDiscs.obj c := ⟨⟨true⟩, t⟩
-        have h_proj : ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u) =
-            .of t := by
-          change FreeAddCommGroup.lift _ (.of u) = _
-          erw [FreeAddCommGroup.lift_apply_of]
-        erw [h_proj, freeAb.map_of]
+      · erw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c t, freeAb.map_of]
         rfl
   -- `T` is a section of the coordinate map.
   have h_section : s ≫ relFreeAb.map _ cutsOutLocus_stdChart_zero_X.preimage_fieldLocus_not.le = 𝟙
@@ -860,22 +851,16 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
   have h_W_false (c : PadicTest) (t : (tilt ⋙ reprBy (CommAlgCat.of OFlat OFlat)).obj c) :
       (W.app c).hom (.of (⟨⟨false⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) = 0 := by
     let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨false⟩, t⟩
-    have h_proj : ((projFirst (B := pointOrTorus)).app c).hom (.of u) = 0 := by
-      change FreeAddCommGroup.lift _ (.of u) = _
-      erw [FreeAddCommGroup.lift_apply_of]
     change (FreeAddCommGroup.lift (fun t ↦ FreeAddCommGroup.of (torusPoint c t)))
       (((projFirst (B := pointOrTorus)).app c).hom (.of u)) = 0
-    erw [h_proj, map_zero]
+    erw [projFirst_false (B := pointOrTorus) c t, map_zero]
   have h_W_true (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
       (W.app c).hom (.of (⟨⟨true⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
         .of (torusPoint c t) := by
     let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, t⟩
-    have h_proj : ((projFirst (B := pointOrTorus)).app c).hom (.of u) = .of t := by
-      change FreeAddCommGroup.lift _ (.of u) = _
-      erw [FreeAddCommGroup.lift_apply_of]
     change (FreeAddCommGroup.lift (fun t ↦ FreeAddCommGroup.of (torusPoint c t)))
       (((projFirst (B := pointOrTorus)).app c).hom (.of u)) = _
-    erw [h_proj, FreeAddCommGroup.lift_apply_of]
+    erw [projFirst_true (B := pointOrTorus) c t, FreeAddCommGroup.lift_apply_of]
   -- `one` sends every point to the unit of `genericAlg`.
   let one {X : PadicTest ⥤ Type 1} : freeAb X ⟶ genericCoeff :=
     desc (fun c _ ↦ ⟨(1 : genericAlg c)⟩) fun _ _ _ _ ↦
@@ -885,23 +870,16 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
   have h_f_false (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ≥0)).obj c) :
       (f.app c).hom (.of (⟨⟨false⟩, t⟩ : twoDiscs.obj c)) = 0 := by
     let u : twoDiscs.obj c := ⟨⟨false⟩, t⟩
-    have h_proj : ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u) = 0 := by
-      change FreeAddCommGroup.lift _ (.of u) = _
-      erw [FreeAddCommGroup.lift_apply_of]
     change ((freeAb.map a).app c).hom
       (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u)) = 0
-    erw [h_proj, map_zero]
+    erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c t, map_zero]
   have h_f_true (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ≥0)).obj c) :
       (f.app c).hom (.of (⟨⟨true⟩, t⟩ : twoDiscs.obj c)) =
         FreeAddCommGroup.of (a c t) := by
     let u : twoDiscs.obj c := ⟨⟨true⟩, t⟩
-    have h_proj : ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u) =
-        .of t := by
-      change FreeAddCommGroup.lift _ (.of u) = _
-      erw [FreeAddCommGroup.lift_apply_of]
     change ((freeAb.map a).app c).hom
       (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u)) = _
-    erw [h_proj, freeAb.map_of]
+    erw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c t, freeAb.map_of]
   have h_origin : origin ⟨true⟩ ≫ oneSub (discTwist epsPow) = 0 := by
     refine freeAb.hom_ext fun c t ↦ ?_
     let z : twoDiscs.obj c := ⟨⟨true⟩, ⟨evalZero (tilt.obj c)⟩⟩
@@ -1050,10 +1028,6 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
     ext c ⟨x⟩
     let o : twoDiscs.obj c := ⟨⟨true⟩, ⟨evalZero (tilt.obj c)⟩⟩
     have ho : ((origin ⟨true⟩).app c).hom (.of PUnit.unit) = .of o := freeAb.desc_of ..
-    have hp : ((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of o) =
-        .of o.snd := by
-      change FreeAddCommGroup.lift _ (.of o) = _
-      erw [FreeAddCommGroup.lift_apply_of]
     have h_one : (one.app c).hom (.of o.snd) = ⟨(1 : genericAlg c)⟩ := freeAb.desc_of ..
     let x' : genericAlg c := x
     let y : genericAlg c := ((one.app c).hom (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
@@ -1061,7 +1035,7 @@ lemma projSpace.exists_hodgeTateMap_pointClass_line :
     change ULift.up (x' * y) = ULift.up x'
     have hy : y = 1 := by
       dsimp only [y]
-      erw [ho, hp, h_one]
+      erw [ho, projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c o.snd, h_one]
     rw [hy, mul_one]
   exact eq_zero_of_cup_eq_zero_of_isTodaCancellation h_toda h_unit h_pull x hx
 

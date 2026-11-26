@@ -161,6 +161,18 @@ of the first part and sends those of the second to 0. -/
 abbrev projFirst : freeAb (tiltPointsSum B) ⟶ freeAb (tilt ⋙ reprBy (B ⟨true⟩)) :=
   freeAb.desc (fun | _, ⟨⟨true⟩, t⟩ => FreeAddCommGroup.of t | _, ⟨⟨false⟩, _⟩ => 0) (by bound)
 
+/-- The projection kills a generator of the false summand. -/
+lemma projFirst_false (c : PadicTest)
+    (t : (tilt ⋙ reprBy (B ⟨false⟩)).obj c) :
+    ((projFirst (B := B)).app c).hom (.of (⟨⟨false⟩, t⟩ : (tiltPointsSum B).obj c)) = 0 :=
+  freeAb.desc_of ..
+
+/-- The projection preserves a generator of the true summand. -/
+lemma projFirst_true (c : PadicTest)
+    (t : (tilt ⋙ reprBy (B ⟨true⟩)).obj c) :
+    ((projFirst (B := B)).app c).hom (.of (⟨⟨true⟩, t⟩ : (tiltPointsSum B).obj c)) = .of t :=
+  freeAb.desc_of ..
+
 /-- For endomorphisms Δ_b of the O^♭-algebras B_b, the endomorphism 1 − Δ of the functor S ↦
 ℤ[⊔_b Hom(B_b, S^♭)], sending [x] to [x] − [x∘Δ_b]. -/
 abbrev oneSub : freeAb (tiltPointsSum B) ⟶ freeAb (tiltPointsSum B) :=
