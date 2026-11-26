@@ -122,7 +122,7 @@ def artinAt (v : FinPlace K) :
   -- that of `Γ`, so it passes to the abelianisations.
   (QuotientGroup.map _ (commutator Γ).topologicalClosure (decompGroup Γ (placeOver v)).subtype
       (Set.MapsTo.closure (fun g hg ↦
-        map_derivedSeries_le_derivedSeries (decompGroup Γ (placeOver v)).subtype 1 ⟨g, hg, rfl⟩)
+        Subgroup.map_derivedSeries_le_derivedSeries (decompGroup Γ (placeOver v)).subtype 1 ⟨g, hg, rfl⟩)
         (by fun_prop))).comp (localArtin Γ (placeOver v) v)
 
 /-- The global Artin map from the finite ideles to the topological abelianisation of `Γ`: a
