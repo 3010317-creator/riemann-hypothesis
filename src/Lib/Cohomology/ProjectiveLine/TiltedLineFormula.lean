@@ -1077,7 +1077,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
     let y' : twoDiscs.obj c := ⟨y.fst, ⟨discTwist χ y.fst ≫ y.snd.down⟩⟩
     erw [NatTrans.comp_app, AddCommGrpCat.comp_apply]
     change (f.app c).hom (FreeAddCommGroup.lift _ (FreeAddCommGroup.of y)) = _
-    erw [FreeAddCommGroup.lift_apply_of]
+    rw [FreeAddCommGroup.lift_apply_of]
     change (f.app c).hom (FreeAddCommGroup.of y - FreeAddCommGroup.of y') = 0
     erw [_root_.map_sub, h_f_app, h_f_app]
     rcases y with ⟨⟨_ | _⟩, y⟩ <;>
@@ -1151,7 +1151,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
         ((kummerSeq (genericTestOver A)).f.app c).hom
           ((κ.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₁)))
       change (α.app c).hom (FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₁)) = _
-      erw [FreeAddCommGroup.lift_apply_of]
+      rw [FreeAddCommGroup.lift_apply_of]
       let t₁ : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, t⟩
       change (α.app c).hom (FreeAddCommGroup.of y₁ - FreeAddCommGroup.of t₁) = _
       erw [_root_.map_sub, h_alpha, h_alpha, h_glue, _root_.map_sub, h_zero, h_one, zero_sub, map_neg]
