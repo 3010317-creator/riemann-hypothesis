@@ -1,5 +1,6 @@
 module
 
+import TauCeti.RingTheory.WittVector.PadicConstants
 public import TauCeti.RingTheory.Perfectoid.Cyclotomic.Basic
 public import TauCeti.RingTheory.Perfectoid.Padic
 import TauCeti.RingTheory.WittVector.ArtinSchreier
@@ -612,18 +613,9 @@ a `p`-adic integer. -/
 lemma exists_algebraMap_eq_of_frobenius_eq {k : Type*} [CommRing k] [IsDomain k] [CharP k p]
     (a : WittVector p k) (h_frobenius : WittVector.frobenius a = a) :
     ∃ c : ℤ_[p], algebraMap ℤ_[p] (WittVector p k) c = a := by
-  -- Every coordinate is a root of `X ^ p - X`, which splits over `ZMod p`; as `k` is a domain, the
-  -- coordinate comes from `ZMod p`.
-  have h_coeff_mem (n : ℕ) : ∃ z : ZMod p, castHom dvd_rfl k z = a.coeff n := by
-    have h_root : a.coeff n ^ p = a.coeff n := by rw [← coeff_frobenius_charP, h_frobenius]
-    exact (Polynomial.splits_X_pow_char_sub_X (ZMod p) p).mem_range_of_isRoot
-      (Polynomial.X_pow_sub_X_ne_zero (Fact.out : p.Prime).one_lt)
-      (by simpa [sub_eq_zero] using h_root)
-  choose z hz using h_coeff_mem
-  -- The Witt vector over `ZMod p` with coordinates `z` is a `p`-adic integer.
-  refine ⟨equiv p (WittVector.mk p z), ?_⟩
-  ext n
-  simp [algebraMap_toAlgebra, hz]
+  obtain ⟨c, hc⟩ := TauCeti.WittVector.frobenius_eq_self_iff.mp h_frobenius
+  refine ⟨c, ?_⟩
+  simpa [TauCeti.WittVector.padicConstants_apply, algebraMap_toAlgebra] using hc
 
 /-- The Frobenius `φ` is bijective on `A_inf`, because `O^♭` is a perfect ring. -/
 lemma frobEnd_bijective : Bijective (frobEnd : Ainf → Ainf) := by
