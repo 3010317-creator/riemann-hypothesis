@@ -803,9 +803,7 @@ private lemma New.apply_eq_prod_smul_of_valuation_lt_one {F : Type*} [Field F] [
   -- Read as a matrix indexed by `n`, `g` is upper triangular modulo the maximal ideal for the order
   -- `e`.
   have h_low_e : ∀ i j : Fin N, e (e.symm j) < e (e.symm i) → v (g i j) < 1 := by simpa using h_low
-  have h_act : ρ (reindexGL e ((reindexGL e).symm g)) y =
-      (∏ i : n, χ (b i) (intGL.map (residue 𝒪[F])
-        (⟨(reindexGL e).symm g, reindexGL_symm_mem_intGL e hg⟩ : intGL n 𝒪[F]) i i)) • y :=
+  have h_act :=
     reindexGL_apply_eq_prod_smul_of_blockTriangular e hb h_block _
       (blockTriangular_intGL_map_reindexGL_symm_of_valuation_lt_one e e g hg h_low_e)
   rw [(reindexGL e).apply_symm_apply] at h_act
