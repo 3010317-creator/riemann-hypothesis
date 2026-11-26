@@ -130,9 +130,9 @@ end
 variable [Module.Finite ℤ R]
 
 /-- A point `a` of `c⁻¹ L` (the vectors that `F c` maps into `L`) has finite order modulo `L`. -/
-lemma mem_torsionPoints (a : h.divLattice c) : (a : V) ∈ torsionPoints L := by
+lemma mem_torsionPoints (a : divLattice L F c) : (a : V) ∈ torsionPoints L := by
   -- the index of `L` in `c⁻¹ L` is the order of the finite group `c⁻¹ L / L`
-  exact ⟨L.toAddSubgroup.relIndex (h.divLattice c), (Nat.card_pos (α := h.MulKernel c)).ne',
+  exact ⟨L.toAddSubgroup.relIndex (divLattice L F c), (Nat.card_pos (α := h.MulKernel c)).ne',
     L.toAddSubgroup.nsmul_relIndex_mem a.prop⟩
 
 /-- For `c ≠ 0`, multiplication by `c` maps the points of finite order modulo `L` onto
@@ -141,7 +141,7 @@ lemma torsionAction_surjective (c : R) [NeZero c] : Surjective (h.torsionAction 
   rintro ⟨y, n, hn, hy⟩
   -- The preimage is `x = (F c).inverse y`. Since `F c (n • x) = n • y ∈ L`, the point `n • x` is
   -- torsion by `mem_torsionPoints`, and hence so is `x`.
-  have hnx : n • (F c).inverse y ∈ h.divLattice c := by simp_all [divLattice]
+  have hnx : n • (F c).inverse y ∈ divLattice L F c := by simp_all [divLattice]
   obtain ⟨m, hm, hmx⟩ : ∃ m ≠ (0 : ℕ), m • n • (F c).inverse y ∈ L :=
     h.mem_torsionPoints ⟨n • (F c).inverse y, hnx⟩
   have hmnx : (m * n) • (F c).inverse y ∈ L := by rwa [mul_smul]
@@ -216,7 +216,7 @@ private lemma averagedPullback_normShift_of_mem_dualLattice (hd : star c = d)
   have phase_one (z : h.MulKernel d) : B.riemannPhase (F d a) (F d z.out) = 1 := by
     refine h.riemannPhase_eq_one ha ?_
     rw [star_eq_iff_star_eq.mp hd]
-    exact h.map_mem c _ (h.map_divLattice_mem d z.out)
+    exact h.map_mem c _ (map_divLattice_mem (L := L) (F := F) d z.out)
   set s : V → ℂ := t ∘ F c ∘ (F d).inverse
   have pull : h.normShift (F c a) t ∘ F c ∘ (F d).inverse = h.normShift (F d a) s :=
     (h.normShift_comp_inverse_eq hd a t).symm
@@ -370,7 +370,7 @@ lemma sum_normShift_eq_zero (hd : star c = d) (hd_dual : ∀ a ∈ B.dualLattice
   -- `z = a (c z) + b (star c z)` lies in `L`
   obtain ⟨a, b, hab⟩ : ∃ a b : R, a * c + b * star c = 1 := hc
   have comb : F (a * c + b * star c) z.out ∈ L := by
-    simpa using add_mem (h.map_mem a _ cz_mem) (h.map_mem b _ (h.map_divLattice_mem _ z.out))
+    simpa using add_mem (h.map_mem a _ cz_mem) (h.map_mem b _ (map_divLattice_mem (L := L) (F := F) _ z.out))
   have z_mem : (z.out : V) ∈ L := by simpa [hab] using comb
   exact hz ((h.out_mem_iff_eq_zero _ z).mp z_mem)
 
@@ -654,7 +654,7 @@ lemma hasShiftBound_of_torsionAction
     · simp only [normShift, normalizedShift, canonicalMultiplier, LinearMap.smul_apply, s]
       fun_prop
     -- translation by `l ∈ L` multiplies `s ξ` by `ξ (c⁻¹ l)`
-    let y : h.divLattice c := ⟨(F c).inverse l, by simpa [divLattice]⟩
+    let y : divLattice L F c := ⟨(F c).inverse l, by simpa [divLattice]⟩
     have h_eigen_z : h.normShift (F c y) (s ξ) z = ξ y * s ξ z :=
       congrFun (h.normShift_sum_eq_char_smul c h_fixed ξ y rfl) z
     simpa [y, χ, normalizedShift, ← neg_add_rev, exp_neg, field, mul_right_comm _ (ξ _), hl,

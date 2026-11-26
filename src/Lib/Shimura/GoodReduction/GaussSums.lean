@@ -126,17 +126,19 @@ hermitian data only fix `B`, `F` and `β`. -/
 abbrev normShift (_ : IsHermitianAction L B F β) : V → (V → ℂ) →ₗ[ℂ] V → ℂ :=
   normalizedShift B (F β)
 
+variable (L F) in
 /-- The lattice a⁻¹L: the additive subgroup of the vectors y of V with ay in L, where a acts
-through F. The hermitian data only fix `L` and `F`. -/
-def divLattice (_ : IsHermitianAction L B F β) (a : R) : AddSubgroup V :=
+through F. -/
+def divLattice (a : R) : AddSubgroup V :=
   L.toAddSubgroup.comap (F a).toAddMonoidHom
 
-/-- The kernel a⁻¹L / L of multiplication by a on the torus V/L. -/
-abbrev MulKernel : Type := h.divLattice a ⧸ L.toAddSubgroup.addSubgroupOf (h.divLattice a)
+/-- The kernel a⁻¹L / L of multiplication by a on the torus V/L. The hermitian action
+provides the finite quotient instance. -/
+abbrev MulKernel (_ : IsHermitianAction L B F β) : Type := divLattice L F a ⧸ L.toAddSubgroup.addSubgroupOf (divLattice L F a)
 
-omit [IsDomain R] [Module.Finite ℤ R] [NeZero a] in
+omit [StarRing R] [IsDomain R] [Module.Finite ℤ R] [NeZero a] in
 @[simp]
-lemma map_divLattice_mem (z : h.divLattice a) : F a z ∈ L := z.prop
+lemma map_divLattice_mem (z : divLattice L F a) : F a z ∈ L := z.prop
 
 omit [IsDomain R] [Module.Finite ℤ R] [NeZero a] in
 /-- The chosen representative of a class in a⁻¹L / L lies in L only for the zero class. -/
@@ -182,13 +184,13 @@ lemma normShift_normShift_of_mem (h : IsHermitianAction L B F β) {u w : V} (hu 
 /-- Let `f` be fixed by the normalised translations by `a l`, `l ∈ L`. For `z ∈ a⁻¹ L`, the chosen
 representative of the class of `z` in `a⁻¹ L / L` gives the same translate of `f` as `z`. -/
 lemma normShift_map_out (h : IsHermitianAction L B F β) {a : R}
-    (hf : ∀ l ∈ L, h.normShift (F a l) f = f) (z : h.divLattice a) :
+    (hf : ∀ l ∈ L, h.normShift (F a l) f = f) (z : divLattice L F a) :
     h.normShift (F a ((z : h.MulKernel a).out : V)) f = h.normShift (F a (z : V)) f := by
   -- the representative is `z + l` with `l ∈ L`, and the translation by `a l` fixes `f`
-  obtain ⟨l, hl⟩ : ∃ l : L.toAddSubgroup.addSubgroupOf (h.divLattice a),
+  obtain ⟨l, hl⟩ : ∃ l : L.toAddSubgroup.addSubgroupOf (divLattice L F a),
       (z : h.MulKernel a).out = z + l := mk_out_eq_add (L.toAddSubgroup.addSubgroupOf _) z
   have hz_mem : F a (z : V) ∈ L := z.property
-  have hl_mem : ((l : h.divLattice a) : V) ∈ L := l.property
+  have hl_mem : ((l : divLattice L F a) : V) ∈ L := l.property
   rw [hl, AddSubgroup.coe_add, map_add,
     ← normShift_normShift_of_mem h hz_mem (h.map_mem a _ hl_mem), hf _ hl_mem]
 
@@ -234,18 +236,18 @@ instance : Fintype (h.MulKernel a) :=
 representative of the class `k`; the terms do not depend on that choice. For `y ∈ a⁻¹ L`, the
 normalised translation by `a y` multiplies `s` by `ξ(y)`. -/
 lemma normShift_sum_eq_char_smul (hf : ∀ l ∈ L, h.normShift (F a l) f = f)
-    (ξ : AddChar (h.MulKernel a) ℂ) (y : h.divLattice a) {s : V → ℂ}
+    (ξ : AddChar (h.MulKernel a) ℂ) (y : divLattice L F a) {s : V → ℂ}
     (hs : s = ∑ k : h.MulKernel a, ξ (-k) • h.normShift (F a k.out) f) :
     h.normShift (F a y) s = ξ y • s := by
   -- Reindex the sum by `k ↦ y + k` and compare term by term.
   rw [hs, map_sum, Finset.smul_sum]
   refine Fintype.sum_equiv (.addLeft ↑y) _ _ fun k ↦ ?_
   -- `y + k.out` represents `y + k`; its translate is that by `k.out` followed by that by `y`.
-  have h_class : ((y + k.out : h.divLattice a) : h.MulKernel a) = y + k := by simp
+  have h_class : ((y + k.out : divLattice L F a) : h.MulKernel a) = y + k := by simp
   have h_term : h.normShift (F a ((y : h.MulKernel a) + k).out) f =
       h.normShift (F a y) (h.normShift (F a k.out) f) := by
     rw [← h_class, normShift_map_out h hf, AddSubgroup.coe_add, map_add,
-      normShift_normShift_of_mem h (h.map_divLattice_mem a y) (h.map_divLattice_mem a k.out)]
+      normShift_normShift_of_mem h (map_divLattice_mem (L := L) (F := F) a y) (map_divLattice_mem (L := L) (F := F) a k.out)]
   change h.normShift (F a y) (ξ (-k) • h.normShift (F a k.out) f) =
     ξ y • ξ (-(y + k)) • h.normShift (F a ((y : h.MulKernel a) + k).out) f
   rw [h_term, _root_.map_smul, smul_smul, ← ξ.map_add_eq_mul, neg_add, add_neg_cancel_left]
@@ -276,7 +278,7 @@ function on the finite group `κ⁻¹ L / L` with `q z = exp (B x (F r x))` for 
 of `z`. Then the sums of `q` and of its complex conjugate have the same fourth power. -/
 lemma sum_conj_pow_four_eq_sum_pow_four [IsFullRankLattice L] [IsDomain R] [Module.Finite ℤ R]
     {κ r : R} [NeZero κ] (q : h.MulKernel κ → ℂ)
-    (hq : ∀ x : h.divLattice κ, q x = exp (B x (F r x))) :
+    (hq : ∀ x : divLattice L F κ, q x = exp (B x (F r x))) :
     (∑ z : h.MulKernel κ, conj (q z)) ^ 4 = (∑ z : h.MulKernel κ, q z) ^ 4 := by
   -- With `N` the order of the group, `q z ^ N ^ 2 = 1`, so `conj (q z) = q z ^ (N ^ 2 - 1)`. Write
   -- `N ^ 2 - 1` as a sum of four squares; the quaternion matrix `M` with `M Mᵀ = N ^ 2 - 1`
@@ -354,7 +356,7 @@ lemma isContPeriodic_poincareSeries [IsFullRankLattice L] (a : R) (w : V) :
 
 /-- For hermitian data `h` and `κ = c - star c`, let `α = star β * κ - c`. On `κ⁻¹ L` the number
 `exp (B x (F (κ * α) x))` depends only on the class of `x` modulo `L`. -/
-private lemma exp_mul_sub_eq_of_sub_mem {c κ : R} (hκ : κ = c - star c) (x : h.divLattice κ)
+private lemma exp_mul_sub_eq_of_sub_mem {c κ : R} (hκ : κ = c - star c) (x : divLattice L F κ)
     (y : V) (hxy : (x : V) - y ∈ L) :
     exp (B x (F (κ * (star β * κ - c)) x)) = exp (B y (F (κ * (star β * κ - c)) y)) := by
   -- the two exponents differ by `B u v - B v u` for two lattice vectors `u`, `v`
@@ -380,13 +382,13 @@ private lemma hasSum_poincareSeries_mulKernel {c κ : R} [NeZero κ] (hκ : κ =
   obtain ⟨h_summable, -, -, -, -⟩ := h.isAppellHumbert.poincareSeries_mem_thetaSpace_and_quotMean
     h.pos
   -- `(l, z) ↦ z.out + l` identifies `L × κ⁻¹ L / L` with `κ⁻¹ L` (representatives of the classes)
-  let e_rep : L × h.MulKernel κ ≃ h.divLattice κ :=
-    ((preimageMkEquivAddSubgroupProdSet (L.toAddSubgroup.addSubgroupOf (h.divLattice κ))
+  let e_rep : L × h.MulKernel κ ≃ divLattice L F κ :=
+    ((preimageMkEquivAddSubgroupProdSet (L.toAddSubgroup.addSubgroupOf (divLattice L F κ))
         Set.univ).trans
       (.prodCongr (L.toAddSubgroup.addSubgroupOfEquivOfLe (h.map_mem κ)).toEquiv
         (Equiv.Set.univ _))).symm.trans (Equiv.Set.univ _)
   -- and multiplication by `κ` identifies `κ⁻¹ L` with `L`
-  let e_mul : h.divLattice κ ≃ L :=
+  let e_mul : divLattice L F κ ≃ L :=
     (LinearEquiv.ofInjectiveEndo _ (action_injective κ)).subtypeEquivOfSubtype
   -- the series of `K(c̄ x, c x)`, reindexed by `(l, z) ↦ κ (z.out + l)`, summed over the fibres
   have h_reindexed : HasSum (fun p : L × h.MulKernel κ ↦
