@@ -82,18 +82,71 @@ lemma trace_besselCharMatrix_mul (u : T.G) :
   -- `J u = (u⁻¹)ᴴ J` turns them into conjugates of the entries of `u⁻¹` that make up
   -- `simpleRootSum u⁻¹`.
   have h_unitary : T.splitGram * u.val.val = u⁻¹.val.valᴴ * T.splitGram := by
-    simpa using U.form_mul_inv_eq u⁻¹
+    have h := U.form_mul_inv_eq u⁻¹
+    rwa [inv_inv] at h
   have h_trace : (besselCharMatrix T * u.val.val).trace = ∑ a : Fin 𝔰.ϱ,
       (u.val.val (.inl a) (𝔰.besselFrame a.succ) +
         (T.splitGram * u.val.val) (𝔰.besselFrame a.succ) (eStar a)) := by
-    -- The instantiated `sum_comm` moves the frame index outwards; the sums stay over one type.
-    simp [besselCharMatrix, trace, Matrix.mul_apply, sum_mul, add_mul, sum_add_distrib,
-      @sum_comm (Fin _), -Fintype.sum_sum_type]
+    calc (besselCharMatrix T * u.val.val).trace
+      _ = ∑ y : 𝔰.BesselIndex, ∑ x : 𝔰.BesselIndex,
+            (∑ a : Fin 𝔰.ϱ,
+              ((if .inl a = x then (if 𝔰.besselFrame a.succ = y then 1 else 0) else 0) +
+                if eStar a = y then T.splitGram (𝔰.besselFrame a.succ) x else 0)) *
+            u.val.val x y :=
+          Finset.sum_congr rfl fun y _ ↦ by rw [diag_apply, Matrix.mul_apply]; rfl
+      _ = ∑ y : 𝔰.BesselIndex, ∑ a : Fin 𝔰.ϱ, ∑ x : 𝔰.BesselIndex,
+            ((if .inl a = x then (if 𝔰.besselFrame a.succ = y then 1 else 0) else 0) *
+                u.val.val x y +
+              (if eStar a = y then T.splitGram (𝔰.besselFrame a.succ) x else 0) *
+                u.val.val x y) := by
+          refine Finset.sum_congr rfl fun y _ ↦ ?_
+          simp_rw [Finset.sum_mul, add_mul]
+          exact Finset.sum_comm
+      _ = ∑ a : Fin 𝔰.ϱ, ∑ y : 𝔰.BesselIndex, ∑ x : 𝔰.BesselIndex,
+            ((if .inl a = x then (if 𝔰.besselFrame a.succ = y then 1 else 0) else 0) *
+                u.val.val x y +
+              (if eStar a = y then T.splitGram (𝔰.besselFrame a.succ) x else 0) *
+                u.val.val x y) := Finset.sum_comm
+      _ = ∑ a : Fin 𝔰.ϱ,
+            (u.val.val (.inl a) (𝔰.besselFrame a.succ) +
+              (T.splitGram * u.val.val) (𝔰.besselFrame a.succ) (eStar a)) := by
+          refine Finset.sum_congr rfl fun a _ ↦ ?_
+          simp_rw [Finset.sum_add_distrib]
+          congr 1
+          · rw [Finset.sum_eq_single (𝔰.besselFrame a.succ)]
+            · rw [Finset.sum_eq_single (.inl a)]
+              · rw [ite_eq_left rfl, ite_eq_left rfl, one_mul]
+              · intro x _ hx; rw [ite_eq_right hx.symm, zero_mul]
+              · intro h; exact absurd (Finset.mem_univ _) h
+            · intro y _ hy
+              refine Finset.sum_eq_zero fun x _ ↦ ?_
+              by_cases hx : .inl a = x
+              · rw [ite_eq_left hx, ite_eq_right hy.symm, zero_mul]
+              · rw [ite_eq_right hx, zero_mul]
+            · intro h; exact absurd (Finset.mem_univ _) h
+          · rw [Finset.sum_eq_single (eStar a)]
+            · rw [Matrix.mul_apply]
+              exact Finset.sum_congr rfl fun x _ ↦ by rw [ite_eq_left rfl]
+            · intro y _ hy
+              exact Finset.sum_eq_zero fun x _ ↦ by rw [ite_eq_right hy.symm, zero_mul]
+            · intro h; exact absurd (Finset.mem_univ _) h
   have h_dual (a : Fin 𝔰.ϱ) : (T.splitGram * u.val.val) (𝔰.besselFrame a.succ) (eStar a) =
       star (u⁻¹.val.val (.inl a) (𝔰.besselFrame a.succ)) := by
-    rw [h_unitary]
-    simp [Matrix.mul_apply]
-  simp [h_trace, h_dual, simpleRootSum, sum_add_distrib]
+    rw [h_unitary, Matrix.mul_apply, Finset.sum_eq_single (.inl a)]
+    · rw [Matrix.conjTranspose_apply, show T.splitGram (.inl a) (eStar a) = 1 from
+        Matrix.one_apply_eq a, mul_one]
+    · intro x _ hx
+      have h0 : T.splitGram x (eStar a) = 0 := by
+        rcases x with b | y | b
+        · exact Matrix.one_apply_ne (fun h ↦ hx (congrArg Sum.inl h))
+        · rfl
+        · rfl
+      rw [h0, mul_zero]
+    · intro h; exact absurd (Finset.mem_univ _) h
+  rw [h_trace, Finset.sum_add_distrib, simpleRootSum, simpleRootSum, star_sum]
+  exact congrArg₂ (· + ·)
+    (Finset.sum_congr rfl fun a _ ↦ by rw [besselFrame_castSucc])
+    (Finset.sum_congr rfl fun a _ ↦ by rw [besselFrame_castSucc]; exact h_dual a)
 
 /-- On the Bessel subgroup S (`New.Shape.Form.besselS`), σ(u⁻¹) = −σ(u), where σ is the sum
 `New.simpleRootSum` of the entries just above the diagonal on the frame. -/
@@ -132,7 +185,9 @@ Bochner integral of `‖F‖ ^ 2`. -/
 lemma lintegral_enorm_sq (hF_int : Integrable F ν) (h_top : MemLp F ∞ ν) :
     ∫⁻ y : G, ‖F y‖ₑ ^ 2 ∂ν = ENNReal.ofReal (∫ y : G, ‖F y‖ ^ 2 ∂ν) := by
   have h_sq_int := hF_int.norm.mul_of_top_left h_top.norm
-  simpa [sq] using (ofReal_integral_norm_eq_lintegral_eNorm h_sq_int).symm
+  have h := (ofReal_integral_norm_eq_lintegral_eNorm h_sq_int).symm
+  simp only [Pi.mul_apply, sq, norm_mul, norm_norm, eNorm_mul, eNorm_norm] at h ⊢
+  exact h
 
 /-- Schur's orthogonality relation for an idempotent kernel `ψ`:
 `∫ ψ a⁻¹ * ψ (g * (a * y)) da = ψ g / ψ 1 * ψ y`, where `ψ a⁻¹ = conj (ψ a)`. -/
@@ -141,7 +196,7 @@ theorem IsIdempotentKernel.integral_inv_mul_translate [(volume : Measure G).IsMu
     ∫ a : G, ψ a⁻¹ * ψ (g * (a * y)) = ψ g / ψ 1 * ψ y := by
   -- The convolution identity of the kernel, after the substitution `a ↦ a⁻¹`.
   rw [← integral_inv_eq_self]
-  simpa [mul_assoc] using hψ.convolution_eq g⁻¹ y
+  simpa only [inv_inv, mul_inv_rev, mul_assoc] using hψ.convolution_eq g⁻¹ y
 
 /-- For an idempotent kernel `ψ` and a function `x` with `ψ * x = x`, the function
 `x⋆ y = conj (x y⁻¹)`, written `⟪x y⁻¹, 1⟫` here, satisfies `x⋆ * ψ = x⋆`. -/
@@ -152,8 +207,14 @@ theorem convolve_star (hψ : IsIdempotentKernel ψ) (hx_conv : convolve ψ x = x
   rw [convolve, ← integral_mul_left_eq_self _ y⁻¹]
   have h_conj : starRingEnd ℂ (x y⁻¹) =
       ∫ a : G, starRingEnd ℂ (x a⁻¹) * starRingEnd ℂ (ψ (y⁻¹ * a)) := by
-    simp [← congrFun hx_conv y⁻¹, convolve, ← integral_conj]
-  simp [h_conj, ← hψ.apply_inv, mul_comm]
+    rw [← congrFun hx_conv y⁻¹, convolve, ← integral_conj]
+    refine integral_congr_ae (.of_forall fun a ↦ ?_)
+    dsimp only
+    rw [smul_eq_mul, map_mul]
+  rw [RCLike.inner_apply, one_mul, h_conj]
+  refine integral_congr_ae (.of_forall fun a ↦ ?_)
+  dsimp only
+  rw [smul_eq_mul, RCLike.inner_apply, one_mul, mul_inv_cancel_left, ← hψ.apply_inv, mul_comm]
 
 variable [(volume : Measure G).IsMulRightInvariant] [LocallyCompactSpace G] [PolishSpace G]
 
@@ -169,18 +230,22 @@ theorem IsBoundedMeasurable.continuous_convolve (hF : IsBoundedMeasurable F)
     (hx : Integrable x) : Continuous (convolve F x) := by
   -- `convolve F x y` pairs the translate by `y` of `a ↦ x a⁻¹` in `L¹` with `F` in `L^∞`, and
   -- translation is continuous in `L¹`.
-  have h_pairing : Continuous fun y : G ↦ (lsmul ℂ ℂ).lpPairing volume 1 ∞
-      (DomMulAct.mk y⁻¹ • hx.comp_inv.toL1) hF.memLp_top.toLp := by fun_prop
+  let P := (lsmul ℂ ℂ (E := E)).lpPairing (volume : Measure G) 1 ∞
+  let f₁ : Lp ℂ 1 volume := hx.comp_inv.toL1
+  let f₂ : Lp E ∞ volume := hF.memLp_top.toLp
+  have h_pairing : Continuous fun y : G ↦ P (DomMulAct.mk y⁻¹ • f₁) f₂ :=
+    ((ContinuousLinearMap.apply ℂ E f₂).continuous.comp P.continuous).comp
+      ((DomMulAct.continuous_mk.comp continuous_inv).smul continuous_const)
   refine h_pairing.congr fun y ↦ ?_
   -- Write the pairing as an integral and substitute `a ↦ y * a`.
-  have h_ae : (fun a : G ↦ (DomMulAct.mk y⁻¹ • hx.comp_inv.toL1) a • hF.memLp_top.toLp F a)
+  have h_ae : (fun a : G ↦ (DomMulAct.mk y⁻¹ • f₁) a • f₂ a)
       =ᵐ[volume] fun a : G ↦ x (y⁻¹ * a)⁻¹ • F a :=
     (AEEqFun.coeFn_mk ..).smul hF.memLp_top.coeFn_toLp
   calc
     _ = ∫ a : G, x (y⁻¹ * a)⁻¹ • F a := (lpPairing_eq_integral ..).trans (integral_congr_ae h_ae)
     _ = convolve F x y := by
-      rw [← integral_mul_left_eq_self _ y]
-      simp [convolve]
+      rw [← integral_mul_left_eq_self _ y, convolve]
+      exact integral_congr_ae (.of_forall fun a ↦ by dsimp only; rw [inv_mul_cancel_left])
 
 /-- The convolution of a bounded strongly measurable function with an integrable function is
 bounded and strongly measurable. -/
@@ -189,7 +254,8 @@ theorem IsBoundedMeasurable.convolve_right (hF : IsBoundedMeasurable F) (hx : In
   obtain ⟨C, hC⟩ := hF.bounded
   refine ⟨(hF.continuous_convolve hx).stronglyMeasurable, ∫ a : G, ‖x a⁻¹‖ * C, fun y ↦
     norm_integral_le_of_norm_le (hx.comp_inv.norm.mul_const C) (.of_forall fun a ↦ ?_)⟩
-  grw [norm_smul, hC]
+  rw [norm_smul]
+  exact mul_le_mul_of_nonneg_left (hC _) (norm_nonneg _)
 
 omit [(volume : Measure G).IsMulRightInvariant] [LocallyCompactSpace G] [PolishSpace G]
   [(volume : Measure G).IsHaarMeasure] [CompleteSpace E] in
@@ -209,7 +275,7 @@ theorem IsBoundedMeasurable.convolve_assoc (hF : IsBoundedMeasurable F) (hx : In
   have h : ∫ b : G, z b⁻¹ • ∫ a : G, x a⁻¹ • F (y * (b * a)) =
       ∫ a : G, (∫ b : G, z b⁻¹ * x (b⁻¹ * a)⁻¹) • F (y * a) :=
     (integral_conv id hz.comp_inv hx.comp_inv (hF.comp (measurable_const_mul y))).2
-  simpa [convolve, mul_assoc] using h
+  simpa only [convolve, smul_eq_mul, mul_inv_rev, inv_inv, mul_assoc] using h
 
 section Translates
 
@@ -240,9 +306,11 @@ theorem IsBoundedMeasurable.integrable_prod_translate (hν : orbitMeasure ρ vol
       (fun y : G ↦ ‖F y‖) ν ν :=
     hF.identDistrib_norm_translate hν hc hF_left a
   have h_meas : AEStronglyMeasurable (fun p : G × G ↦ x p.1⁻¹ • F (p.2 * p.1)) (volume.prod ν) :=
-    hx.comp_inv.1.comp_fst.smul (StronglyMeasurable.aestronglyMeasurable (by fun_prop))
+    hx.comp_inv.1.comp_fst.smul
+      (hF_meas.comp_measurable (measurable_snd.mul measurable_fst)).aestronglyMeasurable
   refine (integrable_prod_iff h_meas).2 ⟨.of_forall fun a ↦ Integrable.smul (x a⁻¹) ?_, ?_⟩
-  · exact (integrable_norm_iff (StronglyMeasurable.aestronglyMeasurable (by fun_prop))).1
+  · exact (integrable_norm_iff
+      (hF_meas.comp_measurable (measurable_mul_const a)).aestronglyMeasurable).1
       ((shift a).integrable_iff.2 hF_int.norm)
   · simp only [norm_smul, integral_const_mul, (shift _).integral_eq]
     exact hx.comp_inv.norm.mul_const _
@@ -261,8 +329,9 @@ theorem IsBoundedMeasurable.integral_inner_convolve (hν : orbitMeasure ρ volum
   have h_prod := hF.integrable_prod_translate hν hc hF_left hF_int hx
   have h_int : Integrable (fun p : G × G ↦ ⟪h p.2, x p.1⁻¹ • F (p.2 * p.1)⟫_ℂ) (volume.prod ν) :=
     (h_prod.norm.const_mul C).mono'
-      ((StronglyMeasurable.aestronglyMeasurable (by fun_prop)).inner h_prod.1)
-      (.of_forall fun p ↦ (norm_inner_le_norm ..).trans (by grw [hC]))
+      ((h_meas.comp_measurable measurable_snd).aestronglyMeasurable.inner h_prod.1)
+      (.of_forall fun p ↦ (norm_inner_le_norm ..).trans
+        (mul_le_mul_of_nonneg_right (hC _) (norm_nonneg _)))
   calc
     _ = ∫ y, (∫ a, ⟪h y, x a⁻¹ • F (y * a)⟫_ℂ) ∂ν := integral_congr_ae (.of_forall fun y ↦
       (integral_inner (hF.integrable_smul hx.comp_inv y) (h y)).symm)
@@ -288,17 +357,21 @@ theorem IsBoundedMeasurable.integral_inner_translate (hν : orbitMeasure ρ volu
         ⟪F (u • y), F (u • y * (s⁻¹ * t))⟫_ℂ = ⟪F y, F (y * (s⁻¹ * t))⟫_ℂ := by
       simp [Subgroup.smul_def, mul_assoc, hF_left _ u.property,
         mul_left_comm (c (u : G)), Complex.mul_conj', hc]
-    have h_meas : StronglyMeasurable fun y : G ↦ ⟪F y, F (y * (s⁻¹ * t))⟫_ℂ := by fun_prop
-    simpa [k, hν, mul_assoc] using (identDistrib_orbitMeasure_mul_right (ν := ρ) (μ := volume)
-      s h_inv h_meas.measurable).integral_eq
+    have h_meas : StronglyMeasurable fun y : G ↦ ⟪F y, F (y * (s⁻¹ * t))⟫_ℂ :=
+      hF_meas.inner (hF_meas.comp_measurable (measurable_mul_const _))
+    simpa only [k, hν, mul_assoc, mul_inv_cancel_left] using
+      (identDistrib_orbitMeasure_mul_right (ν := ρ) (μ := volume) s h_inv
+        h_meas.measurable).integral_eq
   have k_inv (g : G) : k g⁻¹ = starRingEnd ℂ (k g) := by
     rw [← mul_one g⁻¹, ← shift, ← integral_conj]
     simp only [mul_one, inner_conj_symm]
   have k_bdd : IsBoundedMeasurable k := by
     refine ⟨StronglyMeasurable.integral_prod_right (f := fun g y ↦ ⟪F y, F (y * g)⟫_ℂ)
-      (by fun_prop), ∫ y, ‖F y‖ * C ∂ν, fun g ↦ norm_integral_le_of_norm_le
+      ((hF_meas.comp_measurable measurable_snd).inner
+        (hF_meas.comp_measurable (measurable_snd.mul measurable_fst))),
+      ∫ y, ‖F y‖ * C ∂ν, fun g ↦ norm_integral_le_of_norm_le
         (hF_int.norm.mul_const C) (.of_forall fun y ↦ ?_)⟩
-    exact (norm_inner_le_norm ..).trans (by grw [hC (y * g)])
+    exact (norm_inner_le_norm ..).trans (mul_le_mul_of_nonneg_left (hC (y * g)) (norm_nonneg _))
   have right (g : G) : k g = ∫ t : G, ψ t⁻¹ * k (g * t) := calc
     k g = ∫ y : G, ⟪F (y * g⁻¹), convolve F ψ y⟫_ℂ ∂ν := by
       simpa only [hF_conv, inv_inv, mul_one] using (shift g⁻¹ 1).symm
@@ -306,20 +379,28 @@ theorem IsBoundedMeasurable.integral_inner_translate (hν : orbitMeasure ρ volu
       simp only [hF.integral_inner_convolve hν hc hF_left hF_int hψ.integrable
         (hF.comp (measurable_mul_const g⁻¹)), shift, inv_inv]
   have left (g : G) : k g = ∫ t : G, ψ t * k (t⁻¹ * g) := by
-    rw [← inv_inv g, k_inv, right]
-    simp [← integral_conj, ← k_inv, ← hψ.apply_inv]
+    rw [← inv_inv g, k_inv, right, ← integral_conj]
+    refine integral_congr_ae (.of_forall fun t ↦ ?_)
+    dsimp only
+    rw [map_mul, ← hψ.apply_inv, inv_inv, ← k_inv, mul_inv_rev]
   have key (g : G) : k g = ψ g / d * k 1 := calc
     k g = ∫ s : G, ψ s * ∫ t : G, ψ t⁻¹ * k (s⁻¹ * g * t) := by simp only [left g, ← right]
     _ = ∫ t : G, (∫ s : G, ψ s * ψ ((s * t)⁻¹ * g)) * k t := by
       simpa only [smul_eq_mul, mul_inv_rev, inv_inv, mul_assoc] using
         (integral_conv (fun s ↦ s⁻¹ * g) hψ.integrable hψ.integrable.comp_inv k_bdd).2
     _ = ψ g / d * ∫ t : G, ψ t⁻¹ * k t := by
-      simp only [hψ.convolution_eq, hψ_one, ← integral_const_mul]
-      congr with t
-      ring
+      rw [← integral_const_mul]
+      refine integral_congr_ae (.of_forall fun t ↦ ?_)
+      dsimp only
+      rw [hψ.convolution_eq, hψ_one, div_mul_eq_mul_div, mul_comm (ψ t⁻¹), mul_div_right_comm,
+        mul_assoc]
     _ = ψ g / d * k 1 := by simp only [right 1, one_mul]
-  rw [shift, key]
-  simp [k, ← integral_complex_ofReal, inner_self_eq_norm_sq_to_K]
+  rw [shift, key, ← integral_complex_ofReal]
+  congr 1
+  refine integral_congr_ae (.of_forall fun y ↦ ?_)
+  dsimp only
+  rw [mul_one, inner_self_eq_norm_sq_to_K, Complex.ofReal_pow]
+  rfl
 
 end Translates
 
@@ -328,14 +409,15 @@ the convolution of `F` with `x * (a ↦ z a⁻¹)`. -/
 theorem IsBoundedMeasurable.integral_smul_convolve (hF : IsBoundedMeasurable F)
     (hx : Integrable x) (hz : Integrable z) :
     ∫ g : G, z g • convolve F x g = convolve F (convolve x fun a : G ↦ z a⁻¹) 1 := by
-  rw [← hF.convolve_assoc hx hz.comp_inv]
-  simp [convolve]
+  rw [← hF.convolve_assoc hx hz.comp_inv, convolve]
+  exact integral_congr_ae (.of_forall fun g ↦ by dsimp only; rw [inv_inv, one_mul])
 
 /-- For bounded strongly measurable `F` and integrable `x`, the inner product with a fixed vector
 commutes with the integral `convolve F x g = ∫ x a⁻¹ • F (g * a)`. -/
 theorem IsBoundedMeasurable.inner_convolve (hF : IsBoundedMeasurable F) (hx : Integrable x)
     (u : E) (g : G) : ⟪u, convolve F x g⟫_ℂ = ∫ a : G, x a⁻¹ * ⟪u, F (g * a)⟫_ℂ := by
-  simp [convolve, ← integral_inner (hF.integrable_smul hx.comp_inv g), inner_smul_right]
+  rw [convolve, ← integral_inner (hF.integrable_smul hx.comp_inv g)]
+  exact integral_congr_ae (.of_forall fun a ↦ inner_smul_right _ _ _)
 
 omit [MeasureSpace G] [(volume : Measure G).IsMulRightInvariant] [LocallyCompactSpace G]
   [PolishSpace G] [BorelSpace G] [(volume : Measure G).IsHaarMeasure] [CompleteSpace E] in
@@ -347,9 +429,13 @@ theorem continuous_of_inner_eq {w : G → E} {k : G → ℂ} (hk : Continuous k)
   have h_norm (b : G) : ‖w b - w a‖ = √(2 * (k 1).re - 2 * (k (b⁻¹ * a)).re) := by
     rw [← Real.sqrt_sq (norm_nonneg (w b - w a)), norm_sub_sq (𝕜 := ℂ)]
     simp only [← inner_self_eq_norm_sq (𝕜 := ℂ), hw, inv_mul_cancel, RCLike.re_to_complex]
-    ring_nf
-  have h_cont : Continuous fun b : G ↦ √(2 * (k 1).re - 2 * (k (b⁻¹ * a)).re) := by fun_prop
-  simpa [h_norm] using h_cont.tendsto a
+    rw [sub_add_eq_add_sub, ← two_mul]
+  have h_cont : Continuous fun b : G ↦ √(2 * (k 1).re - 2 * (k (b⁻¹ * a)).re) :=
+    (continuous_const.sub (continuous_const.mul
+      (Complex.continuous_re.comp (hk.comp (continuous_inv.mul continuous_const))))).sqrt
+  have h0 : √(2 * (k 1).re - 2 * (k (a⁻¹ * a)).re) = 0 := by
+    rw [inv_mul_cancel, sub_self, Real.sqrt_zero]
+  simpa only [h_norm, h0] using h_cont.tendsto a
 
 /-- Schur's orthogonality relation on `G`: if `ψ` is a bounded idempotent kernel with `ψ 1 = d` and
 `x` is integrable with `ψ * x = x`, then `∫ x (a⁻¹ g) * conj (x (b⁻¹ g)) dg` is
@@ -362,14 +448,24 @@ theorem IsIdempotentKernel.integral_mul_conj_translate (hx : Integrable x)
   -- This is `integral_inner_translate` on `G` itself, for `y ↦ conj (x y⁻¹)`.
   obtain ⟨x_meas, C, hC⟩ : IsBoundedMeasurable x := by
     simpa only [hx_conv] using hψ_bdd.convolve_right hx
-  have h_bdd : IsBoundedMeasurable fun y : G ↦ ⟪x y⁻¹, 1⟫_ℂ := ⟨by fun_prop, C, by simp [hC]⟩
+  have h_bdd : IsBoundedMeasurable fun y : G ↦ ⟪x y⁻¹, 1⟫_ℂ :=
+    ⟨(x_meas.comp_measurable measurable_inv).inner stronglyMeasurable_const, C, fun y ↦ by
+      rw [RCLike.inner_apply, one_mul, RCLike.norm_conj]
+      exact hC y⁻¹⟩
   -- Take the trivial subgroup and the character `1`; the quotient measure is then `volume`.
   have h : ∫ y : G, ⟪⟪x (y * a)⁻¹, 1⟫_ℂ, ⟪x (y * b)⁻¹, 1⟫_ℂ⟫_ℂ =
       ψ (a⁻¹ * b) / d * (∫ y : G, ‖⟪x y⁻¹, 1⟫_ℂ‖ ^ 2 : ℝ) :=
-    h_bdd.integral_inner_translate quotMeasure_bot (c := 1) (by simp) (by simp)
+    h_bdd.integral_inner_translate quotMeasure_bot (c := 1) (fun _ ↦ norm_one)
+      (fun s hs y ↦ by rw [Subgroup.mem_bot.1 hs, one_mul, Pi.one_apply, one_smul])
       (hx.comp_inv.inner_const (𝕜 := ℂ) 1) hψ hψ_one (convolve_star hψ hx_conv) a b
   rw [← integral_inv_eq_self]
-  simpa [integral_inv_eq_self fun y ↦ ‖x y‖ ^ 2, mul_comm] using h
+  refine (integral_congr_ae (.of_forall fun y ↦ ?_)).trans (h.trans ?_)
+  · rw [RCLike.inner_apply, RCLike.inner_apply, RCLike.inner_apply, one_mul, one_mul,
+      starRingEnd_self_apply, mul_inv_rev, mul_inv_rev, mul_comm]
+  · congr 2
+    rw [← integral_inv_eq_self fun y ↦ ‖x y‖ ^ 2]
+    exact integral_congr_ae (.of_forall fun y ↦ by
+      dsimp only; rw [RCLike.inner_apply, one_mul, RCLike.norm_conj])
 
 section Orbit
 
@@ -387,8 +483,8 @@ theorem IsIdempotentKernel.isBoundedMeasurable_of_inner_eq (hψ : IsIdempotentKe
   have w_cont : Continuous w :=
     continuous_of_inner_eq ((hψ.continuous.div_const _).mul_const _) hw
   have h_norm (a : G) : ‖w a‖ ^ 2 = q := by
-    rw [← inner_self_eq_norm_sq (𝕜 := ℂ), hw]
-    simp [← hψ_one, hψ.apply_one_ne_zero]
+    rw [← inner_self_eq_norm_sq (𝕜 := ℂ), hw, inv_mul_cancel, ← hψ_one,
+      div_self hψ.apply_one_ne_zero, one_mul, RCLike.re_to_complex, Complex.ofReal_re]
   exact ⟨w_cont.stronglyMeasurable, √q, fun a ↦ Real.le_sqrt_of_sq_le (h_norm a).le⟩
 
 /-- Let `ψ` be an idempotent kernel with `ψ 1 = d`, `x` integrable with `ψ * x = x`, and
@@ -402,7 +498,11 @@ theorem IsIdempotentKernel.inner_convolve_eq (hx : Integrable x) (hψ : IsIdempo
     _ = ∫ t : G, x t⁻¹ * ⟪w a, w (g * t)⟫_ℂ :=
       (hψ.isBoundedMeasurable_of_inner_eq hψ_one hw).inner_convolve hx _ g
     _ = q / d * convolve ψ x (a⁻¹ * g) := by
-      simp [hw, convolve, ← integral_const_mul, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
+      rw [convolve, ← integral_const_mul]
+      refine integral_congr_ae (.of_forall fun t ↦ ?_)
+      dsimp only
+      rw [hw, smul_eq_mul, ← mul_assoc a⁻¹, div_eq_mul_inv, div_eq_mul_inv,
+        mul_comm (ψ _ * _), mul_comm (ψ _), ← mul_assoc (q : ℂ), mul_left_comm (x t⁻¹)]
     _ = q / d * x (a⁻¹ * g) := by rw [hx_conv]
 
 /-- For an idempotent kernel `ψ` with `ψ 1 = d`, an integrable `x` with `ψ * x = x` and vectors
@@ -413,14 +513,15 @@ theorem IsIdempotentKernel.norm_convolve_sq (hx : Integrable x) (hψ : IsIdempot
     (hw : ∀ a b : G, ⟪w a, w b⟫_ℂ = ψ (a⁻¹ * b) / d * q) :
     ‖convolve w x 1‖ ^ 2 = (∫ y : G, ‖x y‖ ^ 2) / d * q := by
   have h_point (a : G) : x a⁻¹ * ⟪convolve w x 1, w a⟫_ℂ = (‖x a⁻¹‖ ^ 2 / d * q : ℝ) := by
-    rw [← inner_conj_symm, hψ.inner_convolve_eq hx hψ_one hx_conv hw, mul_one]
-    simp only [map_mul, map_div₀, Complex.conj_ofReal, mul_left_comm _ (_ / _ : ℂ),
-      Complex.mul_conj']
-    push_cast
-    ring
+    rw [← inner_conj_symm, hψ.inner_convolve_eq hx hψ_one hx_conv hw, mul_one, map_mul, map_div₀,
+      Complex.conj_ofReal, Complex.conj_ofReal, mul_left_comm _ (_ / _ : ℂ), Complex.mul_conj',
+      Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_pow, div_mul_eq_mul_div,
+      mul_comm (q : ℂ), mul_div_right_comm]
   refine Complex.ofReal_injective ?_
   calc ((‖convolve w x 1‖ ^ 2 : ℝ) : ℂ)
-    _ = ⟪convolve w x 1, convolve w x 1⟫_ℂ := by simp [inner_self_eq_norm_sq_to_K]
+    _ = ⟪convolve w x 1, convolve w x 1⟫_ℂ := by
+      rw [inner_self_eq_norm_sq_to_K, Complex.ofReal_pow]
+      rfl
     _ = ∫ a : G, x a⁻¹ * ⟪convolve w x 1, w a⟫_ℂ := by
       simpa only [one_mul] using
         (hψ.isBoundedMeasurable_of_inner_eq hψ_one hw).inner_convolve hx (convolve w x 1) 1
@@ -440,7 +541,9 @@ theorem IsIdempotentKernel.integrable_inner_convolve (hx : Integrable x)
   | mem u hu =>
     obtain ⟨a, rfl⟩ := hu
     simpa only [hψ.inner_convolve_eq hx hψ_one hx_conv hw] using (hx.comp_mul_left a⁻¹).const_mul _
-  | zero => simp
+  | zero =>
+    simp only [inner_zero_left]
+    exact integrable_zero _ _ _
   | add u u' _ _ h h' => simpa only [inner_add_left] using h.fun_add h'
   | smul t u _ h => simpa only [inner_smul_left] using h.const_mul _
 
@@ -459,8 +562,9 @@ theorem IsIdempotentKernel.integral_inner_convolve_mul (hx : Integrable x)
   have prod_int {u : E} (hu : u ∈ Submodule.span ℂ (Set.range w)) (u' : E) :
       Integrable fun g ↦ ⟪u, convolve w x g⟫_ℂ * ⟪convolve w x g, u'⟫_ℂ :=
     (hψ.integrable_inner_convolve hx hψ_one hx_conv hw hu).mul_bdd (c := C * ‖u'‖)
-      (StronglyMeasurable.aestronglyMeasurable (by fun_prop))
-      (.of_forall fun g ↦ (norm_inner_le_norm ..).trans (by grw [hC]))
+      (v_meas.inner stronglyMeasurable_const).aestronglyMeasurable
+      (.of_forall fun g ↦ (norm_inner_le_norm ..).trans
+        (mul_le_mul_of_nonneg_right (hC _) (norm_nonneg _)))
   -- Both sides are sesquilinear in `u`, `u'`.
   induction hu, hu' using Submodule.span_induction₂ with
   | mem_mem u u' hu hu' =>
@@ -468,20 +572,24 @@ theorem IsIdempotentKernel.integral_inner_convolve_mul (hx : Integrable x)
     obtain ⟨b, rfl⟩ := hu'
     have h_point (g : G) : ⟪w a, convolve w x g⟫_ℂ * ⟪convolve w x g, w b⟫_ℂ =
         (q / d) ^ 2 * (x (a⁻¹ * g) * starRingEnd ℂ (x (b⁻¹ * g))) := by
-      simp [← inner_conj_symm _ (w b), hψ.inner_convolve_eq hx hψ_one hx_conv hw]
-      ring
-    simp [h_point, integral_const_mul, hψ.integral_mul_conj_translate hx hψ_one hψ_bdd hx_conv, hw,
-      hψ.norm_convolve_sq hx hψ_one hx_conv hw]
+      rw [← inner_conj_symm _ (w b), hψ.inner_convolve_eq hx hψ_one hx_conv hw,
+        hψ.inner_convolve_eq hx hψ_one hx_conv hw, map_mul, map_div₀, Complex.conj_ofReal,
+        Complex.conj_ofReal, mul_mul_mul_comm, ← sq]
+    simp_rw [h_point]
+    rw [integral_const_mul, hψ.integral_mul_conj_translate hx hψ_one hψ_bdd hx_conv, hw,
+      hψ.norm_convolve_sq hx hψ_one hx_conv hw, Complex.ofReal_div, Complex.ofReal_mul,
+      Complex.ofReal_div]
     ring
-  | zero_left | zero_right => simp
+  | zero_left => simp only [inner_zero_left, zero_mul, mul_zero, integral_zero]
+  | zero_right => simp only [inner_zero_right, mul_zero, integral_zero]
   | add_left u₁ u₂ u' h₁ h₂ _ ih₁ ih₂ =>
     simp only [inner_add_left, add_mul, mul_add, integral_add (prod_int h₁ _) (prod_int h₂ _),
       ih₁, ih₂]
   | add_right u u₁ u₂ h _ _ ih₁ ih₂ =>
     simp only [inner_add_right, mul_add, integral_add (prod_int h _) (prod_int h _), ih₁, ih₂]
   | smul_left t u u' _ _ ih =>
-    simp only [inner_smul_left, mul_assoc, integral_const_mul, ih]
-    ring
+    simp only [inner_smul_left, mul_assoc, integral_const_mul, ih,
+      mul_left_comm _ (starRingEnd ℂ t)]
   | smul_right t u u' _ _ ih =>
     simp only [inner_smul_right, mul_left_comm _ t, integral_const_mul, ih]
 
@@ -492,16 +600,20 @@ theorem enorm_sq_le_of_forall_mem_inner_sq_le {H : Submodule ℂ E} {V : E} {B :
     (hV : V ∈ closure (H : Set E)) (h_le : ∀ u ∈ H, ‖⟪u, V⟫_ℂ‖ₑ ^ 2 ≤ B * ‖u‖ₑ ^ 2) :
     ‖V‖ₑ ^ 2 ≤ B := by
   obtain h_top | h_fin := eq_or_ne B ∞
-  · simp [h_top]
+  · rw [h_top]; exact le_top
   have h_self : ‖⟪V, V⟫_ℂ‖ₑ ^ 2 ≤ B * ‖V‖ₑ ^ 2 :=
     closure_minimal (t := {u | ‖⟪u, V⟫_ℂ‖ₑ ^ 2 ≤ B * ‖u‖ₑ ^ 2}) (fun u hu ↦ h_le u hu)
-    (isClosed_le (by fun_prop) ((ENNReal.continuous_const_mul h_fin).comp (by fun_prop))) hV
-  have h_enorm : ‖⟪V, V⟫_ℂ‖ₑ = ‖V‖ₑ ^ 2 := by simp [inner_self_eq_norm_sq_to_K, ← ofReal_norm]
+    (isClosed_le ((ENNReal.continuous_pow 2).comp (continuous_id.inner continuous_const).eNorm)
+      ((ENNReal.continuous_const_mul h_fin).comp
+        ((ENNReal.continuous_pow 2).comp continuous_eNorm))) hV
+  have h_enorm : ‖⟪V, V⟫_ℂ‖ₑ = ‖V‖ₑ ^ 2 := by
+    rw [inner_self_eq_norm_sq_to_K, ← ofReal_norm, norm_pow, RCLike.norm_ofReal,
+      abs_of_nonneg (norm_nonneg V), ofReal_pow (norm_nonneg V), ofReal_norm]
   rw [h_enorm, sq (‖V‖ₑ ^ 2)] at h_self
   -- Cancel the finite factor `‖V‖ ^ 2` if it is not zero.
   obtain h_zero | h_ne := eq_or_ne (‖V‖ₑ ^ 2) 0
-  · simp [h_zero]
-  exact (ENNReal.mul_le_mul_iff_left h_ne (by simp)).1 h_self
+  · rw [h_zero]; exact zero_le
+  exact (ENNReal.mul_le_mul_iff_left h_ne (ENNReal.pow_ne_top eNorm_ne_top)).1 h_self
 
 /-- **Schur's bound.** Let `ψ` be a bounded idempotent kernel with `ψ 1 = d`, `x` integrable with
 `ψ * x = x`, and `⟪w a, w b⟫ = ψ (a⁻¹ * b) / d * q`. The average of the translates of
@@ -521,32 +633,44 @@ theorem IsIdempotentKernel.enorm_integral_convolve_sq_le (hx : Integrable x)
   set B : ℝ≥0∞ := .ofReal (‖convolve w x 1‖ ^ 2 / d) * ∫⁻ y : G, ‖z y‖ₑ ^ 2 with hB
   let H : Submodule ℂ E := Submodule.span ℂ (Set.range w)
   have inner_V (u : E) : ⟪u, V⟫_ℂ = ∫ g : G, z g * ⟪u, convolve w x g⟫_ℂ := by
-    simpa [inner_smul_right] using (integral_inner (𝕜 := ℂ) (v_bdd.integrable_smul hz 1) u).symm
+    have h := (integral_inner (𝕜 := ℂ) (v_bdd.integrable_smul hz 1) u).symm
+    simp only [one_mul, inner_smul_right] at h
+    exact h
   have bound (u : E) (hu : u ∈ H) : ‖⟪u, V⟫_ℂ‖ₑ ^ 2 ≤ B * ‖u‖ₑ ^ 2 := by
     have coef_int := hψ.integrable_inner_convolve hx hψ_one hx_conv hw hu
     have coef_bdd : IsBoundedMeasurable fun g ↦ ⟪u, convolve w x g⟫_ℂ := by
       obtain ⟨v_meas, C, hC⟩ := v_bdd
-      exact ⟨by fun_prop, ‖u‖ * C, fun g : G ↦ (norm_inner_le_norm ..).trans (by grw [hC g])⟩
+      exact ⟨stronglyMeasurable_const.inner v_meas, ‖u‖ * C, fun g : G ↦
+        (norm_inner_le_norm ..).trans (mul_le_mul_of_nonneg_left (hC g) (norm_nonneg u))⟩
     have orth : ∫ g, ‖⟪u, convolve w x g⟫_ℂ‖ ^ 2 = ‖convolve w x 1‖ ^ 2 / d * ‖u‖ ^ 2 := by
       have h_point (v : E) : ⟪u, v⟫_ℂ * ⟪v, u⟫_ℂ = ‖⟪u, v⟫_ℂ‖ ^ 2 := by
         rw [← inner_conj_symm v u, Complex.mul_conj']
       apply Complex.ofReal_injective
-      simpa [h_point, inner_self_eq_norm_sq_to_K, ← integral_complex_ofReal] using
-        hψ.integral_inner_convolve_mul hx hψ_one hψ_bdd hx_conv hw hu hu
+      have h_mul := hψ.integral_inner_convolve_mul hx hψ_one hψ_bdd hx_conv hw hu hu
+      rw [← integral_complex_ofReal]
+      refine (integral_congr_ae (.of_forall fun g ↦ by
+        rw [Complex.ofReal_pow, ← h_point])).trans (h_mul.trans ?_)
+      rw [inner_self_eq_norm_sq_to_K, Complex.ofReal_mul, Complex.ofReal_pow]
+      rfl
     calc
       _ ≤ (∫⁻ g, ‖z g * ⟪u, convolve w x g⟫_ℂ‖ₑ) ^ 2 := by
-        grw [inner_V, eNorm_integral_le_lintegral_eNorm]
+        rw [inner_V]
+        exact pow_le_pow_left' (eNorm_integral_le_lintegral_eNorm _) 2
       _ ≤ (∫⁻ g, ‖z g‖ₑ ^ 2) * ∫⁻ g, ‖⟪u, convolve w x g⟫_ℂ‖ₑ ^ 2 :=
-        sq_lintegral_le (hz.1.eNorm.pow_const 2) (coef_int.1.eNorm.pow_const 2) (by simp [mul_pow])
+        sq_lintegral_le (hz.1.eNorm.pow_const 2) (coef_int.1.eNorm.pow_const 2)
+          (fun g ↦ by rw [eNorm_mul, mul_pow])
       _ = B * ‖u‖ₑ ^ 2 := by
-        rw [lintegral_enorm_sq coef_int coef_bdd.memLp_top, orth, ofReal_mul' (by positivity),
-          ofReal_pow (norm_nonneg u), ofReal_norm, hB]
-        ring
+        rw [lintegral_enorm_sq coef_int coef_bdd.memLp_top, orth, ofReal_mul' (sq_nonneg _),
+          ofReal_pow (norm_nonneg u), ofReal_norm, hB, mul_left_comm, ← mul_assoc]
   have V_mem : V ∈ closure (H : Set E) := by
     rw [← Submodule.topologicalClosure_coe, ← Submodule.orthogonal_orthogonal_eq_closure]
     intro u hu
-    simp [inner_V, w_bdd.inner_convolve hx, Submodule.inner_left_of_mem_orthogonal
-      (Submodule.subset_span (Set.mem_range_self _)) hu]
+    rw [inner_V]
+    refine (integral_congr_ae (.of_forall fun g ↦ ?_)).trans (integral_zero _ _)
+    rw [w_bdd.inner_convolve hx, (integral_congr_ae (.of_forall fun a ↦ by
+      rw [Submodule.inner_left_of_mem_orthogonal
+        (Submodule.subset_span (Set.mem_range_self _)) hu, mul_zero])).trans (integral_zero _ _),
+      mul_zero]
   exact enorm_sq_le_of_forall_mem_inner_sq_le V_mem bound
 
 end Orbit
@@ -569,10 +693,13 @@ squared absolute value of the kernel. -/
 theorem IsIdempotentKernel.apply_one_nonneg (hψ : IsIdempotentKernel ψ) (hψ_one : ψ 1 = d) :
     0 ≤ d := by
   have h : (d : ℂ) = (∫ g : G, ‖ψ g‖ ^ 2 : ℝ) := by
-    simpa [hψ_one, hψ.apply_inv, Complex.mul_conj', ← integral_complex_ofReal] using
-      (hψ.convolution_self 1).symm
+    have hs := (hψ.convolution_self 1).symm
+    rw [hψ_one] at hs
+    rw [← integral_complex_ofReal]
+    refine hs.trans (integral_congr_ae (.of_forall fun g ↦ ?_))
+    simp only [mul_one, hψ.apply_inv, Complex.mul_conj', Complex.ofReal_pow]
   rw [Complex.ofReal_injective h]
-  positivity
+  exact integral_nonneg fun _ ↦ sq_nonneg _
 
 /-- Schur's bound in `L²(S ∖ G)`, for the vector `F * x` in the closed span of the right translates
 of `F`, where `G` is a locally compact Polish group with Haar measure `volume`. Here
@@ -615,24 +742,36 @@ theorem IsBoundedMeasurable.lintegral_sq_convolve_convolve_le
       (.ofReal d⁻¹ * .ofReal (∫ y, ‖F y‖ ^ 2 ∂ν)) * ∫⁻ y, ‖z y‖ₑ ^ 2 := by
     have schur := hψ.enorm_integral_convolve_sq_le hx hψ_one hψ_bdd hx_conv hw hz
     rwa [w_bdd.integral_smul_convolve hx hz, hψ.norm_convolve_sq hx hψ_one hx_conv hw,
-      mul_div_assoc, div_eq_inv_mul (∫ y, ‖F y‖ ^ 2 ∂ν), ofReal_mul (by positivity),
-      ofReal_mul (by positivity)] at schur
+      mul_div_assoc, div_eq_inv_mul (∫ y, ‖F y‖ ^ 2 ∂ν),
+      ofReal_mul (div_nonneg (integral_nonneg fun _ ↦ sq_nonneg _) hd_nonneg),
+      ofReal_mul (inv_nonneg.2 hd_nonneg)] at schur
   have Φ_inner : ⟪Φ, Φ⟫_ℂ = ⟪Φ, convolve w Z 1⟫_ℂ := by
     rw [inner_toLp, hF.integral_inner_convolve hν hc hF_left hF_int Z_int Φ_bdd,
       w_bdd.inner_convolve Z_int]
     simp only [Φ, w, inner_toLp, one_mul]
   have Φ_le : ‖Φ‖ ≤ ‖convolve w Z 1‖ := by
-    have h : ‖Φ‖ * ‖Φ‖ ≤ ‖Φ‖ * ‖convolve w Z 1‖ := by
-      grw [← inner_self_eq_norm_mul_norm (𝕜 := ℂ), Φ_inner, re_inner_le_norm]
-    nlinarith [norm_nonneg Φ, norm_nonneg (convolve w Z 1)]
+    rcases eq_or_lt_of_le (norm_nonneg Φ) with h0 | hpos
+    · exact h0 ▸ norm_nonneg _
+    · have h : ‖Φ‖ * ‖Φ‖ ≤ ‖Φ‖ * ‖convolve w Z 1‖ := calc
+        ‖Φ‖ * ‖Φ‖ = RCLike.re ⟪Φ, Φ⟫_ℂ := (inner_self_eq_norm_mul_norm (𝕜 := ℂ) Φ).symm
+        _ = RCLike.re ⟪Φ, convolve w Z 1⟫_ℂ := congrArg RCLike.re Φ_inner
+        _ ≤ ‖Φ‖ * ‖convolve w Z 1‖ := re_inner_le_norm Φ _
+      exact le_of_mul_le_mul_left h hpos
   have Φ_norm : ∫ y, ‖convolve F Z y‖ ^ 2 ∂ν = ‖Φ‖ ^ 2 := by
     apply Complex.ofReal_injective
     have h : ⟪Φ, Φ⟫_ℂ = ∫ y : G, ⟪convolve F Z y, convolve F Z y⟫_ℂ ∂ν := inner_toLp _ _
-    simpa [inner_self_eq_norm_sq_to_K, ← integral_complex_ofReal] using h.symm
+    rw [← integral_complex_ofReal]
+    refine (integral_congr_ae (.of_forall fun y ↦ by
+      rw [Complex.ofReal_pow]
+      exact (inner_self_eq_norm_sq_to_K (𝕜 := ℂ) (convolve F Z y)).symm)).trans (h.symm.trans ?_)
+    rw [inner_self_eq_norm_sq_to_K, Complex.ofReal_pow]
+    rfl
   calc
     _ = .ofReal (‖Φ‖ ^ 2) := by
       rw [hF.convolve_assoc hx hz.comp_inv, lintegral_enorm_sq Φ_int Φ_bdd.memLp_top, Φ_norm]
-    _ ≤ ‖convolve w Z 1‖ₑ ^ 2 := by grw [Φ_le, ofReal_pow (norm_nonneg _), ofReal_norm]
+    _ ≤ ‖convolve w Z 1‖ₑ ^ 2 := by
+      rw [← ofReal_norm, ← ofReal_pow (norm_nonneg _)]
+      exact ofReal_le_ofReal (pow_le_pow_left₀ (norm_nonneg _) Φ_le 2)
     _ ≤ _ := by rwa [lintegral_enorm_sq hF_int hF.memLp_top]
 
 end New
@@ -674,7 +813,8 @@ lemma enorm_integral_besselS_mul (hW : IsBesselFunction rep W) {s : 𝔰.G₁} (
   calc ‖∫ y : 𝔰.G₁, β y • W (u * toBesselH 𝔰 1 h * g * y) ∂μ‖ₑ
     _ = ‖wave (simpleRootSum u) • ∫ y : 𝔰.G₁, A (β y • W (g * y)) ∂μ‖ₑ := by
       simp only [h_transl, map_smul, smul_comm (β _), integral_smul]
-    _ = ‖∫ y : 𝔰.G₁, A (β y • W (g * y)) ∂μ‖ₑ := by simp [← ofReal_norm, norm_smul]
+    _ = ‖∫ y : 𝔰.G₁, A (β y • W (g * y)) ∂μ‖ₑ := by
+      rw [← ofReal_norm, norm_smul, norm_wave, one_mul, ofReal_norm]
     _ = ‖∫ y : 𝔰.G₁, β y • W (g * y) ∂μ‖ₑ := by rw [A.integral_comp_comm, A.eNorm_map]
 
 /-- The norm of a Bessel function `W` is invariant under left multiplication by the Bessel
@@ -682,6 +822,7 @@ subgroup. -/
 lemma enorm_besselS_mul (hW : IsBesselFunction rep W) {s : 𝔰.G₁} (hs : s ∈ besselS)
     (y : 𝔰.G₁) : ‖W (s * y)‖ₑ = ‖W y‖ₑ := by
   -- the case of a unit mass at `1`
-  simpa using hW.enorm_integral_besselS_mul hs 1 y (μ := .dirac 1)
+  have h := hW.enorm_integral_besselS_mul hs 1 y (μ := .dirac 1)
+  rwa [integral_dirac, integral_dirac, Pi.one_apply, one_smul, one_smul, mul_one, mul_one] at h
 
 end New.IsBesselFunction
