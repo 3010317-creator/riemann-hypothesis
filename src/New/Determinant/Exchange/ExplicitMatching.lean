@@ -404,9 +404,7 @@ lemma exists_stackedDetProd_eq_sum_unitary (f : p ⊕ l ≃ b) (j : m ⊕ l ≃ 
     exists_pairedDetProd_eq_sum_unitary h_card (e.injective.comp inl_injective) ξ
   refine ⟨c, MvPolynomial.funext fun x ↦ ?_, ?_⟩
   · -- At the point `x`, `stackedDetProd e` is a fixed multiple of the product for complex `Y τ`.
-    have h_point (τ : InfinitePlace E) : ∃ (Y : m → p → ℂ) (d : ℂ), ∀ ζ : Matrix p m ℂ,
-        (stackedDet τ ζ e).eval x = d * (ζ * of Y).det := exists_eval_stackedDet_eq e τ x
-    choose Y d hY using h_point
+    choose Y d hY using fun τ : InfinitePlace E ↦ exists_eval_stackedDet_eq e τ x
     have h_eval (ζ : (τ : InfinitePlace E) → ι τ → Matrix p m ℂ) :
         (stackedDetProd e ζ).eval x =
           (∏ τ : InfinitePlace E, d τ ^ card (ι τ)) * pairedDetProd Y ζ := by
