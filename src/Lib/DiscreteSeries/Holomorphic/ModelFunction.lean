@@ -210,7 +210,7 @@ theorem IsHolOfWeight.circle_mean_holMinorsPi (ho : IsPosFirstOrder ε o)
         (∏ τ : Φ, weightMinors (u τ + c τ) (h τ)) * F 1 := by
     -- `circle_mean_weightMinors` allows a block restriction `ε'` and an analytic factor `q`;
     -- it is applied to `F` times the denominator with both of these equal to `1`.
-    simpa [r, χ, Pi.add_def, Pi.mul_def] using
+    simpa [r, Pi.add_def, Pi.mul_def] using
       (hF.mul ho.1 h_den).circle_mean_weightMinors (g := h) ho.1 (.inl rfl) h_dom (by simp) 1
         analyticOnNhd_const
   -- Under rotation the denominator changes by its own character, which cancels.

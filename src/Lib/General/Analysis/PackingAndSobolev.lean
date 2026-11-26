@@ -218,7 +218,7 @@ lemma New.sobolev_trace_cube {Ω I L D : Type*} [MeasurableSpace Ω] {σ : Measu
     have in_cube (t : ℝ) (ht : t ∈ Icc 0 ε) : update x d t ∈ Icc 0 fun _ : D ↦ ε :=
       ⟨le_update_iff.2 ⟨ht.1, fun j _ ↦ hx.1 j⟩, update_le_iff.2 ⟨ht.2, fun j _ ↦ hx.2 j⟩⟩
     have h_zero : update x d 0 = x := update_eq_self_iff.2 hxd.symm
-    simpa [normSq, bound, μ, h_zero] using lintegral_sobolev_trace
+    simpa [bound, μ, h_zero] using lintegral_sobolev_trace
       (g := fun t ↦ f i (update x d t)) (h := fun l t ↦ f (l :: i) (update x d t))
       (by fun_prop) (fun l ↦ by fun_prop) hε hε_le
       (h_deriv.mono fun ω hω t ht ↦ hω i d x t (in_cube t ht))

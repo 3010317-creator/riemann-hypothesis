@@ -444,7 +444,7 @@ lemma stdRowDatum_frameAt_lineTermSplitting (X : V'.Splitting V Unit) [IsBaseAda
     fromCols_mul_fromBlocks, fromBlocks_mul_fromRows, fromCols_mul_fromRows, Matrix.add_mul]
   -- It remains to rearrange the products and sums in each entry.
   cases β <;> congr with ⟨⟩ <;>
-    simp [Finset.mul_sum, diagonal, mul_add, mul_assoc, Matrix.mul_apply, Finset.sum_add_distrib]
+    simp [Finset.mul_sum, diagonal, mul_add, mul_assoc, Matrix.mul_apply]
   all_goals simp only [show (0 : Unit × Unit) = (PUnit.unit, PUnit.unit) from rfl] at *
   all_goals grind
 

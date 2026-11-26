@@ -313,7 +313,7 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
     have h_convY_g : Y 1 * (finMean fun t : G ↦ conj (χ (inl t)) * Y (t * g)) =
         (finMean fun t : G ↦ conj (χ (inl t)) * Y t) * Y g := by
       simp only [mul_comm (conj (χ _))]
-      simpa [← finMean_conj, ← hY_char.apply_inv, field, classInner] using h_convY
+      simpa [← finMean_conj, ← hY_char.apply_inv, classInner] using h_convY
     have h_pair_ne : (finMean fun t : G ↦ conj (χ (inl t)) * Y t) ≠ 0 := by
       simpa [← finMean_conj, ← hY_char.apply_inv, field, classInner] using h_ne
     have hY_one_ne : Y 1 ≠ 0 := fun h_zero ↦ by

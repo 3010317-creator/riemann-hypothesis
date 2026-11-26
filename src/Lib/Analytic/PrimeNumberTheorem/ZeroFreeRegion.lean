@@ -67,7 +67,7 @@ lemma pow_three_le_mul_norm_regularL_pow (χ : DirichletCharacter ℂ N) {s : �
     have at_re : (1 : ℂ) + (s.re - 1 : ℝ) = s.re := by simp
     have at_s : s.re + I * s.im = s := by rw [mul_comm, re_add_im]
     have at_s₂ : s.re + 2 * I * s.im = s₂ := by linear_combination at_s
-    simpa only [at_re, at_s, at_s₂, norm_mul, norm_pow, ge_iff_le] using
+    simpa only [at_re, at_s, at_s₂, norm_mul, norm_pow] using
       χ.norm_LSeries_product_ge_one (by linarith : 0 < s.re - 1) s.im
   have trivial_char_le : ‖LSeries ((1 : DirichletCharacter ℂ N) ·) s.re‖ ≤ 2 / η := calc
     _ ≤ 1 + 1 / η := norm_LSeries_char_le 1 (one_div_pos.2 hη) (by simpa using h_re)

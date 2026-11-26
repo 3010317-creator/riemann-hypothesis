@@ -171,7 +171,7 @@ lemma valuation_of_lineFinFactor_ne_zero {a : 𝔸f E} (ha : lineFinFactor 𝔠 
     a ∈ Ô E ∧
       IsIntegralUnit (evalPlaces 𝔠.ramifiedPlaces a) ∧ IsIntegralUnit
         (evalPlaces 𝔠.ramifiedPlaces (star a)) := by
-    simp only [lineFinFactor, invOnUnits, mul_one] at ha
+    simp only [lineFinFactor, invOnUnits] at ha
     grind
   rw [isIntegralUnit_iff_v_eq_one] at h_unit h_unit_star
   refine ⟨idem_mul_mem_Ô.1 h_int, fun w hw ↦ hw.elim (fun hw ↦ h_unit ⟨w, hw⟩) fun hw ↦ ?_⟩

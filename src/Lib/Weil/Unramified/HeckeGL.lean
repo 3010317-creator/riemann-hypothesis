@@ -153,7 +153,7 @@ lemma pow_pow_mem_localCongruence {q : ℕ} (hq : (q : NumberField.RingOfInteger
       rw [mul_geom_sum, ← Units.val_pow_eq_pow_val, ← pow_mul, ← pow_succ]
     have h_exp : exp (-((k + 1).succ : ℤ)) = exp (-(k.succ : ℤ)) * exp (-1) := by
       rw [← exp_add]
-      grind
+      tauto
     rw [h_factor, h_exp]
     refine v_matrix_mul_le (mem_localCongruence.mp ih).right (fun a b ↦ ?_) a b
     -- Indeed `∑ l < q, x ^ l = ∑ l < q, (x ^ l - 1) + q • 1`, with `x ^ l ≡ 1 mod 𝔭` and `q ∈ 𝔭`.
