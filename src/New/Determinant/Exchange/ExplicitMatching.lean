@@ -465,7 +465,7 @@ lemma exists_mul_apply_eq_apply_matchedPoly (f : p ⊕ l ≃ b) (j : m ⊕ l ≃
     -- multiple of `matchedPoly (z⁻¹ ^ 2 • ξ)`, so `h_match` applies.
     have h_frame (z : Circle) (τ : InfinitePlace E) (i : ι τ) :
         η τ i * ((k * t z) τ : Matrix m m ℂ)ᵀ = (z⁻¹ : Circle).val ^ 2 • ξ τ i := by
-      simp [η, ξ, ← ext_iff, Matrix.mul_apply, t, standardFrame, frameTorus, mul_comm, ↓diagTorus,
+      simp [η, ξ, ← ext_iff, Matrix.mul_apply, t, standardFrame, frameTorus, ↓diagTorus,
         Matrix.one_apply, ↓diagonal_apply]
     have h_transl (z : Circle) : ℓ (posBlockEmb j (k * t z)) v =
         ℓ' ((∏ τ, ((k * t z) τ : Matrix m m ℂ).det ^ c τ)⁻¹ •

@@ -260,7 +260,7 @@ lemma IntegralPlace.exists_isIntMatrix_hyperbolicBasis {N : A} (hN : N ∈ P.int
     -- each entry reduces to `hc_norm`, `h_trace` or `hN_star`
     simp [← Matrix.ext_iff, Matrix.mul_apply, C, latticeMiddleGram, diagonal, h_ne,
       Subtype.val_inj, fromBlocks_conjTranspose, conjTranspose_fromRows_eq_fromCols_conjTranspose,
-      conjTranspose_fromCols_eq_fromRows_conjTranspose, mul_assoc, mul_add, mul_sum,
+      conjTranspose_fromCols_eq_fromRows_conjTranspose, mul_add, mul_sum,
       sum_add_distrib, Matrix.one_apply]
     grind
   obtain ⟨V, hV, hV_eq⟩ : ∃ V ∈ intGL 𝔰.MiddleIndex P.integers, V.val = latticeMiddleGram 𝔰 N :=
