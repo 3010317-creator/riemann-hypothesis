@@ -713,6 +713,25 @@ lemma agreesWithStringMap_mul_iff {w : Matrix ι' ι (𝔸 E)} {γ : G E ε} (h�
   have hba : Y'.gradeOf b < Y.gradeOf a := by omega
   simp only [Matrix.sub_apply, Matrix.one_mul, hδ b a ha_pos hba, agrees b a ha_pos hba, sub_self]
 
+omit [Fintype X'] in
+private lemma formAdjoint_mul_self_entry_eq_of_survives {w : Matrix ι' ι (𝔸 E)} {D : ι' → ℤ}
+    (survives : Y.Survives Y' D w) (i k : ι) (hi : 1 ⊔ (2 + Y.gradeOf k) ≤ Y.gradeOf i)
+    (hcol : ∀ p, D p ≤ Y.gradeOf k ⊔ -1 → w p i = 0)
+    (hdual : ∀ p, D p + Y.gradeOf i ≤ 0 → w p (Y.stringReversal k) = 0) :
+    (V.formAdjoint V' (Y.stringMap Y') * Y.stringMap Y') k i = (V.formAdjoint V' w * w) k i := by
+  have h := Y.formAdjoint_mul_self_mulVec_apply_eq_of_survives Y' survives (Pi.single i 1) k
+    (fun p hp ↦ by
+      apply Pi.single_eq_of_ne
+      rintro rfl
+      exact (not_lt_of_ge hi) hp)
+    (fun p hp ↦ by simpa only [mulVec_single_one, Matrix.col_apply] using hcol p hp)
+    (fun p q hp ↦ by
+      by_cases hq : q = i
+      · subst q
+        exact Or.inl (hdual p hp)
+      · exact Or.inr (Pi.single_eq_of_ne hq _))
+  simpa only [mulVec_single_one, Matrix.col_apply] using h
+
 /-- Let `T = Y.stringMap Y'` be the map that kills `X` and the last string vector of `V` and sends
 each other string vector to a multiple of the same-numbered string vector of `V'`. Suppose `w`
 agrees with `T` at every entry `(b, a)` where `a` has positive grade and `b` has grade below that
@@ -753,30 +772,14 @@ lemma hasDegreeGe_of_survives {w : Matrix ι' ι (𝔸 E)} (hw : Y.AgreesWithStr
   have adj_eq :
       V.formAdjoint V' (Y.stringMap Y') (Y.stringReversal a) (Y'.stringReversal b) =
         V.formAdjoint V' w (Y.stringReversal a) (Y'.stringReversal b) := by
-    have h_entry :
-        ((V.formAdjoint V' (Y.stringMap Y') * Y.stringMap Y') *ᵥ Pi.single i 1)
-            (Y.stringReversal a) =
-          ((V.formAdjoint V' w * w) *ᵥ Pi.single i 1) (Y.stringReversal a) := by
-      refine Y.formAdjoint_mul_self_mulVec_apply_eq_of_survives Y' survives (Pi.single i 1)
-        (Y.stringReversal a) ?_ ?_ ?_
-      · intro p hp
-        apply Pi.single_eq_of_ne
-        rintro rfl
-        rw [gradeOf_stringReversal] at hp
-        omega
-      · intro p hp
-        simp only [mulVec_single_one, Matrix.col_apply]
+    have h_entry := Y.formAdjoint_mul_self_entry_eq_of_survives Y' survives i (Y.stringReversal a)
+      (by rw [gradeOf_stringReversal]; omega) (fun p hp ↦ by
         rw [gradeOf_stringReversal] at hp
         rw [hw p i (by omega) (by omega)]
-        exact Y.hasDegreeGe_neg_one_stringMap p i (by omega)
-      · intro p q hp
-        by_cases hq : q = i
-        · subst q
-          left
-          apply low p _ (by omega)
-          simp only [gradeOf_stringReversal]
-          omega
-        · exact Or.inr (Pi.single_eq_of_ne hq _)
+        exact Y.hasDegreeGe_neg_one_stringMap p i (by omega)) (fun p hp ↦ by
+        apply low p _ (by omega)
+        simp only [gradeOf_stringReversal]
+        omega)
     have row {y : Matrix ι' ι (𝔸 E)}
         (hy : ∀ p j, Y'.gradeOf p < Y'.gradeOf b → Y'.gradeOf p < Y.gradeOf j - 1 →
           y p j = 0) (l : ι') :
@@ -792,7 +795,7 @@ lemma hasDegreeGe_of_survives {w : Matrix ι' ι (𝔸 E)} (hw : Y.AgreesWithStr
         simp
     have rowT := row (y := Y.stringMap Y') (fun p j _ hj ↦
       Y.hasDegreeGe_neg_one_stringMap p j (by omega))
-    simp only [mulVec_single_one, Matrix.col_apply, Matrix.mul_apply'] at h_entry
+    simp only [Matrix.mul_apply'] at h_entry
     rw [col (w := Y.stringMap Y') (fun _ _ _ _ ↦ rfl) _ rowT, col hw _ (row low)] at h_entry
     exact unit.mul_left_inj.mp h_entry
   -- By `formAdjoint_apply` this entry of the adjoint determines the entry `(b, a)`.
@@ -875,29 +878,13 @@ lemma exists_agreesWithStringMap (w : Matrix ι' ι (𝔸 E)) (hw : w ∈ ratMat
     have h_gram_entry : ((Y.stringMap Y')ᴴ * V'.J.map toAdele * Y.stringMap Y') k i =
         ((w.map toAdele)ᴴ * V'.J.map toAdele * w.map toAdele) k i := by
       rw [gram_adj, gram_adj]
-      have h_adj :
-          ((V.formAdjoint V' (Y.stringMap Y') * Y.stringMap Y') *ᵥ Pi.single i 1)
-              (Y.stringReversal k) =
-            ((V.formAdjoint V' (w.map toAdele) * w.map toAdele) *ᵥ Pi.single i 1)
-              (Y.stringReversal k) := by
-        -- Both `i` and `k` have positive weight, and the target weights are `0`.
-        have hi : 0 < Y.gradeOf i := (mem_filter.mp i.2).2
-        have hk : 0 < Y.gradeOf k := (mem_filter.mp k.2).2
-        refine Y.formAdjoint_mul_self_mulVec_apply_eq_of_survives Y' survives (Pi.single i 1)
-          (Y.stringReversal k) ?_ ?_ ?_
-        · intro p hp
-          refine Pi.single_eq_of_ne ?_ _
-          rintro rfl
-          rw [gradeOf_stringReversal] at hp
-          omega
-        · intro p hp
-          rw [Pi.zero_apply, gradeOf_stringReversal] at hp
-          omega
-        · intro p q hq
-          refine Or.inr (Pi.single_eq_of_ne ?_ _)
-          rintro rfl
-          rw [Pi.zero_apply] at hq
-          omega
+      -- Both basis vectors have positive weight and the target weights are zero.
+      have hi : 0 < Y.gradeOf i := (mem_filter.mp i.2).2
+      have hk : 0 < Y.gradeOf k := (mem_filter.mp k.2).2
+      have h_adj := Y.formAdjoint_mul_self_entry_eq_of_survives Y' survives (i : ι)
+        (Y.stringReversal k) (by rw [gradeOf_stringReversal]; omega)
+        (fun p hp ↦ by rw [Pi.zero_apply, gradeOf_stringReversal] at hp; omega)
+        (fun _ hp ↦ ((not_le_of_gt hi) (by simpa only [Pi.zero_apply, zero_add] using hp)).elim)
       -- Row `k` of `V.J * M` is a multiple of the row of `M` dual to `k`.
       simpa [Y.gram_eq, map_gradedGram_mul_apply] using
         congrArg (fun z ↦ V.J.map toAdele k (Y.stringReversal k) * z) h_adj
