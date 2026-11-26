@@ -362,14 +362,10 @@ coordinate `x j` replaced by `y`. -/
 lemma eval_freeCoordinate [DecidableEq σ] (x : σ → intQpBar ℓ) (j : σ)
     (P : MvPolynomial σ (intQpBar ℓ)) (y : intQpBar ℓ) :
     (freeCoordinate x j P).eval y = MvPolynomial.eval (Function.update x j y) P := by
-  have h_point : (fun k : σ ↦ (Function.update (fun k : σ ↦ C (x k)) j X k).eval y) =
-      Function.update x j y := by
-    funext k
-    by_cases hk : k = j <;> simp [hk]
-  have h_const : (evalRingHom y).comp (algebraMap (intQpBar ℓ) (intQpBar ℓ)[X]) =
-      RingHom.id (intQpBar ℓ) := RingHom.ext fun _ ↦ by simp
-  rw [freeCoordinate, MvPolynomial.aeval_def, MvPolynomial.polynomial_eval_eval₂, h_point, h_const,
-    MvPolynomial.eval₂_id]
+  rw [freeCoordinate, ← coe_aeval_eq_eval, MvPolynomial.comp_aeval_apply,
+    MvPolynomial.aeval_eq_eval]
+  refine congrArg (MvPolynomial.eval · P) (funext fun k ↦ ?_)
+  by_cases hk : k = j <;> simp [hk]
 
 /-- Moving one coordinate `j`. Let `δ < 1`, and let `δ` times the sum of `1 / (h + 1)` over the
 exponents `1 ≤ h ≤ h₀` with `1 / φ(ℓ ^ h) ≤ ρ` exceed `B`. Let `P i` be polynomials and `x i` points
