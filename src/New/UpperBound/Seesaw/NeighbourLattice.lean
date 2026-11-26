@@ -442,7 +442,7 @@ lemma isNeighbourVector_col_neighbourMatrix [DecidableEq X] [DecidableEq X'']
     { mul_coeff := mul_neighbourCoeff hP hκ m
       mem_of_ne := fun i hi₁ hi₂ ↦ by
         rcases i with (i | ⟨⟩) | (i | ⟨⟩) <;>
-          simp_all [neighbourMatrix_apply, neighbourAxis, h_one]
+          simp_all [neighbourMatrix_apply, neighbourAxis]
       star_mul_mem := fun i ↦ by
         rw [Matrix.col_apply, neighbourMatrix_apply, mul_add, ← mul_assoc]
         exact add_mem (mul_mem hπ.star_mem_integralAdeles (h_one i))
