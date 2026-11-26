@@ -256,23 +256,25 @@ lemma norm_coeff_le_of_aeval {x : ℂ_[p]⟦X⟧} {l : ℕ} {s : ℝ} (h_dvd : X
   rw [eq_sub_of_add_eq' h_sum.symm, sub_eq_add_neg]
   exact (norm_add_le_max _ _).trans (max_le (hR _ hi) (by rwa [norm_neg]))
 
+/-- Legendre's bound `v((n + 1)!) ≤ n / (p - 1)`, for the norm of `ℂ_p`. -/
+lemma rpow_pow_le_norm_factorial_succ (n : ℕ) :
+    ((p : ℝ) ^ (-(1 / (p - 1)) : ℝ)) ^ n ≤ ‖((n + 1).factorial : ℂ_[p])‖ := by
+  have hp : (1 : ℝ) < p := Nat.one_lt_cast.2 (Fact.out : p.Prime).one_lt
+  have h : ((p : ℝ) - 1) * (multiplicity p (n + 1).factorial : ℝ) ≤ n := by
+    rw [← Nat.cast_pred (Fact.out : p.Prime).pos]
+    exact_mod_cast Nat.le_of_lt_succ
+      (sub_one_mul_multiplicity_factorial_lt_of_ne_zero p n.succ_ne_zero)
+  rw [← Real.rpow_mul_natCast p.cast_nonneg, neg_mul, one_div_mul_eq_div,
+    norm_natCast_eq_inv_pow_padicValNat (n + 1).factorial_ne_zero, Nat.padicValNat_def]
+  simpa [Real.rpow_neg] using Real.rpow_le_rpow_of_exponent_le hp.le
+    (neg_le_neg ((le_div_iff₀' (sub_pos.2 hp)).2 h))
+
 /-- If `v(c) ≥ 1 / (p - 1)`, that is, `‖c‖ ≤ p ^ (-1 / (p - 1))`, then `c ^ j / (j + 1)!` is
 integral, as `v((j + 1)!) ≤ j / (p - 1)`. -/
 lemma norm_pow_le_norm_factorial_succ {c : ℂ_[p]} (hc : ‖c‖ ≤ p ^ (-(1 / (p - 1)) : ℝ)) (j : ℕ) :
     ‖c‖ ^ j ≤ ‖((j + 1).factorial : ℂ_[p])‖ := by
-  have hp : (1 : ℝ) < p := Nat.one_lt_cast.2 (Fact.out : p.Prime).one_lt
-  have h_val : (p - 1) * padicValNat p (j + 1).factorial ≤ j := by
-    rw [Nat.padicValNat_def]
-    exact Nat.le_of_lt_succ (sub_one_mul_multiplicity_factorial_lt_of_ne_zero p j.succ_ne_zero)
-  have h_real : (padicValNat p (j + 1).factorial : ℝ) ≤ j / (p - 1) := by
-    rw [le_div_iff₀' (sub_pos.2 hp), ← Nat.cast_pred (Fact.out : p.Prime).pos]
-    exact_mod_cast h_val
-  calc ‖c‖ ^ j ≤ (p : ℝ) ^ (-(j / (p - 1)) : ℝ) := by
-        grw [hc, ← Real.rpow_mul_natCast p.cast_nonneg, neg_mul, one_div_mul_eq_div]
-    _ ≤ (p : ℝ) ^ (-(padicValNat p (j + 1).factorial : ℝ)) :=
-      Real.rpow_le_rpow_of_exponent_le hp.le (neg_le_neg h_real)
-    _ = ‖((j + 1).factorial : ℂ_[p])‖ := by
-      simp [norm_natCast_eq_inv_pow_padicValNat (j + 1).factorial_ne_zero, Real.rpow_neg]
+  exact (pow_le_pow_left₀ (norm_nonneg c) hc j).trans
+    (rpow_pow_le_norm_factorial_succ j)
 
 /-- If `v(c) ≥ 1 / (p - 1)`, that is, `‖c‖ ≤ p ^ (-1 / (p - 1))`, then `c ^ j / (j + 1)` is
 integral. -/
